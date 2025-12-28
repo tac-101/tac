@@ -1,0 +1,78 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./*"
+      ],
+      "@/components/dashboard/*": [
+        "./app/(main)/dashboard/_components/*"
+      ],
+      "@/components/invoices/*": [
+        "./app/(main)/invoices/_components/*"
+      ],
+      "@/components/shipments/*": [
+        "./app/(main)/shipments/_components/*"
+      ],
+      "@/components/auth/*": [
+        "./app/(auth)/_components/*"
+      ],
+      "@/components/tracking/*": [
+        "./app/(external)/track/_components/*"
+      ],
+      "@/components/landing/*": [
+        "./app/(external)/_components/*"
+      ],
+      "@/components/app-sidebar": [
+        "./app/(main)/_components/app-sidebar"
+      ],
+      "@/components/nav-main": [
+        "./app/(main)/_components/nav-main"
+      ],
+      "@/components/nav-documents": [
+        "./app/(main)/_components/nav-documents"
+      ],
+      "@/components/nav-secondary": [
+        "./app/(main)/_components/nav-secondary"
+      ],
+      "@/components/nav-user": [
+        "./app/(main)/_components/nav-user"
+      ],
+      "@/components/command-menu": [
+        "./app/(main)/_components/command-menu"
+      ]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

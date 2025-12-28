@@ -1,0 +1,41 @@
+
+> project-tapango-v2@0.1.0 build
+> next build
+
+ΓÜá Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\project-tapango\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * C:\project-tapango\project-tapango-v2\package-lock.json
+
+Γû▓ Next.js 16.1.1 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 1 errors:
+./project-tapango-v2/components/support/customer-support-client.tsx:8:1
+Module not found: Can't resolve '@/components/ui/ai-assistant-card'
+   6 | import { useForm } from "react-hook-form";
+   7 | import { z } from "zod";
+>  8 | import { Component as AiAssistantCard } from "@/components/ui/ai-assistant-card";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   9 | import { Button } from "@/components/ui/button";
+  10 | import { Card } from "@/components/ui/card";
+  11 | import {
+
+Import map: aliased to relative './components/ui/ai-assistant-card' inside of [project]/project-tapango-v2
+
+
+Import trace:
+  Server Component:
+    ./project-tapango-v2/components/support/customer-support-client.tsx
+    ./project-tapango-v2/app/(main)/dashboard/support/customer/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (./project-tapango-v2/components/support/customer-support-client.tsx:8:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
