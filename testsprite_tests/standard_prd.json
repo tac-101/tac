@@ -1,0 +1,989 @@
+{
+  "meta": {
+    "project": "TAC - Tapan Air Cargo Platform",
+    "date": "2025-12-22",
+    "prepared_by": "Software Development Manager"
+  },
+  "product_overview": "TAC is a comprehensive logistics management platform tailored for cargo companies in India, providing end-to-end shipment tracking, automated invoicing, barcode management, inventory control, and financial analytics with an emphasis on real-time data and regulatory compliance.",
+  "core_goals": [
+    "Enable efficient shipment lifecycle management from creation to delivery with accurate ETA calculations.",
+    "Automate invoicing processes including GST-compliant billing, PDF generation, and multi-channel delivery.",
+    "Support industry-standard barcode generation and real-time scan event tracking for shipment visibility.",
+    "Provide perpetual inventory management with real-time stock updates and adjustment capabilities.",
+    "Facilitate air cargo manifest creation and management for streamlined flight cargo operations.",
+    "Maintain a detailed customer database supporting contact, GST, and credit management.",
+    "Deliver comprehensive financial reporting including accounts receivable summaries and aging analytics.",
+    "Ensure secure authentication with robust role-based access control and data protection measures.",
+    "Achieve high system reliability with low API response times and high concurrency support."
+  ],
+  "key_features": [
+    "Shipment Management: Create, track, and update shipments across various transport modes with ETA calculation.",
+    "Invoice Management: Auto-generate and manage GST-compliant invoices, generate branded PDFs, track payments, and send notifications via WhatsApp and SMS.",
+    "Barcode & Tracking: Generate GS1-compliant and internal barcodes; record package scan events; provide public shipment tracking without login.",
+    "Inventory Management: Real-time perpetual inventory with stock adjustments, low stock alerts, and warehouse location tracking.",
+    "Manifest Management: Create and update air cargo manifests grouping shipments by origin and destination with reconciliation.",
+    "Customer Management: Manage shipper and consignee details, contacts, GST information, and credit limits.",
+    "Financial Analytics: View accounts receivable summaries and aging reports to monitor outstanding invoices and cash flow.",
+    "Authentication & Security: Use Supabase Auth for secure login, session management, and enforce role-based access control with row-level security.",
+    "API Performance & Stability: APIs designed for under 500ms responses, support 100+ concurrent users, with rate limiting and 99.9% uptime target."
+  ],
+  "user_flow_summary": [
+    "User logs in securely via Supabase Auth with credentials and assigned role determining access level.",
+    "Admin or Manager creates shipments entering origin, destination, and transport mode, then tracks status changes and ETA.",
+    "Operator scans packages recording scan events linked to barcodes for real-time shipment progress updates.",
+    "Finance or Manager users create invoices linked to shipments, generate PDFs, and send them through WhatsApp or SMS.",
+    "Inventory managers adjust stock levels based on inbound, outbound, and cycle count processes, monitoring low stock alerts.",
+    "Users view customer details and update contact and GST information as required.",
+    "Finance users access Accounts Receivable dashboards showing outstanding balances and aging details.",
+    "External customers use the public tracking portal to search shipments by shipment ref, invoice ref, or barcode without authentication."
+  ],
+  "validation_criteria": [
+    "APIs respond within 500ms under normal and peak loads supporting 100+ concurrent users.",
+    "Role-based access control prevents unauthorized data access; users only see data permitted by their roles.",
+    "Invoices correctly generated with GST calculations and PDFs include company branding and accurate data.",
+    "Barcode generation complies with GS1 standards and internal formats, validated by automated tests.",
+    "Scan events record accurately and reflect real-time package movements in shipment timelines.",
+    "Inventory adjustments update stock in real-time with correct location and reason tracking; alerts trigger on low stock.",
+    "Financial reports match invoice and payment data with accurate aging classifications.",
+    "Public tracking returns correct shipment status and timelines without requiring authentication.",
+    "System uptime monitored at 99.9% with error tracking via Sentry and performance analytics through Vercel Analytics.",
+    "Rate limiting enforced on all endpoints to prevent abuse, validated by load tests and logs."
+  ],
+  "code_summary": {
+    "tech_stack": [
+      "TypeScript",
+      "Next.js 16.1",
+      "React 19",
+      "Tailwind CSS v4",
+      "Supabase (PostgreSQL)",
+      "Supabase Auth",
+      "Supabase Realtime",
+      "Shadcn UI",
+      "Radix UI",
+      "Framer Motion",
+      "TanStack Table",
+      "React Hook Form",
+      "Zod",
+      "Zustand",
+      "Twilio",
+      "WhatsApp Business API",
+      "Upstash Redis",
+      "Sentry",
+      "Vercel Analytics",
+      "Puppeteer",
+      "Recharts"
+    ],
+    "features": [
+      {
+        "name": "Authentication",
+        "description": "User authentication with Supabase Auth, session management, and role-based access control",
+        "files": [
+          "app/api/auth/getCurrentUser/route.ts",
+          "app/api/auth/session/route.ts",
+          "app/api/auth/protected/route.ts",
+          "lib/auth.ts",
+          "lib/supabaseServer.ts",
+          "lib/supabaseClient.ts"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "paths": {
+            "/api/auth/session": {
+              "get": {
+                "summary": "Get current session",
+                "responses": {
+                  "200": {
+                    "description": "Session data",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "user": {
+                              "type": "object"
+                            },
+                            "session": {
+                              "type": "object"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "/api/auth/getCurrentUser": {
+              "get": {
+                "summary": "Get authenticated user profile",
+                "responses": {
+                  "200": {
+                    "description": "User profile",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "email": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "role": {
+                              "type": "string"
+                            },
+                            "location": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "Shipments",
+        "description": "Shipment management including creation, tracking, status updates, and ETA calculation",
+        "files": [
+          "app/api/shipments/[id]/eta/route.ts",
+          "app/api/shipments/protected/route.ts",
+          "app/(main)/dashboard/shipments/page.tsx",
+          "features/shipments/types.ts"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "paths": {
+            "/api/shipments/{id}/eta": {
+              "get": {
+                "summary": "Get shipment ETA and tracking details",
+                "parameters": [
+                  {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "Shipment details with ETA",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "shipment": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string"
+                                },
+                                "shipment_ref": {
+                                  "type": "string"
+                                },
+                                "origin": {
+                                  "type": "string"
+                                },
+                                "destination": {
+                                  "type": "string"
+                                },
+                                "status": {
+                                  "type": "string"
+                                },
+                                "progress": {
+                                  "type": "integer"
+                                },
+                                "eta": {
+                                  "type": "string",
+                                  "format": "date-time"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "Invoices",
+        "description": "Invoice management including creation, PDF generation, WhatsApp delivery, and payment tracking",
+        "files": [
+          "app/api/invoices/route.ts",
+          "app/api/invoices/create/route.ts",
+          "app/api/invoices/generate/route.ts",
+          "app/api/invoices/download/route.ts",
+          "app/api/invoices/[invoiceId]/send-whatsapp/route.ts",
+          "app/api/invoices/logs/route.ts",
+          "lib/invoicePdf.ts",
+          "features/invoices/types.ts"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "paths": {
+            "/api/invoices": {
+              "get": {
+                "summary": "List invoices with filtering",
+                "parameters": [
+                  {
+                    "name": "status",
+                    "in": "query",
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "customer_id",
+                    "in": "query",
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "limit",
+                    "in": "query",
+                    "schema": {
+                      "type": "integer"
+                    }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "Invoice list",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "invoices": {
+                              "type": "array"
+                            },
+                            "total": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "/api/invoices/create": {
+              "post": {
+                "summary": "Create new invoice",
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "customer_id"
+                        ],
+                        "properties": {
+                          "customer_id": {
+                            "type": "string"
+                          },
+                          "shipment_id": {
+                            "type": "string"
+                          },
+                          "freight_amount": {
+                            "type": "number"
+                          },
+                          "gst_percent": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Invoice created"
+                  }
+                }
+              }
+            },
+            "/api/invoices/generate": {
+              "post": {
+                "summary": "Generate invoice PDF",
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "invoiceId"
+                        ],
+                        "properties": {
+                          "invoiceId": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "PDF generated"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "Barcodes",
+        "description": "Barcode generation including GS1-compliant SSCC-18, GTIN-14, and TAC internal formats",
+        "files": [
+          "app/api/barcodes/generate/route.ts",
+          "app/api/barcodes/gs1/route.ts",
+          "lib/gs1-barcode.ts"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "paths": {
+            "/api/barcodes/generate": {
+              "post": {
+                "summary": "Generate standard barcode",
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "barcodeNumber"
+                        ],
+                        "properties": {
+                          "barcodeNumber": {
+                            "type": "string"
+                          },
+                          "shipmentId": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Barcode created"
+                  }
+                }
+              }
+            },
+            "/api/barcodes/gs1": {
+              "post": {
+                "summary": "Generate GS1-compliant barcodes",
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "type"
+                        ],
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "SSCC",
+                              "GTIN14",
+                              "TAC",
+                              "GS1-128"
+                            ]
+                          },
+                          "companyPrefix": {
+                            "type": "string"
+                          },
+                          "quantity": {
+                            "type": "integer"
+                          },
+                          "shipmentId": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Barcodes generated"
+                  }
+                }
+              },
+              "get": {
+                "summary": "Validate barcode or get supported types",
+                "parameters": [
+                  {
+                    "name": "validate",
+                    "in": "query",
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "Validation result or supported types"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "Scans",
+        "description": "Package scan event recording for tracking shipment movement",
+        "files": [
+          "app/api/scans/route.ts"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "paths": {
+            "/api/scans": {
+              "post": {
+                "summary": "Record package scan event",
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "barcode"
+                        ],
+                        "properties": {
+                          "barcode": {
+                            "type": "string"
+                          },
+                          "scanType": {
+                            "type": "string"
+                          },
+                          "location": {
+                            "type": "string"
+                          },
+                          "operatorId": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Scan recorded"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "Inventory",
+        "description": "Perpetual inventory management with real-time stock tracking and adjustments",
+        "files": [
+          "app/api/inventory/route.ts",
+          "app/(main)/dashboard/inventory/page.tsx",
+          "features/inventory/inventory-table.tsx",
+          "features/inventory/types.ts"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "paths": {
+            "/api/inventory": {
+              "get": {
+                "summary": "List inventory items",
+                "parameters": [
+                  {
+                    "name": "location",
+                    "in": "query",
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "lowStock",
+                    "in": "query",
+                    "schema": {
+                      "type": "boolean"
+                    }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "Inventory items list"
+                  }
+                }
+              },
+              "post": {
+                "summary": "Adjust inventory stock",
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "sku",
+                          "adjustmentType",
+                          "quantity"
+                        ],
+                        "properties": {
+                          "sku": {
+                            "type": "string"
+                          },
+                          "adjustmentType": {
+                            "type": "string",
+                            "enum": [
+                              "inbound",
+                              "outbound",
+                              "adjustment",
+                              "cycle_count"
+                            ]
+                          },
+                          "quantity": {
+                            "type": "integer"
+                          },
+                          "location": {
+                            "type": "string"
+                          },
+                          "reason": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Stock adjusted"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "Manifests",
+        "description": "Air cargo manifest management for grouping shipments",
+        "files": [
+          "app/api/manifests/route.ts"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "paths": {
+            "/api/manifests": {
+              "get": {
+                "summary": "List manifests",
+                "responses": {
+                  "200": {
+                    "description": "Manifest list"
+                  }
+                }
+              },
+              "post": {
+                "summary": "Create or update manifest",
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "origin_hub",
+                          "destination"
+                        ],
+                        "properties": {
+                          "origin_hub": {
+                            "type": "string"
+                          },
+                          "destination": {
+                            "type": "string"
+                          },
+                          "airline_code": {
+                            "type": "string"
+                          },
+                          "flight_number": {
+                            "type": "string"
+                          },
+                          "manifest_date": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Manifest created/updated"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "Customers",
+        "description": "Customer management for shippers and consignees",
+        "files": [
+          "app/api/customers/update/route.ts",
+          "app/(main)/dashboard/customers/page.tsx",
+          "features/customers/types.ts"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "paths": {
+            "/api/customers/update": {
+              "post": {
+                "summary": "Update customer details",
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "id"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string"
+                          },
+                          "address": {
+                            "type": "string"
+                          },
+                          "city": {
+                            "type": "string"
+                          },
+                          "gst_number": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Customer updated"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "Payments",
+        "description": "Payment recording against invoices",
+        "files": [
+          "app/api/payments/route.ts"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "paths": {
+            "/api/payments": {
+              "post": {
+                "summary": "Record payment",
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "invoice_id",
+                          "amount"
+                        ],
+                        "properties": {
+                          "invoice_id": {
+                            "type": "string"
+                          },
+                          "amount": {
+                            "type": "number"
+                          },
+                          "payment_mode": {
+                            "type": "string"
+                          },
+                          "reference": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Payment recorded"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "Finance",
+        "description": "Financial reporting including Accounts Receivable summary",
+        "files": [
+          "app/api/finance/ar/route.ts",
+          "lib/finance.ts"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "paths": {
+            "/api/finance/ar": {
+              "get": {
+                "summary": "Get Accounts Receivable summary",
+                "responses": {
+                  "200": {
+                    "description": "AR summary with aging",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "summary": {
+                              "type": "object",
+                              "properties": {
+                                "totalOutstanding": {
+                                  "type": "number"
+                                },
+                                "current": {
+                                  "type": "number"
+                                },
+                                "overdue30": {
+                                  "type": "number"
+                                },
+                                "overdue60": {
+                                  "type": "number"
+                                },
+                                "overdue90": {
+                                  "type": "number"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "Public Tracking",
+        "description": "Public shipment tracking without authentication",
+        "files": [
+          "app/api/public/track/route.ts",
+          "lib/tracking.ts"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "paths": {
+            "/api/public/track": {
+              "post": {
+                "summary": "Track shipment publicly",
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "query"
+                        ],
+                        "properties": {
+                          "query": {
+                            "type": "string",
+                            "description": "Shipment ref, invoice ref, or barcode"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Tracking result",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "found": {
+                              "type": "boolean"
+                            },
+                            "shipment": {
+                              "type": "object"
+                            },
+                            "timeline": {
+                              "type": "array"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "get": {
+                "summary": "Track shipment via GET",
+                "parameters": [
+                  {
+                    "name": "q",
+                    "in": "query",
+                    "required": true,
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "Tracking result"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "WhatsApp Messaging",
+        "description": "Send invoices and notifications via WhatsApp Business API",
+        "files": [
+          "app/api/send-whatsapp/route.ts",
+          "lib/whatsapp-invoice.ts",
+          "lib/twilioClient.ts"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "paths": {
+            "/api/send-whatsapp": {
+              "post": {
+                "summary": "Send WhatsApp message for invoice",
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "invoiceId"
+                        ],
+                        "properties": {
+                          "invoiceId": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Message sent",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "success": {
+                              "type": "boolean"
+                            },
+                            "messageId": {
+                              "type": "string"
+                            },
+                            "to": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "Search",
+        "description": "Global search across shipments, invoices, and customers",
+        "files": [
+          "app/api/search/route.ts"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "paths": {
+            "/api/search": {
+              "get": {
+                "summary": "Global search",
+                "parameters": [
+                  {
+                    "name": "q",
+                    "in": "query",
+                    "required": true,
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "type",
+                    "in": "query",
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "Search results"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "tech_stack": [
+    "TypeScript",
+    "Next.js",
+    "React",
+    "Tailwind CSS",
+    "Supabase",
+    "Shadcn UI",
+    "React Hook Form",
+    "Zod"
+  ],
+  "features": [
+    {
+      "name": "Alerts",
+      "description": "System alerts and notifications management",
+      "files": [
+        "features/alerts"
+      ]
+    },
+    {
+      "name": "Customers",
+      "description": "Customer management and directory",
+      "files": [
+        "features/customers"
+      ]
+    },
+    {
+      "name": "Inventory",
+      "description": "Inventory tracking and management",
+      "files": [
+        "features/inventory"
+      ]
+    },
+    {
+      "name": "Invoices",
+      "description": "Invoice generation and tracking",
+      "files": [
+        "features/invoices"
+      ]
+    },
+    {
+      "name": "Notifications",
+      "description": "User notification system",
+      "files": [
+        "features/notifications"
+      ]
+    },
+    {
+      "name": "Rates",
+      "description": "Shipping rates and calculator",
+      "files": [
+        "features/rates"
+      ]
+    },
+    {
+      "name": "Shipments",
+      "description": "Shipment creation, tracking, and management",
+      "files": [
+        "features/shipments"
+      ]
+    },
+    {
+      "name": "Support",
+      "description": "Customer support ticketing system",
+      "files": [
+        "features/support"
+      ]
+    },
+    {
+      "name": "Warehouse",
+      "description": "Warehouse operations and management",
+      "files": [
+        "features/warehouse"
+      ]
+    },
+    {
+      "name": "Authentication",
+      "description": "User authentication and layout protection",
+      "files": [
+        "app/(auth)",
+        "lib/auth",
+        "lib/api/withAuth.ts"
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "description": "Main application dashboard layout and widgets",
+      "files": [
+        "app/(main)/dashboard",
+        "components/dashboard"
+      ]
+    }
+  ]
+}

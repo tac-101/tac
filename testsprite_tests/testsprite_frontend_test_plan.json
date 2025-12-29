@@ -1,0 +1,549 @@
+[
+  {
+    "id": "TC001",
+    "title": "User Authentication - Successful Login",
+    "description": "Verify that users can log in successfully with valid credentials and receive appropriate session data including roles.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the login page"
+      },
+      {
+        "type": "action",
+        "description": "Input valid username and password"
+      },
+      {
+        "type": "action",
+        "description": "Submit login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that login is successful and session data is returned with user role"
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "User Authentication - Failed Login",
+    "description": "Verify that the system correctly denies access when incorrect credentials are provided.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the login page"
+      },
+      {
+        "type": "action",
+        "description": "Input invalid username or password"
+      },
+      {
+        "type": "action",
+        "description": "Submit login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that login fails with an appropriate error message"
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Role-Based Access Control Enforcement",
+    "description": "Validate that users with different roles have access only to their permitted data and actions.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as a user with limited role"
+      },
+      {
+        "type": "action",
+        "description": "Attempt to access data or perform actions restricted to admin"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm access is denied with security error"
+      },
+      {
+        "type": "action",
+        "description": "Login as an admin user"
+      },
+      {
+        "type": "action",
+        "description": "Access restricted admin features"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm access is granted to admin features"
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Create Shipment with Valid Data",
+    "description": "Verify that a shipment can be created with valid origin, destination, and transport mode and that ETA is calculated correctly.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as Admin or Manager"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to create shipment page"
+      },
+      {
+        "type": "action",
+        "description": "Enter valid origin, destination, and transport mode"
+      },
+      {
+        "type": "action",
+        "description": "Submit shipment creation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify shipment is created with correct status and a proper ETA is returned"
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Create Shipment with Missing Required Fields",
+    "description": "Test shipment creation fails when required fields such as origin or destination are missing.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as Admin or Manager"
+      },
+      {
+        "type": "action",
+        "description": "Attempt to create shipment without origin"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that shipment creation is rejected with validation error"
+      },
+      {
+        "type": "action",
+        "description": "Attempt to create shipment without destination"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that shipment creation is rejected with validation error"
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Shipment Status Update and Tracking",
+    "description": "Ensure shipment status can be updated and tracked successfully including updates to progress and ETA.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Create and access existing shipment"
+      },
+      {
+        "type": "action",
+        "description": "Update shipment status to 'In Transit'"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify status is updated correctly and progress percentage reflects the shipment lifecycle"
+      },
+      {
+        "type": "action",
+        "description": "Fetch shipment ETA via API"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify ETA is current and reflects expected delivery date"
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Generate GST-Compliant Invoice",
+    "description": "Validate invoice creation with correct GST calculations, linkage to shipment, and generation of PDF with company branding.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as Finance or Manager"
+      },
+      {
+        "type": "action",
+        "description": "Create invoice linked to an existing shipment with freight amount and GST percentage"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the invoice is created successfully with accurate GST tax fields"
+      },
+      {
+        "type": "action",
+        "description": "Generate invoice PDF"
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure PDF is generated correctly and contains company branding and accurate invoice data"
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Send Invoice via WhatsApp and SMS",
+    "description": "Verify that invoices can be sent through WhatsApp and SMS channels successfully with message ID and delivery confirmation.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as Finance or Manager"
+      },
+      {
+        "type": "action",
+        "description": "Select existing invoice and send via WhatsApp"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify successful message send with valid messageId and recipient number"
+      },
+      {
+        "type": "action",
+        "description": "Send invoice notification via SMS"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm SMS sent successfully"
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Barcode Generation Validity - GS1 and Internal Formats",
+    "description": "Ensure barcode generation supports GS1-compliant SSCC-18, GTIN-14, and TAC-specific barcode formats; validate output correctness.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Request generation of SSCC-18 barcode with valid company prefix and shipment ID"
+      },
+      {
+        "type": "assertion",
+        "description": "Validate barcode conforms to GS1 SSCC-18 specifications"
+      },
+      {
+        "type": "action",
+        "description": "Request generation of GTIN-14 barcode"
+      },
+      {
+        "type": "assertion",
+        "description": "Validate barcode conforms to GS1 GTIN-14 format"
+      },
+      {
+        "type": "action",
+        "description": "Generate TAC internal barcode with shipment ID"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify barcode matches internal format and is uniquely assigned"
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Record Package Scan Event",
+    "description": "Verify that package scan events can be recorded including barcode, scan type, location, and operator ID, and reflect real-time package movement.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Submit scan event with valid barcode, scan type (e.g., 'received'), location, and operator ID"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm scan event is recorded and timestamped"
+      },
+      {
+        "type": "action",
+        "description": "Retrieve shipment tracking timeline via API"
+      },
+      {
+        "type": "assertion",
+        "description": "Validate scan event appears correctly in shipment progress timeline"
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Inventory Stock Adjustment and Low Stock Alert",
+    "description": "Test real-time inventory updates including inbound, outbound, and cycle count adjustments triggering low stock alerts with accurate stock and location data.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Adjust inventory via API using 'inbound' adjustment with SKU, quantity, and location"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify inventory stock for SKU is incremented and location updated"
+      },
+      {
+        "type": "action",
+        "description": "Perform 'outbound' adjustment reducing stock"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm stock decremented accordingly"
+      },
+      {
+        "type": "action",
+        "description": "Reduce stock below predefined low stock threshold"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify low stock alert is triggered and visible to user"
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Create and Update Air Cargo Manifest",
+    "description": "Validate that manifests can be created and updated grouping shipments by origin and destination, including airline code, flight number and manifest date.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Create manifest with origin_hub, destination, airline_code, flight_number, and manifest_date"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify manifest is created and contains the provided details"
+      },
+      {
+        "type": "action",
+        "description": "Update manifest details with changes to flight number or date"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm manifest is updated and changes are reflected"
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Customer Details Update",
+    "description": "Verify that customer contact, GST information, and credit limits can be updated successfully.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as authorized user"
+      },
+      {
+        "type": "action",
+        "description": "Update customer record with new phone, email, address, city, and GST number"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm customer details are saved and retrievable with updated values"
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Financial Reporting - Accounts Receivable Summary and Aging",
+    "description": "Ensure financial reports correctly display outstanding invoices with accuracy in aging classifications for current, 30, 60, and 90+ days overdue.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Access Accounts Receivable summary report as Finance user"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify totals for outstanding balance, current, overdue 30, overdue 60, and overdue 90 match invoice and payment data"
+      },
+      {
+        "type": "action",
+        "description": "Add payment against an invoice"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm AR summary updates to reflect payment accordingly"
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Public Shipment Tracking Without Authentication",
+    "description": "Validate that external customers can search shipments by shipment reference, invoice reference, or barcode without login and receive correct shipment status and timeline.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Submit public tracking query using shipment reference"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify shipment details and timeline are returned correctly with 'found' true"
+      },
+      {
+        "type": "action",
+        "description": "Submit public tracking query using invoice reference"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify shipment details and timeline are returned correctly"
+      },
+      {
+        "type": "action",
+        "description": "Submit public tracking query using barcode number"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm correct shipment info is returned"
+      },
+      {
+        "type": "action",
+        "description": "Submit public tracking query with invalid or nonexistent reference"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify response indicates shipment not found"
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "API Performance Under Normal and Peak Load",
+    "description": "Ensure all APIs respond within 500ms under normal and simulated peak loads of 100+ concurrent users with proper rate limiting.",
+    "category": "performance",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Simulate 100+ concurrent users making typical API requests including shipment, invoice, and inventory endpoints"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify response times are below 500ms for all requests"
+      },
+      {
+        "type": "action",
+        "description": "Send rapid repeated requests exceeding rate limits"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm rate limiting responses are issued preventing abuse"
+      }
+    ]
+  },
+  {
+    "id": "TC017",
+    "title": "System Uptime and Error Monitoring",
+    "description": "Validate that system uptime meets 99.9% target and errors are tracked accurately by Sentry with performance analytics available via Vercel Analytics.",
+    "category": "stability",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Review system uptime logs over a defined period"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify uptime is at or above 99.9%"
+      },
+      {
+        "type": "action",
+        "description": "Induce known application errors to trigger Sentry logging"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm errors are logged and visible in Sentry dashboard"
+      },
+      {
+        "type": "action",
+        "description": "Access performance dashboards on Vercel Analytics"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify response times and page load metrics are reported"
+      }
+    ]
+  },
+  {
+    "id": "TC018",
+    "title": "Invoice Payment Recording",
+    "description": "Ensure payments can be recorded correctly against invoices including amount, payment mode, and reference details updating invoice payment status.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Record payment by submitting invoice_id, amount, payment_mode, and reference"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify payment is saved and invoice outstanding balance is updated accordingly"
+      },
+      {
+        "type": "action",
+        "description": "Attempt to record payment exceeding invoice outstanding amount"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm validation error is returned"
+      }
+    ]
+  },
+  {
+    "id": "TC019",
+    "title": "Global Search Functionality",
+    "description": "Test global search across shipments, invoices, and customers returns relevant results filtered by query string and type parameter.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Perform global search with a query string targeting shipment references"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify shipment results are returned matching query"
+      },
+      {
+        "type": "action",
+        "description": "Perform search filtering by invoice"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm invoice results are accurate"
+      },
+      {
+        "type": "action",
+        "description": "Search filtered by customers"
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure customer matches are listed"
+      }
+    ]
+  }
+]

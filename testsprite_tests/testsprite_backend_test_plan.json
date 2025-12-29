@@ -1,0 +1,52 @@
+[
+  {
+    "id": "TC001",
+    "title": "test_auth_session_endpoint_response_time_and_data_integrity",
+    "description": "Verify that the /api/auth/session endpoint returns session data within 500ms and includes valid user and session objects."
+  },
+  {
+    "id": "TC002",
+    "title": "test_auth_getcurrentuser_endpoint_role_based_access",
+    "description": "Ensure /api/auth/getCurrentUser returns the authenticated user's profile with correct role and location, enforcing role-based access control."
+  },
+  {
+    "id": "TC003",
+    "title": "test_shipments_eta_endpoint_valid_uuid_and_eta_accuracy",
+    "description": "Test /api/shipments/{id}/eta endpoint with valid shipment UUID to confirm accurate ETA calculation and shipment tracking details."
+  },
+  {
+    "id": "TC004",
+    "title": "test_invoices_create_endpoint_gst_compliance_and_invoice_creation",
+    "description": "Validate /api/invoices/create endpoint creates GST-compliant invoices correctly with required fields and returns success response."
+  },
+  {
+    "id": "TC005",
+    "title": "test_invoices_generate_pdf_endpoint_branding_and_data_accuracy",
+    "description": "Check /api/invoices/generate endpoint generates branded PDF invoices with accurate invoice data and returns success status."
+  },
+  {
+    "id": "TC006",
+    "title": "test_barcodes_generate_endpoint_standard_barcode_creation",
+    "description": "Verify /api/barcodes/generate endpoint creates standard barcodes with valid barcodeNumber and optional shipmentId, returning success."
+  },
+  {
+    "id": "TC007",
+    "title": "test_scans_post_endpoint_record_scan_event",
+    "description": "Ensure /api/scans POST endpoint records package scan events accurately with barcode, scanType, location, and operatorId."
+  },
+  {
+    "id": "TC008",
+    "title": "test_inventory_post_endpoint_stock_adjustment_and_alerts",
+    "description": "Test /api/inventory POST endpoint adjusts stock levels correctly for various adjustment types and triggers low stock alerts if applicable."
+  },
+  {
+    "id": "TC009",
+    "title": "test_manifests_post_endpoint_create_update_manifest",
+    "description": "Validate /api/manifests POST endpoint creates or updates air cargo manifests with required origin and destination fields."
+  },
+  {
+    "id": "TC010",
+    "title": "test_customers_update_endpoint_modify_customer_details",
+    "description": "Verify /api/customers/update POST endpoint updates customer details including contact and GST information successfully."
+  }
+]

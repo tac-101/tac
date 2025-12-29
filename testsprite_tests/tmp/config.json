@@ -1,0 +1,16 @@
+{
+  "status": "committed",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:3000",
+  "executionArgs": {
+    "projectName": "tac",
+    "projectPath": "c:\\cargo-project\\tac",
+    "testIds": [],
+    "additionalInstruction": "",
+    "envs": {
+      "API_KEY": "${TEST_API_KEY}"
+    }
+  },
+  "proxy": "${TEST_PROXY_URL}"
+}
