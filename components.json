@@ -6,11 +6,11 @@
   "tailwind": {
     "config": "",
     "css": "app/globals.css",
-    "baseColor": "gray",
+    "baseColor": "neutral",
     "cssVariables": true,
     "prefix": ""
   },
-  "iconLibrary": "hugeicons",
+  "iconLibrary": "tabler",
   "aliases": {
     "components": "@/components",
     "utils": "@/lib/utils",
@@ -20,5 +20,8 @@
   },
   "menuColor": "default",
   "menuAccent": "subtle",
+  "font": "outfit",
+  "theme": "neutral",
+  "radius": "0.5rem",
   "registries": {}
 }
