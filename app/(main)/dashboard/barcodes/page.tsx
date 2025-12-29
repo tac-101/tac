@@ -21,7 +21,7 @@ export default function BarcodeTrackingPage() {
             setResults({
                 id: trackingId,
                 status: "In Transit",
-                origin: "Bangaloare Hub (BLR)",
+                origin: "Bangalore Hub (BLR)",
                 destination: "Dubai (DXB)",
                 currentLocation: "Mumbai Gateway (BOM)",
                 history: [
@@ -32,6 +32,11 @@ export default function BarcodeTrackingPage() {
             });
             setLoading(false);
         }, 1000);
+    };
+
+    const handleReset = () => {
+        setTrackingId("");
+        setResults(null);
     };
 
     return (
@@ -56,14 +61,21 @@ export default function BarcodeTrackingPage() {
                                 placeholder="e.g. TAC-12345678"
                                 className="h-12 border-none rounded-none text-lg font-mono focus-visible:ring-0 bg-transparent placeholder:text-muted-foreground/30"
                                 value={trackingId}
-                                onChange={(e) => setTrackingId(e.target.value)}
+                                onChange={(e) => setTrackingId(e.target.value.toUpperCase())}
                                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                             />
-                            <Button size="lg" className="h-12 px-8 rounded-none shadow-lg" onClick={handleSearch} disabled={loading}>
-                                {loading ? "Searching..." : (
-                                    <><Search className="mr-2 h-5 w-5" /> Track Page</>
+                            <div className="flex gap-2">
+                                {results && (
+                                    <Button variant="outline" size="lg" className="h-12 px-6 rounded-none" onClick={handleReset}>
+                                        <History className="mr-2 h-4 w-4" /> Reset
+                                    </Button>
                                 )}
-                            </Button>
+                                <Button size="lg" className="h-12 px-8 rounded-none shadow-lg" onClick={handleSearch} disabled={loading}>
+                                    {loading ? "Searching..." : (
+                                        <><Search className="mr-2 h-5 w-5" /> Track Package</>
+                                    )}
+                                </Button>
+                            </div>
                         </div>
                     </CardContent>
                 </Card>

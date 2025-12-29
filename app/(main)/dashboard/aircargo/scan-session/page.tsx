@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import DashboardPageLayout from "@/components/dashboard/layout";
 import AtomIcon from "@/components/icons/atom";
 import { Badge } from "@/components/ui/badge";
@@ -13,21 +13,88 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Barcode, CheckCircle2, AlertCircle, Play, Pause, RotateCcw } from "lucide-react";
+import { Barcode, CheckCircle2, AlertCircle, Play, Pause, RotateCcw, Loader2 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+
+interface ScanLog {
+    time: string;
+    barcode: string;
+    status: "success" | "error";
+    msg: string;
+}
 
 export default function ScanSessionPage() {
     const [isScanning, setIsScanning] = useState(false);
     const [scannedCount, setScannedCount] = useState(12);
+    const [manualInputOpen, setManualInputOpen] = useState(false);
+    const [manualBarcode, setManualBarcode] = useState("");
     const totalCount = 45;
     const progress = (scannedCount / totalCount) * 100;
 
-    const [logs, setLogs] = useState([
+    const [logs, setLogs] = useState<ScanLog[]>([
         { time: "08:24:11", barcode: "TAC-992-X1", status: "success", msg: "Verified: Item loaded to EK503" },
         { time: "08:23:45", barcode: "TAC-881-A2", status: "success", msg: "Verified: Item loaded to EK503" },
         { time: "08:22:12", barcode: "TAC-112-Q9", status: "error", msg: "Mismatch: Item belongs to QR782" },
         { time: "08:21:55", barcode: "TAC-456-L0", status: "success", msg: "Verified: Item loaded to EK503" },
+        { time: "08:20:10", barcode: "TAC-101-M3", status: "success", msg: "Verified: Item loaded to EK503" },
     ]);
+
+    const addLog = useCallback((barcode: string, status: "success" | "error", msg: string) => {
+        const newLog: ScanLog = {
+            time: new Date().toLocaleTimeString("en-GB"),
+            barcode,
+            status,
+            msg,
+        };
+        setLogs(prev => [newLog, ...prev].slice(0, 50));
+        if (status === "success") {
+            setScannedCount(prev => Math.min(prev + 1, totalCount));
+        }
+    }, [totalCount]);
+
+    // Simulate scanning when active
+    useEffect(() => {
+        if (!isScanning) return;
+
+        const interval = setInterval(() => {
+            if (scannedCount >= totalCount) {
+                setIsScanning(false);
+                toast.success("Manifest completely scanned!");
+                return;
+            }
+
+            // 80% success rate for simulation
+            const isError = Math.random() < 0.2;
+            const mockBarcode = `TAC-${Math.floor(Math.random() * 900) + 100}-${Math.random().toString(36).substring(7).toUpperCase()}`;
+
+            if (isError) {
+                addLog(mockBarcode, "error", "Mismatch: Package routing error");
+            } else {
+                addLog(mockBarcode, "success", "Verified: Item loaded to EK503");
+            }
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, [isScanning, scannedCount, totalCount, addLog]);
+
+    const handleManualSubmit = () => {
+        if (!manualBarcode) return;
+        addLog(manualBarcode, "success", "Manual Entry: Verified & Loaded");
+        setManualBarcode("");
+        setManualInputOpen(false);
+        toast.success(`Barcode ${manualBarcode} recorded`);
+    };
 
     return (
         <DashboardPageLayout
@@ -58,7 +125,16 @@ export default function ScanSessionPage() {
                                         <><Play className="mr-2 h-4 w-4" /> Start Scanning</>
                                     )}
                                 </Button>
-                                <Button variant="outline" size="icon" className="h-11 w-11 rounded-none border-white/10">
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    className="h-11 w-11 rounded-none border-white/10"
+                                    onClick={() => {
+                                        setScannedCount(0);
+                                        setLogs([]);
+                                        setIsScanning(false);
+                                    }}
+                                >
                                     <RotateCcw className="h-4 w-4" />
                                 </Button>
                             </div>
@@ -75,15 +151,17 @@ export default function ScanSessionPage() {
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div className="bg-white/[0.03] p-4 border border-white/5 space-y-1">
                                     <p className="text-xs text-muted-foreground uppercase tracking-widest">Successful</p>
-                                    <p className="text-2xl font-mono text-success">{scannedCount - 1}</p>
+                                    <p className="text-2xl font-mono text-success">{logs.filter(l => l.status === "success").length}</p>
                                 </div>
                                 <div className="bg-white/[0.03] p-4 border border-white/5 space-y-1">
                                     <p className="text-xs text-muted-foreground uppercase tracking-widest">Exceptions</p>
-                                    <p className="text-2xl font-mono text-destructive">1</p>
+                                    <p className="text-2xl font-mono text-destructive">{logs.filter(l => l.status === "error").length}</p>
                                 </div>
                                 <div className="bg-white/[0.03] p-4 border border-white/5 space-y-1">
-                                    <p className="text-xs text-muted-foreground uppercase tracking-widest">Time Elapsed</p>
-                                    <p className="text-2xl font-mono text-blue-400">00:42:15</p>
+                                    <p className="text-xs text-muted-foreground uppercase tracking-widest">Status</p>
+                                    <p className={`text-2xl font-mono ${isScanning ? "text-primary animate-pulse" : "text-muted-foreground"}`}>
+                                        {isScanning ? "ACTIVE" : "PAUSED"}
+                                    </p>
                                 </div>
                             </div>
                         </CardContent>
@@ -94,13 +172,23 @@ export default function ScanSessionPage() {
                         <div className="absolute inset-y-0 left-0 w-1 bg-primary" />
                         <CardContent className="p-6 flex items-center gap-6">
                             <div className="bg-primary/10 p-3 rounded-full">
-                                <Barcode className="h-8 w-8 text-primary" />
+                                {isScanning ? <Loader2 className="h-8 w-8 text-primary animate-spin" /> : <Barcode className="h-8 w-8 text-primary" />}
                             </div>
                             <div className="flex-1">
-                                <p className="text-xs text-primary/70 font-bold uppercase tracking-widest mb-1">Ready to scan</p>
-                                <p className="text-lg font-medium text-foreground/90">Point scanner at package barcode or enter manually</p>
+                                <p className="text-xs text-primary/70 font-bold uppercase tracking-widest mb-1">
+                                    {isScanning ? "Scanner active" : "Scanner standby"}
+                                </p>
+                                <p className="text-lg font-medium text-foreground/90">
+                                    {isScanning ? "Keep manifest within barcode reader range" : "Point scanner at package barcode or enter manually"}
+                                </p>
                             </div>
-                            <Button variant="outline" className="rounded-none border-primary/20 hover:bg-primary/10">Manual Input</Button>
+                            <Button
+                                variant="outline"
+                                className="rounded-none border-primary/20 hover:bg-primary/10"
+                                onClick={() => setManualInputOpen(true)}
+                            >
+                                Manual Input
+                            </Button>
                         </CardContent>
                     </Card>
                 </div>
@@ -110,13 +198,13 @@ export default function ScanSessionPage() {
                     <CardHeader className="border-b border-white/5 shrink-0">
                         <CardTitle className="text-lg flex items-center gap-2">
                             Live Scan Feed
-                            <div className="size-2 rounded-full bg-success animate-pulse" />
+                            {isScanning && <div className="size-2 rounded-full bg-success animate-pulse" />}
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="p-0 flex-1 overflow-hidden">
                         <ScrollArea className="h-full">
                             <div className="divide-y divide-white/5 p-4 space-y-4">
-                                {logs.map((log, i) => (
+                                {logs.length > 0 ? logs.map((log, i) => (
                                     <div key={i} className="pt-4 first:pt-0 space-y-2">
                                         <div className="flex justify-between items-start">
                                             <span className="font-mono text-[10px] text-muted-foreground">{log.time}</span>
@@ -133,12 +221,43 @@ export default function ScanSessionPage() {
                                             </p>
                                         </div>
                                     </div>
-                                ))}
+                                )) : (
+                                    <div className="flex flex-col items-center justify-center py-12 text-muted-foreground italic text-sm">
+                                        No scans recorded in this session.
+                                    </div>
+                                )}
                             </div>
                         </ScrollArea>
                     </CardContent>
                 </Card>
             </div>
+
+            <Dialog open={manualInputOpen} onOpenChange={setManualInputOpen}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Manual Barcode Entry</DialogTitle>
+                        <DialogDescription>
+                            Enter the package barcode identifier manually to record it in this session.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="barcode">Barcode / AWB</Label>
+                            <Input
+                                id="barcode"
+                                placeholder="e.g. TAC-101-ABCD"
+                                value={manualBarcode}
+                                onChange={(e) => setManualBarcode(e.target.value.toUpperCase())}
+                                onKeyDown={(e) => e.key === "Enter" && handleManualSubmit()}
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setManualInputOpen(false)}>Cancel</Button>
+                        <Button onClick={handleManualSubmit} disabled={!manualBarcode}>Record Scan</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </DashboardPageLayout>
     );
 }

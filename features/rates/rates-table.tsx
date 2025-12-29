@@ -26,15 +26,23 @@ export function RatesTable({
 		const normalized = (serviceType ?? "standard").toString().toLowerCase();
 
 		if (normalized === "air") {
-			return { label: "Air", variant: "outline-success" as const };
+			return {
+				label: "Air",
+				variant: "outline" as const,
+				className: "text-blue-600 border-blue-600 bg-blue-50 dark:bg-blue-950/20",
+			};
 		}
 
 		if (normalized === "surface") {
-			return { label: "Surface", variant: "outline" as const };
+			return { label: "Surface", variant: "outline" as const, className: "" };
 		}
 
 		if (normalized === "express") {
-			return { label: "Express", variant: "outline-warning" as const };
+			return {
+				label: "Express",
+				variant: "outline" as const,
+				className: "text-amber-600 border-amber-600 bg-amber-50 dark:bg-amber-950/20",
+			};
 		}
 
 		return { label: "Standard", variant: "secondary" as const };
@@ -75,7 +83,17 @@ export function RatesTable({
 											{(() => {
 												const badge = getServiceBadge(rate.serviceType);
 												return (
-													<Badge variant={badge.variant}>{badge.label}</Badge>
+													<Badge
+														variant={badge.variant}
+														className={
+															(badge as any).className ||
+															(badge.variant === "secondary"
+																? "bg-secondary text-secondary-foreground"
+																: "")
+														}
+													>
+														{badge.label}
+													</Badge>
 												);
 											})()}
 										</td>

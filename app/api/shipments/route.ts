@@ -94,10 +94,10 @@ export async function GET(req: Request) {
 		if (err.message === "Unauthorized") {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
-		const errorMessage = err?.message || (typeof err === "object" ? JSON.stringify(err) : String(err));
+		const errorMessage = err instanceof Error ? err.message : String(err);
 		console.error("/api/shipments GET error:", errorMessage);
 		return NextResponse.json(
-			{ error: errorMessage || "Unknown error" },
+			{ error: errorMessage },
 			{ status: 500 }
 		);
 	}
@@ -144,10 +144,10 @@ export async function POST(req: Request) {
 		if (err.message === "Unauthorized") {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
-		const errorMessage = err?.message || (typeof err === "object" ? JSON.stringify(err) : String(err));
+		const errorMessage = err instanceof Error ? err.message : String(err);
 		console.error("/api/shipments POST error:", errorMessage);
 		return NextResponse.json(
-			{ error: errorMessage || "Unknown error" },
+			{ error: errorMessage },
 			{ status: 500 }
 		);
 	}
@@ -210,10 +210,10 @@ export async function PATCH(req: Request) {
 		if (err.message === "Unauthorized") {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
-		const errorMessage = err?.message || (typeof err === "object" ? JSON.stringify(err) : String(err));
+		const errorMessage = err instanceof Error ? err.message : String(err);
 		console.error("/api/shipments PATCH error:", errorMessage);
 		return NextResponse.json(
-			{ error: errorMessage || "Unknown error" },
+			{ error: errorMessage },
 			{ status: 500 }
 		);
 	}

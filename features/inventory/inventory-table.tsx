@@ -1,18 +1,24 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Settings2 } from "lucide-react";
 import type { UIInventoryItem } from "@/features/inventory/types";
 
 interface InventoryTableProps {
 	items: UIInventoryItem[];
 	getStockStatus: (current: number, min: number) => string;
 	getStatusColor: (status: string) => string;
+	onAdjust?: (sku: string) => void;
+	canEdit?: boolean;
 }
 
 export function InventoryTable({
 	items,
 	getStockStatus,
 	getStatusColor,
+	onAdjust,
+	canEdit = false,
 }: InventoryTableProps) {
 	return (
 		<Card>
@@ -35,6 +41,7 @@ export function InventoryTable({
 								<th className="text-left py-2 px-2 font-semibold">
 									Last Updated
 								</th>
+								{canEdit && <th className="text-left py-2 px-2 font-semibold">Action</th>}
 							</tr>
 						</thead>
 						<tbody>
@@ -67,6 +74,19 @@ export function InventoryTable({
 												return d.toLocaleString("en-IN");
 											})()}
 										</td>
+										{canEdit && (
+											<td className="py-3 px-2">
+												<Button
+													variant="ghost"
+													size="icon"
+													onClick={() => onAdjust?.(item.sku)}
+													className="h-8 w-8"
+													aria-label={`Adjust stock for ${item.sku}`}
+												>
+													<Settings2 className="h-4 w-4" />
+												</Button>
+											</td>
+										)}
 									</tr>
 								);
 							})}

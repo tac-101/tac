@@ -70,9 +70,10 @@ export async function GET(req: Request) {
 		if (err.message === "Unauthorized") {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
-		console.error("/api/customers GET error", err);
+		const errorMessage = err instanceof Error ? err.message : String(err);
+		console.error("/api/customers GET error:", errorMessage);
 		return NextResponse.json(
-			{ error: err?.message ?? "Unknown error" },
+			{ error: errorMessage },
 			{ status: 500 }
 		);
 	}
@@ -107,9 +108,10 @@ export async function POST(req: Request) {
 		if (err.message === "Unauthorized") {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
-		console.error("/api/customers POST error", err);
+		const errorMessage = err instanceof Error ? err.message : String(err);
+		console.error("/api/customers POST error:", errorMessage);
 		return NextResponse.json(
-			{ error: err?.message ?? "Unknown error" },
+			{ error: errorMessage },
 			{ status: 500 }
 		);
 	}
@@ -161,9 +163,10 @@ export async function PATCH(req: Request) {
 		if (err.message === "Unauthorized") {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
-		console.error("/api/customers PATCH error", err);
+		const errorMessage = err instanceof Error ? err.message : String(err);
+		console.error("/api/customers PATCH error:", errorMessage);
 		return NextResponse.json(
-			{ error: err?.message ?? "Unknown error" },
+			{ error: errorMessage },
 			{ status: 500 }
 		);
 	}

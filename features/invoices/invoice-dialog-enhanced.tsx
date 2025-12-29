@@ -27,7 +27,7 @@ import {
 	Zap,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type SubmitHandler, type UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import { Badge } from "@/components/ui/badge";
@@ -70,9 +70,7 @@ import { cn } from "@/lib/utils";
 import type { Customer, Invoice, ShipmentRate } from "@/types/database";
 
 const invoiceFormSchema = z.object({
-	invoiceDate: z.date({
-		required_error: "Invoice date is required",
-	}),
+	invoiceDate: z.date(),
 	shipperName: z.string().min(2, "Shipper name is required"),
 	shipperAddress: z.string().min(5, "Shipper address is required"),
 	shipperPhone: z.string().min(10, "Valid phone number required"),
@@ -86,7 +84,7 @@ const invoiceFormSchema = z.object({
 	actualWeight: z.number().min(0.1, "Weight must be at least 0.1"),
 	chargedWeight: z.number().min(0.1, "Weight must be at least 0.1"),
 	rate: z.number().min(0, "Rate must be 0 or more"),
-	transportMode: z.enum(["air", "surface", "express", "train"]).default("air"),
+	transportMode: z.enum(["air", "surface", "express", "train"]).optional().default("air"),
 	paymentMode: z.string().optional(),
 	freightAmount: z.number().min(0).default(0),
 	pickupCharge: z.number().min(0).default(0),
@@ -131,7 +129,7 @@ export function InvoiceDialogEnhanced({
 	const [matchedRate, setMatchedRate] = useState<ShipmentRate | null>(null);
 
 	const form = useForm<InvoiceFormValues>({
-		resolver: zodResolver(invoiceFormSchema),
+		resolver: zodResolver(invoiceFormSchema) as any,
 		defaultValues: {
 			invoiceDate: new Date(),
 			shipperName: "",
@@ -140,6 +138,7 @@ export function InvoiceDialogEnhanced({
 			consigneeName: "",
 			consigneeAddress: "",
 			consigneePhone: "",
+			customerId: "",
 			origin: "",
 			destination: "",
 			pieces: 1,
@@ -160,7 +159,7 @@ export function InvoiceDialogEnhanced({
 			notes: "",
 			remarks: "",
 		},
-	});
+	}) as unknown as UseFormReturn<InvoiceFormValues>;
 
 	// Reset form when editing starts
 	useEffect(() => {
@@ -239,7 +238,7 @@ export function InvoiceDialogEnhanced({
 		form.setValue("freightAmount", Math.round(freight), { shouldDirty: true });
 	}, [chargedWeight, rateValue, form]);
 
-	const onSubmit = async (data: InvoiceFormValues) => {
+	const onSubmit: SubmitHandler<InvoiceFormValues> = async (data) => {
 		setIsCreating(true);
 		try {
 			if (onSave) {
@@ -704,7 +703,7 @@ export function InvoiceDialogEnhanced({
 														className={cn(
 															"flex-1 gap-2 h-10",
 															field.value === "air" &&
-																"bg-blue-600 hover:bg-blue-700",
+															"bg-blue-600 hover:bg-blue-700",
 														)}
 														onClick={() => field.onChange("air")}
 													>
@@ -720,7 +719,7 @@ export function InvoiceDialogEnhanced({
 														className={cn(
 															"flex-1 gap-2 h-10",
 															field.value === "express" &&
-																"bg-amber-600 hover:bg-amber-700",
+															"bg-amber-600 hover:bg-amber-700",
 														)}
 														onClick={() => field.onChange("express")}
 													>
@@ -736,7 +735,7 @@ export function InvoiceDialogEnhanced({
 														className={cn(
 															"flex-1 gap-2 h-10",
 															field.value === "surface" &&
-																"bg-emerald-600 hover:bg-emerald-700",
+															"bg-emerald-600 hover:bg-emerald-700",
 														)}
 														onClick={() => field.onChange("surface")}
 													>
