@@ -359,3 +359,31 @@ export {
 	ChartLegendContent,
 	ChartStyle,
 };
+
+// Enhanced chart exports with additional chart types
+// Re-export Recharts components for convenience
+export {
+  AreaChart,
+  BarChart,
+  LineChart,
+  PieChart,
+  RadarChart,
+  ScatterChart,
+  ComposedChart,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  Area,
+  Bar,
+  Line,
+  Pie,
+  Cell,
+  Radar,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Scatter,
+} from "recharts";
