@@ -1,132 +1,206 @@
 "use client";
 
-import { useState } from "react";
-import DashboardPageLayout from "@/components/dashboard/layout";
-import BracketsIcon from "@/components/icons/brackets";
+import { motion } from "framer-motion";
+import { 
+  Barcode, 
+  ChevronRight, 
+  Clock, 
+  ExternalLink, 
+  LocateFixed, 
+  MapPin, 
+  Package, 
+  Search,
+  Truck
+} from "lucide-react";
+import React, { useState } from "react";
+
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Search, MapPin, Calendar, User, Package, History, ArrowRight } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 
-export default function BarcodeTrackingPage() {
-    const [trackingId, setTrackingId] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [results, setResults] = useState<any>(null);
+const MOCK_HISTORY = [
+  { id: "1", date: "2024-03-24 14:30", location: "Warehouse BLR-01", event: "Manifest Scanned", user: "Tapan Go Ops" },
+  { id: "2", date: "2024-03-24 10:15", location: "Bangalore Intl Airport", event: "Arrived at destination", user: "System" },
+  { id: "3", date: "2024-03-23 22:45", location: "Doha (DOH)", event: "Departed for BLR", user: "Airline Feed" },
+  { id: "4", date: "2024-03-23 18:00", location: "Doha Hub", event: "Consolidated into XL-92", user: "Hub Admin" },
+];
 
-    const handleSearch = () => {
-        if (!trackingId) return;
-        setLoading(true);
-        // Mock search delay
-        setTimeout(() => {
-            setResults({
-                id: trackingId,
-                status: "In Transit",
-                origin: "Bangaloare Hub (BLR)",
-                destination: "Dubai (DXB)",
-                currentLocation: "Mumbai Gateway (BOM)",
-                history: [
-                    { status: "Arrived at Hub", location: "BOM", time: "2025-12-29 04:12" },
-                    { status: "Manifested", location: "BLR", time: "2025-12-28 22:45" },
-                    { status: "Picked Up", location: "Warehouse A", time: "2025-12-28 18:30" },
-                ]
-            });
-            setLoading(false);
-        }, 1000);
-    };
+export default function BarcodesPage() {
+  const [trackingId, setTrackingId] = useState("");
+  const [hasSearched, setHasSearched] = useState(false);
 
-    return (
-        <DashboardPageLayout
-            header={{
-                title: "Barcode Tracking",
-                description: "Lookup and trace individual barcode lifecycle and chain of custody",
-                icon: BracketsIcon,
-            }}
-        >
-            <div className="max-w-4xl mx-auto space-y-8">
-                {/* Search Hero Section */}
-                <Card className="bg-primary/5 border-primary/20 rounded-none overflow-hidden shadow-[0_0_40px_rgba(var(--primary),0.1)]">
-                    <CardContent className="p-8 space-y-6">
-                        <div className="space-y-2 text-center">
-                            <h3 className="text-2xl font-bold">Fast Tracking</h3>
-                            <p className="text-muted-foreground">Enter a package barcode to view its journey</p>
-                        </div>
+  const handleSearch = () => {
+    if (trackingId) setHasSearched(true);
+  };
 
-                        <div className="flex gap-2 p-1 bg-background/50 border border-white/5 backdrop-blur-md">
-                            <Input
-                                placeholder="e.g. TAC-12345678"
-                                className="h-12 border-none rounded-none text-lg font-mono focus-visible:ring-0 bg-transparent placeholder:text-muted-foreground/30"
-                                value={trackingId}
-                                onChange={(e) => setTrackingId(e.target.value)}
-                                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                            />
-                            <Button size="lg" className="h-12 px-8 rounded-none shadow-lg" onClick={handleSearch} disabled={loading}>
-                                {loading ? "Searching..." : (
-                                    <><Search className="mr-2 h-5 w-5" /> Track Page</>
-                                )}
-                            </Button>
-                        </div>
-                    </CardContent>
-                </Card>
+  return (
+    <div className="flex-1 space-y-8 p-8 pt-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
+            Barcode Tracking
+          </h2>
+          <p className="text-muted-foreground">
+            Search and trace any package using unique barcode identifiers.
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" className="glass">
+            <Clock className="mr-2 h-4 w-4" />
+            History
+          </Button>
+          <Button className="btn-gradient-warm">
+            <LocateFixed className="mr-2 h-4 w-4" />
+            Active Scanners
+          </Button>
+        </div>
+      </div>
 
-                {/* Results Logic */}
-                {results && (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        {/* summary */}
-                        <div className="md:col-span-1 space-y-4">
-                            <Card className="bg-background/40 backdrop-blur-md border-white/10 rounded-none">
-                                <CardHeader className="pb-2">
-                                    <CardTitle className="text-sm text-muted-foreground uppercase tracking-widest">Tracking Status</CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className="size-3 rounded-full bg-primary animate-pulse" />
-                                        <span className="text-xl font-bold">{results.status}</span>
-                                    </div>
-                                    <div className="space-y-3 pt-4">
-                                        <div className="flex items-center gap-2 text-sm">
-                                            <Package className="size-4 text-muted-foreground" />
-                                            <span className="font-mono">{results.id}</span>
-                                        </div>
-                                        <div className="flex items-center gap-2 text-sm">
-                                            <MapPin className="size-4 text-muted-foreground" />
-                                            <span>{results.currentLocation}</span>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </div>
-
-                        {/* History Timeline */}
-                        <div className="md:col-span-2">
-                            <Card className="bg-background/40 backdrop-blur-md border-white/10 rounded-none h-full">
-                                <CardHeader>
-                                    <CardTitle className="flex items-center gap-2">
-                                        <History className="size-5 text-primary" />
-                                        Movement History
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="space-y-8 relative before:absolute before:inset-y-0 before:left-2.5 before:w-px before:bg-white/10">
-                                        {results.history.map((item: any, i: number) => (
-                                            <div key={i} className="relative pl-8 flex gap-4">
-                                                <div className="absolute left-1 top-2 size-3 rounded-full border-2 border-primary bg-background translate-y-[-2px]" />
-                                                <div className="flex-1 space-y-1">
-                                                    <p className="text-sm font-bold">{item.status}</p>
-                                                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                                                        <span className="flex items-center gap-1"><MapPin className="size-3" /> {item.location}</span>
-                                                        <span className="flex items-center gap-1"><Calendar className="size-3" /> {item.time}</span>
-                                                    </div>
-                                                </div>
-                                                <ArrowRight className="size-4 text-white/5" />
-                                            </div>
-                                        ))}
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </div>
-                    </div>
-                )}
+      <Card className="glass overflow-hidden border-none shadow-2xl relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5" />
+        <CardContent className="pt-12 pb-16 flex flex-col items-center justify-center space-y-8 relative z-10">
+          <div className="text-center space-y-3">
+            <div className="h-16 w-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary/20">
+              <Barcode className="h-8 w-8 text-primary" />
             </div>
-        </DashboardPageLayout>
-    );
+            <h3 className="text-2xl font-bold">Global Movement Search</h3>
+            <p className="text-muted-foreground w-80 mx-auto">
+              Enter a Tracking ID, AWB, or Order number to retrieve real-time location and status.
+            </p>
+          </div>
+
+          <div className="flex w-full max-w-xl items-center space-x-2 bg-white/5 p-2 rounded-2xl border border-white/5 ring-1 ring-white/5 shadow-2xl backdrop-blur-3xl">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+              <Input 
+                placeholder="Ex: TAC-AWB-987219..." 
+                className="pl-10 h-12 bg-transparent border-none focus-visible:ring-0 text-lg font-medium"
+                value={trackingId}
+                onChange={(e) => setTrackingId(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              />
+            </div>
+            <Button 
+              size="lg" 
+              className="h-12 px-8 btn-gradient-warm rounded-xl shadow-xl hover:scale-105 transition-all"
+              onClick={handleSearch}
+            >
+              Search Parcel
+            </Button>
+          </div>
+
+          <div className="flex gap-6 text-xs text-muted-foreground font-medium uppercase tracking-widest pt-4">
+             <span className="flex items-center gap-2"><div className="w-1 h-1 bg-primary rounded-full" /> 3.2M Scanned this week</span>
+             <span className="flex items-center gap-2"><div className="w-1 h-1 bg-primary rounded-full" /> 99.9% Tracking uptime</span>
+          </div>
+        </CardContent>
+      </Card>
+
+      {hasSearched && (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+        >
+          <Card className="glass border-white/5 md:col-span-1 h-full">
+            <CardHeader className="bg-white/5 px-6 py-4 flex flex-row items-center justify-between">
+              <CardTitle className="text-sm font-medium flex items-center gap-2">
+                <Package className="h-4 w-4 text-primary" />
+                Package Summary
+              </CardTitle>
+              <Badge className="bg-success text-white">Active</Badge>
+            </CardHeader>
+            <CardContent className="p-6 space-y-6">
+              <div className="space-y-4">
+                <div className="flex justify-between items-center text-sm border-b border-white/5 pb-2">
+                  <span className="text-muted-foreground">Carrier</span>
+                  <span className="font-semibold flex items-center gap-2">
+                    <Truck className="h-4 w-4" /> Tapan Go Fleet
+                  </span>
+                </div>
+                <div className="flex justify-between items-center text-sm border-b border-white/5 pb-2">
+                  <span className="text-muted-foreground">Dimensions</span>
+                  <span className="font-semibold uppercase">45x30x20 CM</span>
+                </div>
+                <div className="flex justify-between items-center text-sm border-b border-white/5 pb-2">
+                  <span className="text-muted-foreground">Weight</span>
+                  <span className="font-semibold uppercase">12.5 KG</span>
+                </div>
+                <div className="flex justify-between items-center text-sm border-b border-white/5 pb-2">
+                  <span className="text-muted-foreground">Destination</span>
+                  <span className="font-semibold uppercase">Bangalore, IN</span>
+                </div>
+              </div>
+              <Button variant="outline" className="w-full glass group">
+                Full Shipment Details
+                <ExternalLink className="ml-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="glass border-white/5 md:col-span-2">
+            <CardHeader className="bg-white/5 px-6 py-4 flex flex-row items-center justify-between">
+              <CardTitle className="text-sm font-medium flex items-center gap-2">
+                <Clock className="h-4 w-4 text-primary" />
+                Movement History
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <ScrollArea className="h-[300px]">
+                <div className="p-6 space-y-8">
+                  {MOCK_HISTORY.map((item, i) => (
+                    <div key={item.id} className="relative flex gap-4">
+                      {i !== MOCK_HISTORY.length - 1 && (
+                        <div className="absolute left-2.5 top-6 bottom-[-24px] w-px bg-white/10" />
+                      )}
+                      <div className={cn(
+                        "mt-1.5 h-5 w-5 rounded-full border-2 flex items-center justify-center z-10",
+                        i === 0 ? "border-primary bg-primary/20 animate-pulse" : "border-white/20 bg-white/5"
+                      )}>
+                        <div className={cn(
+                          "h-2 w-2 rounded-full",
+                          i === 0 ? "bg-primary shadow-[0_0_8px_rgba(var(--primary-rgb),1)]" : "bg-muted-foreground"
+                        )} />
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <div className="flex items-center justify-between text-xs">
+                          <p className="font-semibold text-foreground uppercase tracking-wider">{item.event}</p>
+                          <span className="text-muted-foreground">{item.date}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+                          <MapPin className="h-3 w-3" />
+                          <span>{item.location}</span>
+                          <span className="text-xs opacity-50">•</span>
+                          <span className="text-[11px] uppercase">{item.user}</span>
+                        </div>
+                        {i === 0 && (
+                          <motion.div 
+                            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                            className="bg-primary/5 border border-primary/10 rounded-lg p-2 mt-2 flex items-center justify-between group cursor-pointer hover:bg-primary/10 transition-colors"
+                          >
+                            <span className="text-xs font-semibold text-primary">SCAN DATA VERIFIED</span>
+                            <ChevronRight className="h-4 w-4 text-primary group-hover:translate-x-1 transition-transform" />
+                          </motion.div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+              <div className="p-4 bg-white/5 border-t border-white/5 flex gap-2 overflow-x-auto no-scrollbar">
+                 {['Photo Proof', 'GPS Coordinates', 'Signature', 'Invoice'].map(tag => (
+                   <Badge key={tag} variant="secondary" className="glass bg-white/5 hover:bg-white/10 whitespace-nowrap cursor-pointer">
+                     {tag}
+                   </Badge>
+                 ))}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+    </div>
+  );
 }
