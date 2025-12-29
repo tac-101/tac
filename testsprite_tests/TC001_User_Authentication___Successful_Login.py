@@ -8,9 +8,15 @@ async def run_test():
     browser = None
     context = None
     
-    # Use environment variables for credentials to avoid hardcoding
-    admin_email = os.getenv("TEST_ADMIN_EMAIL", "admin@tapango.logistics")
-    admin_password = os.getenv("TEST_ADMIN_PASSWORD", "Test@1498")
+    # Use environment variables for credentials - NO HARDCODED DEFAULTS
+    admin_email = os.getenv("TEST_ADMIN_EMAIL")
+    admin_password = os.getenv("TEST_ADMIN_PASSWORD")
+    
+    if not admin_email or not admin_password:
+        raise ValueError(
+            "Test credentials not configured. Please set TEST_ADMIN_EMAIL and "
+            "TEST_ADMIN_PASSWORD environment variables."
+        )
     base_url = os.getenv("TEST_BASE_URL", "http://localhost:3000")
 
     try:
