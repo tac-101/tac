@@ -4,13 +4,13 @@ import { ShipmentInvoice } from "@/components/invoices/shipment-invoice";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 interface InvoicePrintPageProps {
-	params: { invoiceId: string };
+	params: Promise<{ invoiceId: string }>;
 }
 
 export default async function PrintShipmentInvoicePage({
 	params,
 }: InvoicePrintPageProps) {
-	const invoiceId = params.invoiceId;
+	const { invoiceId } = await params;
 
 	// Fetch Invoice
 	const { data: invoice, error: invoiceError } = await supabaseAdmin

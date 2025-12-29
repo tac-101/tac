@@ -1,10 +1,25 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { format } from "date-fns";
+import { AlertTriangle, ArrowDownCircle, ArrowUpCircle, Loader2, Radio, RefreshCw } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 import DashboardPageLayout from "@/components/dashboard/layout";
 import BoxIcon from "@/components/icons/box";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
 	Select,
 	SelectContent,
@@ -16,60 +31,124 @@ import { InventoryTable } from "@/features/inventory/inventory-table";
 import type { UIInventoryItem } from "@/features/inventory/types";
 import { supabase } from "@/lib/supabaseClient";
 
+interface InventoryItemExtended extends UIInventoryItem {
+	isUpdated?: boolean;
+}
+
 export default function InventoryManagement() {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [locationFilter, setLocationFilter] = useState<string>("all");
-	const [inventoryData, setInventoryData] = useState<UIInventoryItem[]>([]);
+	const [inventoryData, setInventoryData] = useState<InventoryItemExtended[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [userRole, setUserRole] = useState<string | null>(null);
 	const [roleLoaded, setRoleLoaded] = useState(false);
+	const [isLive, setIsLive] = useState(true);
+	const [adjustmentOpen, setAdjustmentOpen] = useState(false);
+	const [selectedSku, setSelectedSku] = useState<string | null>(null);
+	const [adjustmentType, setAdjustmentType] = useState<"inbound" | "outbound" | "adjustment" | "cycle_count">("inbound");
+	const [adjustmentQty, setAdjustmentQty] = useState("");
+	const [adjustmentReason, setAdjustmentReason] = useState("");
+	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	const loadInventory = useCallback(async () => {
+		setLoading(true);
+		try {
+			const { data, error } = await supabase
+				.from("inventory_items")
+				.select(
+					"sku, description, location, current_stock, min_stock, last_updated",
+				)
+				.order("last_updated", { ascending: false });
+
+			if (error) {
+				console.warn("Supabase inventory error", error.message);
+				throw error;
+			}
+
+			const normalized: InventoryItemExtended[] = (data || []).map(
+				(row: any) => ({
+					sku: row.sku,
+					description: row.description ?? "",
+					location: row.location ?? "",
+					currentStock: row.current_stock ?? 0,
+					minStock: row.min_stock ?? 0,
+					lastUpdated: row.last_updated ?? "",
+					isUpdated: false,
+				}),
+			);
+
+			setInventoryData(normalized);
+		} catch (err) {
+			console.error("Failed to load inventory from Supabase", err);
+			setInventoryData([]);
+		} finally {
+			setLoading(false);
+		}
+	}, []);
 
 	useEffect(() => {
-		let cancelled = false;
-
-		async function loadInventory() {
-			setLoading(true);
-			try {
-				const { data, error } = await supabase
-					.from("inventory_items")
-					.select(
-						"sku, description, location, current_stock, min_stock, last_updated",
-					);
-
-				if (error) {
-					console.warn("Supabase inventory error", error.message);
-					throw error;
-				}
-
-				const normalized: UIInventoryItem[] = ((data as any[]) ?? []).map(
-					(row) => ({
-						sku: row.sku,
-						description: row.description ?? "",
-						location: row.location ?? "",
-						currentStock: row.current_stock ?? 0,
-						minStock: row.min_stock ?? 0,
-						lastUpdated: row.last_updated ?? "",
-					}),
-				);
-
-				if (cancelled) return;
-
-				setInventoryData(normalized);
-				setLoading(false);
-			} catch (err) {
-				if (cancelled) return;
-				console.error("Failed to load inventory from Supabase", err);
-				setInventoryData([]);
-				setLoading(false);
-			}
-		}
-
 		loadInventory();
+	}, [loadInventory]);
+
+	useEffect(() => {
+		if (!isLive) return;
+
+		const channel = supabase
+			.channel("realtime-inventory")
+			.on(
+				"postgres_changes",
+				{
+					event: "*",
+					schema: "public",
+					table: "inventory_items",
+				},
+				(payload) => {
+					const updated = payload.new as any;
+					if (!updated?.sku) return;
+
+					setInventoryData((prev) => {
+						const idx = prev.findIndex((item) => item.sku === updated.sku);
+						if (idx === -1) {
+							return [
+								{
+									sku: updated.sku,
+									description: updated.description ?? "",
+									location: updated.location ?? "",
+									currentStock: updated.current_stock ?? 0,
+									minStock: updated.min_stock ?? 0,
+									lastUpdated: updated.last_updated ?? "",
+									isUpdated: true,
+								},
+								...prev,
+							];
+						}
+
+						const newData = [...prev];
+						newData[idx] = {
+							...newData[idx],
+							currentStock: updated.current_stock ?? newData[idx].currentStock,
+							location: updated.location ?? newData[idx].location,
+							lastUpdated: updated.last_updated ?? newData[idx].lastUpdated,
+							isUpdated: true,
+						};
+						return newData;
+					});
+
+					setTimeout(() => {
+						setInventoryData((prev) =>
+							prev.map((item) =>
+								item.sku === updated.sku ? { ...item, isUpdated: false } : item
+							)
+						);
+					}, 3000);
+				}
+			)
+			.subscribe();
 
 		return () => {
-			cancelled = true;
+			supabase.removeChannel(channel);
 		};
-	}, []);
+	}, [isLive]);
 
 	useEffect(() => {
 		let cancelled = false;
@@ -157,15 +236,114 @@ export default function InventoryManagement() {
 		}
 	};
 
+	const handleAdjustment = async () => {
+		if (!selectedSku || !adjustmentQty) return;
+
+		const qty = parseInt(adjustmentQty, 10);
+		const isAbsolute = adjustmentType === "adjustment" || adjustmentType === "cycle_count";
+		if (isNaN(qty) || (!isAbsolute && qty <= 0) || (isAbsolute && qty < 0)) {
+			toast.error("Please enter a valid quantity");
+			return;
+		}
+
+		setIsSubmitting(true);
+		try {
+			const res = await fetch("/api/inventory", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					sku: selectedSku,
+					adjustmentType,
+					quantity: qty,
+					reason: adjustmentReason || undefined,
+				}),
+			});
+
+			const json = await res.json();
+
+			if (!res.ok) {
+				throw new Error(json.error || "Failed to adjust stock");
+			}
+
+			const toastMsg = isAbsolute
+				? `Stock for ${selectedSku} updated to ${qty}`
+				: `Stock ${adjustmentType === "inbound" ? "increased" : "decreased"} by ${qty}`;
+
+			toast.success(toastMsg);
+			setAdjustmentOpen(false);
+			setSelectedSku(null);
+			setAdjustmentQty("");
+			setAdjustmentReason("");
+		} catch (err: any) {
+			toast.error(err.message || "Failed to adjust stock");
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
+
+	const criticalCount = inventoryData.filter(
+		(i) => getStockStatus(i.currentStock, i.minStock) === "critical"
+	).length;
+
+	const lowCount = inventoryData.filter(
+		(i) => getStockStatus(i.currentStock, i.minStock) === "low"
+	).length;
+
 	return (
 		<DashboardPageLayout
 			header={{
 				title: "Inventory & Goods",
-				description: "Manage warehouse inventory and track goods location",
+				description: "Perpetual inventory with real-time stock tracking",
 				icon: BoxIcon,
 			}}
 		>
-			<div className="space-y-6">
+			<div className="space-y-6 px-4 lg:px-6 py-4">
+				{/* Header Controls */}
+				<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+					<div className="flex items-center gap-3">
+						<div
+							className={`flex items-center gap-2 px-3 py-1.5 text-xs font-mono uppercase tracking-wider border ${isLive
+								? "bg-emerald-500/10 text-emerald-500 border-emerald-500/30"
+								: "bg-muted text-muted-foreground border-border"
+								}`}
+						>
+							<Radio className={`h-3 w-3 ${isLive ? "animate-pulse" : ""}`} />
+							{isLive ? "Live" : "Paused"}
+						</div>
+						{criticalCount > 0 && (
+							<Badge variant="destructive" className="font-mono gap-1">
+								<AlertTriangle className="h-3 w-3" />
+								{criticalCount} critical
+							</Badge>
+						)}
+					</div>
+
+					<div className="flex items-center gap-2">
+						<Button
+							variant="outline"
+							size="sm"
+							className="rounded-none"
+							onClick={() => setIsLive(!isLive)}
+						>
+							{isLive ? "Pause" : "Resume"}
+						</Button>
+						<Button
+							variant="default"
+							size="sm"
+							className="rounded-none"
+							onClick={loadInventory}
+							disabled={loading}
+						>
+							{loading ? (
+								<Loader2 className="h-4 w-4 animate-spin" />
+							) : (
+								<RefreshCw className="h-4 w-4 mr-2" />
+							)}
+							Refresh
+						</Button>
+					</div>
+				</div>
+
 				{/* Filters */}
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 					<Input
@@ -196,10 +374,6 @@ export default function InventoryManagement() {
 						You have read-only access. Contact an admin to adjust inventory
 						counts.
 					</p>
-				)}
-
-				{loading && (
-					<p className="text-xs text-muted-foreground">Loading inventory...</p>
 				)}
 
 				{/* Inventory Summary */}
@@ -250,7 +424,71 @@ export default function InventoryManagement() {
 					items={filteredInventory}
 					getStockStatus={getStockStatus}
 					getStatusColor={getStatusColor}
+					canEdit={canEdit}
+					onAdjust={(sku) => {
+						setSelectedSku(sku);
+						setAdjustmentOpen(true);
+					}}
 				/>
+
+				{/* Adjustment Dialog */}
+				<Dialog open={adjustmentOpen} onOpenChange={setAdjustmentOpen}>
+					<DialogContent className="sm:max-w-[425px]">
+						<DialogHeader>
+							<DialogTitle>Stock Adjustment</DialogTitle>
+							<DialogDescription>
+								Update stock levels for reference: <span className="font-mono font-bold">{selectedSku}</span>
+							</DialogDescription>
+						</DialogHeader>
+						<div className="grid gap-4 py-4">
+							<div className="grid grid-cols-4 items-center gap-4">
+								<Label htmlFor="type" className="text-right">Type</Label>
+								<Select
+									value={adjustmentType}
+									onValueChange={(v: any) => setAdjustmentType(v)}
+								>
+									<SelectTrigger id="type" className="col-span-3">
+										<SelectValue placeholder="Select type" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="inbound">Inbound (+)</SelectItem>
+										<SelectItem value="outbound">Outbound (-)</SelectItem>
+										<SelectItem value="adjustment">Set Absolute (Override)</SelectItem>
+										<SelectItem value="cycle_count">Cycle Count</SelectItem>
+									</SelectContent>
+								</Select>
+							</div>
+							<div className="grid grid-cols-4 items-center gap-4">
+								<Label htmlFor="qty" className="text-right">Quantity</Label>
+								<Input
+									id="qty"
+									type="number"
+									className="col-span-3"
+									value={adjustmentQty}
+									onChange={(e) => setAdjustmentQty(e.target.value)}
+									placeholder={adjustmentType === "adjustment" || adjustmentType === "cycle_count" ? "New total" : "Change amount"}
+								/>
+							</div>
+							<div className="grid grid-cols-4 items-center gap-4">
+								<Label htmlFor="reason" className="text-right">Reason</Label>
+								<Input
+									id="reason"
+									className="col-span-3"
+									value={adjustmentReason}
+									onChange={(e) => setAdjustmentReason(e.target.value)}
+									placeholder="e.g. Damage, Restock"
+								/>
+							</div>
+						</div>
+						<DialogFooter>
+							<Button variant="outline" onClick={() => setAdjustmentOpen(false)}>Cancel</Button>
+							<Button disabled={isSubmitting} onClick={handleAdjustment}>
+								{isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+								Apply Adjustment
+							</Button>
+						</DialogFooter>
+					</DialogContent>
+				</Dialog>
 			</div>
 		</DashboardPageLayout>
 	);

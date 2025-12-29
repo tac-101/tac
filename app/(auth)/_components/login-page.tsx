@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import Lottie from "lottie-react";
 import {
 	ChevronLeft,
@@ -42,12 +42,12 @@ import { cn } from "@/lib/utils";
 const signInSchema = z.object({
 	email: z.string().email("Invalid email address"),
 	password: z.string().min(1, "Password is required"),
-	rememberMe: z.boolean().default(false),
+	rememberMe: z.boolean().optional(),
 });
 
 type SignInValues = z.infer<typeof signInSchema>;
 
-const containerVariants = {
+const containerVariants: Variants = {
 	hidden: { opacity: 0 },
 	visible: {
 		opacity: 1,
@@ -55,12 +55,12 @@ const containerVariants = {
 	},
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
 	hidden: { opacity: 0, y: 10 },
 	visible: {
 		opacity: 1,
 		y: 0,
-		transition: { duration: 0.4, ease: "easeOut" },
+		transition: { duration: 0.4, ease: "easeOut" as const },
 	},
 };
 
@@ -89,8 +89,8 @@ export function LoginPage() {
 	const form = useForm<SignInValues>({
 		resolver: zodResolver(signInSchema),
 		defaultValues: {
-			email: "admin@tapango.logistics",
-			password: "Test@1498",
+			email: "",
+			password: "",
 			rememberMe: true,
 		},
 	});
@@ -367,6 +367,14 @@ export function LoginPage() {
 										</form>
 									</Form>
 
+									{form.formState.errors.root && (
+										<div className="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
+											<p className="text-sm text-red-500 text-center font-medium">
+												{form.formState.errors.root.message}
+											</p>
+										</div>
+									)}
+
 									<div className="relative my-8">
 										<div className="absolute inset-0 flex items-center">
 											<Separator className="w-full bg-border/40" />
@@ -401,6 +409,6 @@ export function LoginPage() {
 					</motion.div>
 				</motion.div>
 			</main>
-		</div>
+		</div >
 	);
 }

@@ -64,7 +64,7 @@ export default function SecurityStatus({ statuses }: SecurityStatusProps) {
 		<DashboardCard
 			title="Growth KPIs"
 			intent="default"
-			addon={<Badge variant="outline-success">Tracking</Badge>}
+			addon={<Badge variant="outline">Tracking</Badge>}
 		>
 			<div className="grid grid-cols-1 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-4 items-stretch">
 				<div className="flex flex-col">

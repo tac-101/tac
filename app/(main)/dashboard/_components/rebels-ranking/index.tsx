@@ -43,7 +43,7 @@ export default function RebelsRanking({ rebels }: RebelsRankingProps) {
 		<DashboardCard
 			title="Growth projections"
 			intent="default"
-			addon={<Badge variant="outline-warning">Next 90 days</Badge>}
+			addon={<Badge variant="outline">Next 90 days</Badge>}
 		>
 			<div className="space-y-3">
 				{rebels.map((rebel) => {

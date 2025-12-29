@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type SubmitHandler, type UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import DashboardPageLayout from "@/components/dashboard/layout";
 import WarehouseIcon from "@/components/icons/warehouse";
@@ -31,6 +31,7 @@ const warehouseSchema = z.object({
 	docks: z.coerce.number().min(0).optional().or(z.nan()),
 	status: z
 		.enum(["operational", "constrained", "offline"])
+		.optional()
 		.default("operational"),
 });
 
@@ -56,13 +57,13 @@ export default function WarehouseManagement() {
 		useLocation();
 
 	const form = useForm<WarehouseFormValues>({
-		resolver: zodResolver(warehouseSchema),
+		resolver: zodResolver(warehouseSchema) as any,
 		defaultValues: {
 			name: "",
 			location: "",
-			status: "operational",
+			status: "operational" as "operational" | "constrained" | "offline",
 		},
-	});
+	}) as unknown as UseFormReturn<WarehouseFormValues>;
 
 	// Load warehouses with location filter
 	const loadWarehouses = useCallback(async () => {
@@ -172,7 +173,7 @@ export default function WarehouseManagement() {
 
 	const canEdit = userRole === "manager" || userRole === "admin";
 
-	const handleCreateWarehouse = async (values: WarehouseFormValues) => {
+	const handleCreateWarehouse: SubmitHandler<WarehouseFormValues> = async (values) => {
 		setIsCreating(true);
 		try {
 			const payload: any = {

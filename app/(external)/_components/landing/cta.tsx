@@ -23,7 +23,7 @@ export function CTA() {
 
 				<div className="flex flex-col sm:flex-row items-center justify-center gap-6">
 					<Button
-						size="xl"
+						size="lg"
 						asChild
 						className="h-16 px-12 rounded-none text-lg font-bold bg-white text-black hover:bg-primary hover:text-black shadow-[4px_4px_0px_#ccff00] transition-transform active:translate-x-1 active:translate-y-1 active:shadow-none uppercase tracking-wider"
 					>

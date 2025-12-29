@@ -99,10 +99,9 @@ async function buildTrackingContext(messages: UIMessage[]): Promise<string> {
 
 		if (data.shipment) {
 			pieces.push(
-				`Shipment status: ${data.shipment.status ?? "unknown"}, progress: ${
-					typeof data.shipment.progress === "number"
-						? `${data.shipment.progress}%`
-						: "n/a"
+				`Shipment status: ${data.shipment.status ?? "unknown"}, progress: ${typeof data.shipment.progress === "number"
+					? `${data.shipment.progress}%`
+					: "n/a"
 				}, route: ${data.shipment.origin ?? "?"} -> ${data.shipment.destination ?? "?"}.`,
 			);
 
@@ -117,8 +116,7 @@ async function buildTrackingContext(messages: UIMessage[]): Promise<string> {
 
 		if (data.invoice) {
 			pieces.push(
-				`Invoice ${data.invoice.invoice_ref} amount ${data.invoice.amount}, status ${
-					data.invoice.status ?? "unknown"
+				`Invoice ${data.invoice.invoice_ref} amount ${data.invoice.amount}, status ${data.invoice.status ?? "unknown"
 				}.`,
 			);
 		}
@@ -152,7 +150,7 @@ export async function POST(req: Request) {
 
 	const result = streamText({
 		model: resolvePerplexityModel(model, webSearch),
-		messages: convertToModelMessages(messages),
+		messages: await convertToModelMessages(messages),
 		system: `${BASE_SYSTEM_PROMPT}${trackingContext ? ` ${trackingContext}` : ""}`,
 	});
 

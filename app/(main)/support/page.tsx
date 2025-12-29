@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type SubmitHandler, type UseFormReturn } from "react-hook-form";
 import DashboardPageLayout from "@/components/dashboard/layout";
 import EmailIcon from "@/components/icons/email";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -74,13 +74,13 @@ function SupportPageContent() {
 	const { toast } = useToast();
 
 	const form = useForm<TicketFormValues>({
-		resolver: zodResolver(ticketSchema),
+		resolver: zodResolver(ticketSchema) as any,
 		defaultValues: {
 			subject: "",
 			customerId: "",
 			priority: "medium",
 		},
-	});
+	}) as unknown as UseFormReturn<TicketFormValues>;
 
 	useEffect(() => {
 		let cancelled = false;
@@ -196,7 +196,7 @@ function SupportPageContent() {
 		[tickets, searchTerm, filterStatus, filterPriority],
 	);
 
-	const handleCreateTicket = async (values: TicketFormValues) => {
+	const handleCreateTicket: SubmitHandler<TicketFormValues> = async (values) => {
 		setIsCreating(true);
 		try {
 			const payload: any = {
@@ -369,7 +369,7 @@ function SupportPageContent() {
 						customers={customers}
 						form={form}
 						isCreating={isCreating}
-						onSubmit={handleCreateTicket}
+						onSubmit={handleCreateTicket as any}
 					/>
 				</div>
 

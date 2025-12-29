@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Component as AiAssistantCard } from "@/components/ui/ai-assistant-card";
+import { AiSupportChat } from "./ai-support-chat";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -169,7 +169,7 @@ export function CustomerSupportClient() {
 					</section>
 
 					<section className="w-full max-w-md ml-auto space-y-4">
-						<AiAssistantCard showClose={false} />
+						<AiSupportChat />
 
 						<Card className="p-6 bg-card/90 border-border/80 shadow-[0_18px_60px_rgba(0,0,0,0.7)]">
 							<div className="mb-4 space-y-1">

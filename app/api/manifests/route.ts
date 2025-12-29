@@ -1,18 +1,70 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { createClient } from "@/lib/supabaseServer";
 
 const manifestBodySchema = z.object({
 	manifestRef: z.string().optional(),
-	originHub: z.string().min(2),
-	destination: z.string().min(2),
-	airlineCode: z.string().min(1),
-	scannedBarcodeIds: z.array(z.string().min(1)).nonempty(),
+	originHub: z.string().min(2, "Origin hub must be at least 2 characters"),
+	destination: z.string().min(2, "Destination must be at least 2 characters"),
+	airlineCode: z.string().min(1, "Airline code is required"),
+	scannedBarcodeIds: z.array(z.string().min(1)).optional(),
+	flightNumber: z.string().optional(),
+	manifestDate: z.string().optional(),
 	createdBy: z.string().optional(),
 });
 
+async function checkAuth() {
+	const supabase = await createClient();
+	const { data: { user }, error } = await supabase.auth.getUser();
+	if (error || !user) {
+		throw new Error("Unauthorized");
+	}
+	return user;
+}
+
+export async function GET(req: Request) {
+	try {
+		await checkAuth();
+		const { searchParams } = new URL(req.url);
+		const status = searchParams.get("status");
+		const date = searchParams.get("date");
+		const limit = parseInt(searchParams.get("limit") || "50", 10);
+
+		let query = supabaseAdmin
+			.from("manifests")
+			.select("*")
+			.order("created_at", { ascending: false })
+			.limit(limit);
+
+		if (status) {
+			query = query.eq("status", status);
+		}
+
+		if (date) {
+			query = query.eq("manifest_date", date);
+		}
+
+		const { data, error } = await query;
+
+		if (error) throw error;
+
+		return NextResponse.json({ manifests: data || [], count: data?.length || 0 });
+	} catch (err: any) {
+		if (err.message === "Unauthorized") {
+			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+		}
+		console.error("/api/manifests GET error", err);
+		return NextResponse.json(
+			{ error: err?.message ?? "Unknown error" },
+			{ status: 500 }
+		);
+	}
+}
+
 export async function POST(req: Request) {
 	try {
+		await checkAuth();
 		const json = await req.json();
 		const parsed = manifestBodySchema.safeParse(json);
 
@@ -28,29 +80,33 @@ export async function POST(req: Request) {
 			originHub,
 			destination,
 			airlineCode,
-			scannedBarcodeIds,
+			scannedBarcodeIds = [],
 			createdBy,
 		} = parsed.data;
 
-		const { data: barcodeRows, error: barcodeError } = await supabaseAdmin
-			.from("barcodes")
-			.select("id, shipment_id")
-			.in("id", scannedBarcodeIds);
+		let barcodes: { id: string; shipment_id: string | null }[] = [];
 
-		if (barcodeError) {
-			throw barcodeError;
-		}
+		if (scannedBarcodeIds.length > 0) {
+			const { data: barcodeRows, error: barcodeError } = await supabaseAdmin
+				.from("barcodes")
+				.select("id, shipment_id")
+				.in("id", scannedBarcodeIds);
 
-		const barcodes = (barcodeRows ?? []) as {
-			id: string;
-			shipment_id: string | null;
-		}[];
+			if (barcodeError) {
+				throw barcodeError;
+			}
 
-		if (!barcodes.length) {
-			return NextResponse.json(
-				{ error: "No barcodes found for provided IDs" },
-				{ status: 404 },
-			);
+			barcodes = (barcodeRows ?? []) as {
+				id: string;
+				shipment_id: string | null;
+			}[];
+
+			if (!barcodes.length && scannedBarcodeIds.length > 0) {
+				return NextResponse.json(
+					{ error: "No barcodes found for provided IDs" },
+					{ status: 404 },
+				);
+			}
 		}
 
 		const shipmentIds = Array.from(
@@ -92,7 +148,8 @@ export async function POST(req: Request) {
 
 		const totalPieces = barcodes.length;
 
-		const ref = manifestRef || `MAN-${Date.now()}`;
+		// Use a more stable reference if not provided
+		const ref = manifestRef || `MAN-${originHub.substring(0, 3).toUpperCase()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
 
 		const { data: manifest, error: manifestError } = await supabaseAdmin
 			.from("manifests")
@@ -121,7 +178,6 @@ export async function POST(req: Request) {
 		const manifestItems = barcodes.map((b) => ({
 			manifest_id: manifestId,
 			barcode_id: b.id,
-			// shipment_id and weight are normalized in barcodes/shipments tables, not stored in manifest_items link table
 		}));
 
 		const { error: itemsError } = await supabaseAdmin
@@ -135,7 +191,7 @@ export async function POST(req: Request) {
 		// Update barcode statuses to MANIFESTED
 		const { error: updateError } = await supabaseAdmin
 			.from("barcodes")
-			.update({ status: "MANIFESTED" }) // Correct status from PDR
+			.update({ status: "MANIFESTED" })
 			.in(
 				"id",
 				barcodes.map((b) => b.id),
@@ -146,11 +202,13 @@ export async function POST(req: Request) {
 				"Failed to update barcode statuses to MANIFESTED",
 				updateError,
 			);
-			// Not fatal, but should be noted
 		}
 
 		return NextResponse.json({ success: true, manifest });
 	} catch (err: any) {
+		if (err.message === "Unauthorized") {
+			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+		}
 		console.error("/api/manifests error", err);
 		return NextResponse.json(
 			{ error: err?.message ?? "Unknown error" },

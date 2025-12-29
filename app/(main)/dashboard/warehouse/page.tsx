@@ -45,7 +45,7 @@ export default function WarehousePage() {
 
 				setData(normalized);
 			} catch (error) {
-				console.error("Error loading warehouses:", error);
+				console.error("Error loading warehouses:", error instanceof Error ? error.message : error);
 				toast({
 					title: "Error loading warehouses",
 					description: "Please try again later.",

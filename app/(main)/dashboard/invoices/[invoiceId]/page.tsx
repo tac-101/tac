@@ -11,13 +11,13 @@ import { createSignedUrl } from "@/lib/storageHelpers";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 interface InvoicePublicPageProps {
-	params: { invoiceId: string };
+	params: Promise<{ invoiceId: string }>;
 }
 
 export default async function InvoicePublicPage({
 	params,
 }: InvoicePublicPageProps) {
-	const invoiceId = params.invoiceId;
+	const { invoiceId } = await params;
 
 	const { data: invoice, error: invoiceError } = await supabaseAdmin
 		.from("invoices")
@@ -395,8 +395,8 @@ export default async function InvoicePublicPage({
 											<td className="py-2 px-2 text-right align-top">
 												{item.weight > 0
 													? item.weight.toLocaleString("en-IN", {
-															maximumFractionDigits: 2,
-														})
+														maximumFractionDigits: 2,
+													})
 													: "-"}
 											</td>
 											<td className="py-2 px-2 text-right align-top">

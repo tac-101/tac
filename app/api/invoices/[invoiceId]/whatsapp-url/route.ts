@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 
 export async function GET(
 	req: Request,
-	{ params }: { params: { invoiceId: string } },
+	{ params }: { params: Promise<{ invoiceId: string }> },
 ) {
-	const { invoiceId } = params;
+	const { invoiceId } = await params;
 	const { searchParams } = new URL(req.url);
 	const mode = searchParams.get("mode");
 

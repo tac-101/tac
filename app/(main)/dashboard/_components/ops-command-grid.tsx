@@ -55,6 +55,7 @@ const SpotlightCard = ({ children, className = "", spotlightColor = "rgba(255, 2
 interface OpsCommandGridProps {
 	stats?: {
 		totalShipments: number;
+		activeShipments?: number;
 		activeCustomers: number;
 		pendingInvoices: number;
 		warehouseCapacity: number;
@@ -82,6 +83,7 @@ const generateSparkline = (points: number, trend: "up" | "down" | "neutral") => 
 export function OpsCommandGrid({ stats }: OpsCommandGridProps) {
 	const data = stats || {
 		totalShipments: 0,
+		activeShipments: 0,
 		activeCustomers: 0,
 		pendingInvoices: 0,
 		warehouseCapacity: 0,
@@ -159,7 +161,13 @@ export function OpsCommandGrid({ stats }: OpsCommandGridProps) {
 							<p className="text-xs font-bold text-muted-foreground tracking-wider uppercase">
 								Shipments
 							</p>
-							<Package className="w-5 h-5 text-primary group-hover:scale-110 transition-transform duration-300" />
+							<div className="flex items-center gap-2">
+								<span className="relative flex h-2 w-2">
+									<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+									<span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+								</span>
+								<Package className="w-5 h-5 text-primary group-hover:scale-110 transition-transform duration-300" />
+							</div>
 						</div>
 						<CardTitle className="text-4xl font-heading font-bold tracking-tight mt-2">
 							{data.totalShipments.toLocaleString()}
@@ -167,6 +175,12 @@ export function OpsCommandGrid({ stats }: OpsCommandGridProps) {
 					</CardHeader>
 					<CardContent className="relative z-10">
 						<div className="flex items-center gap-2 text-sm">
+							<Badge
+								variant="outline"
+								className="bg-primary/10 text-primary border-primary/20 font-mono"
+							>
+								{data.activeShipments || 0} active
+							</Badge>
 							<Badge
 								variant="outline"
 								className={cn(
@@ -179,7 +193,6 @@ export function OpsCommandGrid({ stats }: OpsCommandGridProps) {
 								<TrendingUp className="w-3 h-3 mr-1" />
 								{data.shipmentsTrend}%
 							</Badge>
-							<span className="text-muted-foreground text-xs">active</span>
 						</div>
 						<div className="h-10 mt-4 -mx-2 opacity-50 group-hover:opacity-100 transition-opacity">
 							<ChartContainer config={{ value: { theme: { light: "var(--primary)", dark: "var(--primary)" } } }} className="h-full w-full">

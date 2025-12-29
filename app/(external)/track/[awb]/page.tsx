@@ -8,15 +8,15 @@ import { UnifiedLogo } from "@/components/ui/unified-logo";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 interface PageProps {
-	params: {
+	params: Promise<{
 		awb: string;
-	};
+	}>;
 }
 
 export async function generateMetadata({
 	params,
 }: PageProps): Promise<Metadata> {
-	const { awb } = params;
+	const { awb } = await params;
 
 	return {
 		title: `Track Shipment ${awb} | Tapan Go`,
@@ -70,7 +70,7 @@ async function getShipmentData(awb: string) {
 }
 
 export default async function TrackingPage({ params }: PageProps) {
-	const { awb } = params;
+	const { awb } = await params;
 	const data = await getShipmentData(awb);
 
 	if (!data) {

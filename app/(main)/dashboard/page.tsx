@@ -3,10 +3,9 @@ import DashboardPageLayout from "@/components/dashboard/layout";
 import { OpsCommandGrid } from "@/components/dashboard/ops-command-grid";
 import { RecentShipments } from "@/components/dashboard/recent-shipments";
 import { ShipmentDiagnostics } from "@/components/dashboard/shipment-diagnostics";
+import { ShipmentMap } from "./_components/shipment-map";
 import { ShipmentsDataTable } from "@/components/dashboard/shipments-data-table";
 import BracketsIcon from "@/components/icons/brackets";
-
-import shipmentsTableData from "./shipments-table-data.json";
 
 type TypedShipment = {
 	id: number;
@@ -76,6 +75,7 @@ async function getDashboardStats() {
 
 				return {
 					totalShipments: shipmentsRes.count ?? activeShipments,
+					activeShipments,
 					activeCustomers: customersRes.count ?? 0,
 					pendingInvoices: pendingInvoices,
 					warehouseCapacity: Math.round(avgCapacity),
@@ -95,20 +95,82 @@ async function getDashboardStats() {
 				);
 
 				return {
-					totalShipments: 1247,
-					activeCustomers: 156,
-					pendingInvoices: 23,
-					warehouseCapacity: 79,
-					shipmentsTrend: 12.5,
-					customersTrend: 8.2,
-					invoicesTrend: -5.3,
-					capacityTrend: -2.3,
-					exceptionsThisWeek: 8,
-					exceptionsTrend: 2.1,
+					totalShipments: 0,
+					activeShipments: 0,
+					activeCustomers: 0,
+					pendingInvoices: 0,
+					warehouseCapacity: 0,
+					shipmentsTrend: 0,
+					customersTrend: 0,
+					invoicesTrend: 0,
+					capacityTrend: 0,
+					exceptionsThisWeek: 0,
+					exceptionsTrend: 0,
 				};
 			}
 		},
 	);
+}
+
+async function getShipments(limit = 50): Promise<TypedShipment[]> {
+	const logger = (Sentry as any).logger ?? console;
+
+	return Sentry.startSpan(
+		{
+			op: "db.query",
+			name: "dashboard:getShipments",
+		},
+		async (span) => {
+			try {
+				const { supabaseAdmin } = await import("@/lib/supabaseAdmin");
+
+				const { data, error } = await supabaseAdmin
+					.from("shipments")
+					.select(`
+						id,
+						shipment_ref,
+						origin,
+						destination,
+						status,
+						weight,
+						created_at,
+						customer:customers(name)
+					`)
+					.order("created_at", { ascending: false })
+					.limit(limit);
+
+				if (error) throw error;
+
+				span.setAttribute("dashboard.shipments.fetched", data?.length ?? 0);
+
+				return (data || []).map((row: any, index: number) => ({
+					id: index + 1,
+					shipment_ref: row.shipment_ref || `SHP-${index}`,
+					customer_name: row.customer?.name || "Unknown Customer",
+					origin: row.origin || "—",
+					destination: row.destination || "—",
+					status: normalizeStatus(row.status),
+					weight: row.weight || 0,
+					created_at: row.created_at,
+				}));
+			} catch (error) {
+				Sentry.captureException(error);
+				logger.error(
+					logger.fmt`Error fetching shipments: ${error instanceof Error ? error.message : "unknown error"}`,
+				);
+				return [];
+			}
+		},
+	);
+}
+
+function normalizeStatus(status: string | null): TypedShipment["status"] {
+	const s = (status || "").toLowerCase().replace(/-/g, "_");
+	if (s === "pending") return "pending";
+	if (s === "in_transit" || s === "in-transit") return "in_transit";
+	if (s === "delivered") return "delivered";
+	if (s === "cancelled" || s === "canceled") return "cancelled";
+	return "pending";
 }
 
 
@@ -119,16 +181,17 @@ import { getARStats } from "@/lib/finance";
 export default async function Page({
 	searchParams,
 }: {
-	searchParams?: {
+	searchParams?: Promise<{
 		q?: string;
 		status?: "pending" | "in_transit" | "delivered" | "cancelled";
-	};
+	}>;
 }) {
-	const [stats, arStats] = await Promise.all([
+	const params = await searchParams;
+	const [stats, arStats, shipments] = await Promise.all([
 		getDashboardStats(),
 		getARStats().catch(() => null),
+		getShipments(50),
 	]);
-	const shipments = shipmentsTableData as unknown as TypedShipment[];
 
 	return (
 		<DashboardPageLayout
@@ -155,6 +218,10 @@ export default async function Page({
 							</MotionItem>
 						)}
 
+						<MotionItem className="px-4 lg:px-6">
+							<ShipmentMap />
+						</MotionItem>
+
 						<MotionItem className="grid gap-4 px-4 lg:px-6 md:grid-cols-2">
 							<ShipmentDiagnostics />
 							<RecentShipments
@@ -168,8 +235,8 @@ export default async function Page({
 						<MotionItem>
 							<ShipmentsDataTable
 								data={shipments}
-								initialFilter={searchParams?.q}
-								initialStatus={searchParams?.status}
+								initialFilter={params?.q}
+								initialStatus={params?.status}
 							/>
 						</MotionItem>
 					</MotionList>

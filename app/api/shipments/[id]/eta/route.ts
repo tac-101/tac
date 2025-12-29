@@ -16,10 +16,9 @@ interface ETAUpdateBody {
 // PATCH /api/shipments/[id]/eta - Update ETA fields for a shipment
 export async function PATCH(
 	request: NextRequest,
-	{ params }: { params: { id: string } },
+	{ params }: { params: Promise<{ id: string }> },
 ) {
-	const { logger } = Sentry;
-	const shipmentId = params.id;
+	const { id: shipmentId } = await params;
 
 	return Sentry.startSpan(
 		{
@@ -86,9 +85,7 @@ export async function PATCH(
 				if (error) {
 					Sentry.captureException(error, { extra: { shipmentId } });
 
-					logger.error(
-						logger.fmt`Error updating shipment ETA for ${shipmentId}: ${error.message}`,
-					);
+					console.error(`Error updating shipment ETA for ${shipmentId}: ${error.message}`);
 
 					return NextResponse.json(
 						{ error: "Failed to update shipment ETA" },
@@ -103,7 +100,7 @@ export async function PATCH(
 					);
 				}
 
-				logger.info("Updated shipment ETA", { shipmentId });
+				console.log("Updated shipment ETA", { shipmentId });
 
 				return NextResponse.json({
 					success: true,
@@ -112,11 +109,7 @@ export async function PATCH(
 			} catch (error) {
 				Sentry.captureException(error, { extra: { shipmentId } });
 
-				logger.error(
-					logger.fmt`ETA update error for shipment ${shipmentId}: ${
-						error instanceof Error ? error.message : "unknown error"
-					}`,
-				);
+				console.error(`ETA update error for shipment ${shipmentId}: ${error instanceof Error ? error.message : "unknown error"}`);
 
 				return NextResponse.json(
 					{ error: "Internal server error" },
@@ -130,10 +123,9 @@ export async function PATCH(
 // GET /api/shipments/[id]/eta - Get ETA fields for a shipment
 export async function GET(
 	_request: NextRequest,
-	{ params }: { params: { id: string } },
+	{ params }: { params: Promise<{ id: string }> },
 ) {
-	const { logger } = Sentry;
-	const shipmentId = params.id;
+	const { id: shipmentId } = await params;
 
 	return Sentry.startSpan(
 		{
@@ -154,7 +146,7 @@ export async function GET(
 					.single();
 
 				if (error || !shipment) {
-					logger.warn("Shipment ETA not found", { shipmentId });
+					console.warn("Shipment ETA not found", { shipmentId });
 
 					return NextResponse.json(
 						{ error: "Shipment not found" },
@@ -162,17 +154,13 @@ export async function GET(
 					);
 				}
 
-				logger.info("Fetched shipment ETA", { shipmentId });
+				console.log("Fetched shipment ETA", { shipmentId });
 
 				return NextResponse.json({ shipment });
 			} catch (error) {
 				Sentry.captureException(error, { extra: { shipmentId } });
 
-				logger.error(
-					logger.fmt`ETA fetch error for shipment ${shipmentId}: ${
-						error instanceof Error ? error.message : "unknown error"
-					}`,
-				);
+				console.error(`ETA fetch error for shipment ${shipmentId}: ${error instanceof Error ? error.message : "unknown error"}`);
 
 				return NextResponse.json(
 					{ error: "Internal server error" },

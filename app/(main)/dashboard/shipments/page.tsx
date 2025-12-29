@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Loader2, Pencil, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type SubmitHandler, type UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -41,8 +41,8 @@ const shipmentSchema = z.object({
 	shipmentRef: z.string().min(3, "Shipment reference is required"),
 	customerId: z.string().optional().or(z.literal("")),
 	route: z.string().min(1, "Route is required"),
-	weight: z.coerce.number().min(0.1, "Weight must be greater than 0"),
-	status: z.enum(SHIPMENT_STATUSES).default("pending"),
+	weight: z.number().min(0.1, "Weight must be greater than 0"),
+	status: z.enum(SHIPMENT_STATUSES).optional().default("pending"),
 });
 
 type ShipmentFormValues = z.infer<typeof shipmentSchema>;
@@ -60,7 +60,7 @@ export default function ShipmentsPage() {
 	const { toast } = useToast();
 
 	const form = useForm<ShipmentFormValues>({
-		resolver: zodResolver(shipmentSchema),
+		resolver: zodResolver(shipmentSchema) as any,
 		defaultValues: {
 			shipmentRef: "",
 			customerId: "",
@@ -68,7 +68,7 @@ export default function ShipmentsPage() {
 			weight: 1,
 			status: "pending",
 		},
-	});
+	}) as unknown as UseFormReturn<ShipmentFormValues>;
 
 	const loadShipments = useCallback(async () => {
 		setLoading(true);
@@ -120,7 +120,7 @@ export default function ShipmentsPage() {
 		loadCustomers();
 	}, [loadCustomers, loadShipments]);
 
-	const handleSubmit = async (values: any) => {
+	const handleSubmit: SubmitHandler<ShipmentFormValues> = async (values) => {
 		try {
 			const selectedRoute =
 				SERVICE_ROUTES[parseInt(values.route, 10)] || SERVICE_ROUTES[0];
@@ -296,7 +296,7 @@ export default function ShipmentsPage() {
 					editingShipment={editingShipment}
 					customers={customers}
 					form={form}
-					onSubmit={handleSubmit}
+					onSubmit={handleSubmit as any}
 					onNewShipmentClick={() => {
 						setEditingShipment(null);
 						form.reset({

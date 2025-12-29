@@ -57,7 +57,7 @@ reliability. Speed. Precision. Flash.
 
 <div className="flex flex-wrap gap-4 pt-4">
 <Button
-size="xl"
+size="lg"
 asChild
 className="h-14 px-8 rounded-none text-lg font-bold bg-primary text-black hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black border border-transparent hover:border-primary transition-all skew-x-[-10deg]"
 >
@@ -66,7 +66,7 @@ className="h-14 px-8 rounded-none text-lg font-bold bg-primary text-black hover:
 </Link>
 </Button>
 <Button
-size="xl"
+size="lg"
 asChild
 variant="outline"
 className="h-14 px-8 rounded-none text-lg font-bold border-border hover:bg-primary hover:text-black transition-all skew-x-[-10deg]"

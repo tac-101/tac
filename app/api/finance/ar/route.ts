@@ -178,7 +178,8 @@ export async function GET() {
 
 		return NextResponse.json(payload);
 	} catch (err: any) {
-		console.error("/api/finance/ar error", err);
+		const errorMessage = err?.message || (typeof err === "object" ? JSON.stringify(err) : String(err));
+		console.error("/api/finance/ar error:", errorMessage);
 		return NextResponse.json(
 			{ error: err?.message ?? "Unknown error" },
 			{ status: 500 },

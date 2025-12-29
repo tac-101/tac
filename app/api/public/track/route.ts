@@ -64,11 +64,12 @@ async function handleTrackGet(req: Request) {
 
 		return NextResponse.json(result);
 	} catch (err: any) {
+		console.error("Tracking API Error:", err);
 		Sentry.captureException(err, {
 			tags: { component: "api-track", operation: "track-get" },
 		});
 		return NextResponse.json(
-			{ error: err?.message ?? "Unknown error" },
+			{ error: err?.message || "Internal Server Error" },
 			{ status: 500 },
 		);
 	}
