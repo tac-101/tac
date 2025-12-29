@@ -92,9 +92,16 @@ export async function checkRateLimit(
 ) {
 	const limiter = rateLimiters[limiterType];
 
-	// If rate limiting not configured, allow all requests
+	// If rate limiting not configured, allow all requests (silent in production)
 	if (!limiter) {
-		console.warn(`Rate limiting not configured for ${limiterType}`);
+		if (process.env.NODE_ENV === "development") {
+			// Only log once per limiter type to avoid spam
+			const warnKey = `__ratelimit_warned_${limiterType}`;
+			if (!(global as any)[warnKey]) {
+				(global as any)[warnKey] = true;
+				console.info(`ℹ️  Rate limiting not configured for ${limiterType} (optional)`);
+			}
+		}
 		return { success: true };
 	}
 

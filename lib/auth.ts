@@ -18,7 +18,7 @@ export interface User {
  * Server-side only - use in Server Components and API routes
  */
 export async function getCurrentUser(): Promise<User | null> {
-	const cookieStore = cookies();
+	const cookieStore = await cookies();
 
 	const supabase = createServerClient(
 		process.env.NEXT_PUBLIC_SUPABASE_URL!,
