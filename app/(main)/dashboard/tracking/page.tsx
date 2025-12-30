@@ -2,10 +2,10 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { Loader2, Radio, RefreshCw, Volume2, VolumeX } from "lucide-react";
+import { Loader2, Radio, Radar, RefreshCw, Volume2, VolumeX } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import ProcessorIcon from "@/components/icons/proccesor";
+import DashboardPageLayout from "@/components/dashboard/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
@@ -198,17 +198,14 @@ export default function TrackingPage() {
 	}
 
 	return (
-		<div className="space-y-6">
+		<DashboardPageLayout
+			header={{
+				title: "Live Tracking",
+				description: "Real-time scan events stream",
+				icon: Radar,
+			}}
+		>
 			<audio ref={audioRef} src="/sounds/scan-beep.mp3" preload="auto" />
-			<div className="flex items-center justify-between">
-				<div>
-					<h2 className="text-2xl font-bold tracking-tight">Live Tracking</h2>
-					<p className="text-muted-foreground">
-						Real-time scan events stream.
-					</p>
-				</div>
-			</div>
-
 			<div className="space-y-6">
 				<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
 					<div className="flex items-center gap-3">
@@ -266,6 +263,6 @@ export default function TrackingPage() {
 
 				<DataTable columns={columns} data={data} searchKey="shipmentRef" />
 			</div>
-		</div>
+		</DashboardPageLayout>
 	);
 }

@@ -1,10 +1,12 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { ExternalLink, Loader2, Plus } from "lucide-react";
+import { ExternalLink, Loader2, Plus, Receipt } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+
+import DashboardPageLayout from "@/components/dashboard/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTableBlock } from "@/components/blocks/data-table/data-table-block";
@@ -151,12 +153,14 @@ export default function InvoicesPage() {
 	}
 
 	return (
-		<div className="space-y-6">
-			<div className="flex items-center justify-between">
-				<div>
-					<h2 className="text-2xl font-bold tracking-tight">Invoices</h2>
-					<p className="text-muted-foreground">Manage billing and payments.</p>
-				</div>
+		<DashboardPageLayout
+			header={{
+				title: "Invoices",
+				description: "Manage billing and payments",
+				icon: Receipt,
+			}}
+		>
+			<div className="flex items-center justify-end mb-4">
 				<Button asChild>
 					<Link href="/dashboard/invoices/new">
 						<Plus className="mr-2 h-4 w-4" />
@@ -182,6 +186,6 @@ export default function InvoicesPage() {
 					},
 				]}
 			/>
-		</div>
+		</DashboardPageLayout>
 	);
 }

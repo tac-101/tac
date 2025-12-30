@@ -1,158 +1,87 @@
-"use client";
-
 import React from "react";
-import {
-	CalendarX2,
-	Truck,
-	TriangleAlert,
-} from "lucide-react";
+import { LayoutDashboard } from "lucide-react";
+import DashboardPageLayout from "@/components/dashboard/layout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
-import { Card } from "@/components/ui/card";
-import { StatisticsCard } from "@/app/(main)/dashboard/_components/widgets/statistics-card-01";
-import { ProductInsightsCard } from "@/app/(main)/dashboard/_components/widgets/widget-product-insights";
-import { TotalEarningCard } from "@/app/(main)/dashboard/_components/widgets/widget-total-earning";
-import { SalesMetricsCard } from "@/app/(main)/dashboard/_components/widgets/chart-sales-metrics";
-import TransactionDatatable, { type Item } from "@/app/(main)/dashboard/_components/widgets/datatable-transaction";
-import PageContainer from "@/components/layout/page-container";
-
-// Statistics card data
-const StatisticsCardData = [
-	{
-		icon: <Truck className="size-4" />,
-		value: "42",
-		title: "Shipped Orders",
-		changePercentage: "+18.2%",
-	},
-	{
-		icon: <TriangleAlert className="size-4" />,
-		value: "8",
-		title: "Damaged Returns",
-		changePercentage: "-8.7%",
-	},
-	{
-		icon: <CalendarX2 className="size-4" />,
-		value: "27",
-		title: "Missed Delivery Slots",
-		changePercentage: "+4.3%",
-	},
-];
-
-// Earning data for Total Earning card
-const earningData = [
-	{
-		icon: "",
-		platform: "Zipcar",
-		technologies: "Vuejs & HTML",
-		earnings: "-$23,569.26",
-		progressPercentage: 75,
-		colorClass: "bg-emerald-500/10 text-emerald-500",
-	},
-	{
-		icon: "",
-		platform: "Bitbank",
-		technologies: "Figma & React",
-		earnings: "-$12,650.31",
-		progressPercentage: 25,
-		colorClass: "bg-blue-500/10 text-blue-500",
-	},
-];
-
-const transactionData: Item[] = [
-	{
-		id: "1",
-		avatar: "https://github.com/shadcn.png",
-		avatarFallback: "HR",
-		name: "Hallie Richards",
-		email: "hallie.richards@example.com",
-		amount: 129.99,
-		status: "paid",
-		paidBy: "mastercard"
-	},
-	{
-		id: "2",
-		avatar: "https://github.com/shadcn.png",
-		avatarFallback: "MJ",
-		name: "Michael Jones",
-		email: "michael.jones@example.com",
-		amount: 59.50,
-		status: "pending",
-		paidBy: "visa"
-	},
-	{
-		id: "3",
-		avatar: "https://github.com/shadcn.png",
-		avatarFallback: "SK",
-		name: "Sarah King",
-		email: "sarah.king@example.com",
-		amount: 245.00,
-		status: "processing",
-		paidBy: "visa"
-	},
-	{
-		id: "4",
-		avatar: "https://github.com/shadcn.png",
-		avatarFallback: "DL",
-		name: "David Lee",
-		email: "david.lee@example.com",
-		amount: 89.99,
-		status: "failed",
-		paidBy: "mastercard"
-	},
-	{
-		id: "5",
-		avatar: "https://github.com/shadcn.png",
-		avatarFallback: "AM",
-		name: "Andrea Morgan",
-		email: "andrea.morgan@example.com",
-		amount: 154.20,
-		status: "paid",
-		paidBy: "visa"
-	}
-]
-
-export default function DashboardHome() {
+export default function DashboardPage() {
 	return (
-		<PageContainer
-			pageTitle="Dashboard"
-			pageDescription="Core operations overview for shipments, customers, billing, and capacity."
+		<DashboardPageLayout
+			header={{
+				title: "Dashboard",
+				description: "Operational overview and key performance indicators",
+				icon: LayoutDashboard,
+			}}
 		>
-			<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-				{/* Statistics Cards - Full Width on Mobile, Grid on Large */}
-				<div className="col-span-full grid gap-6 sm:grid-cols-3">
-					{StatisticsCardData.map((card, index) => (
-						<StatisticsCard
-							key={index}
-							icon={card.icon}
-							title={card.title}
-							value={card.value}
-							changePercentage={card.changePercentage}
-						/>
-					))}
-				</div>
+			<Alert variant="default" className="border-yellow-500/50 bg-yellow-500/5">
+				<AlertCircle className="h-4 w-4 text-yellow-600" />
+				<AlertDescription className="text-sm">
+					<strong>Under Construction:</strong> Main dashboard page requires implementation with OpsCommandGrid, ShipmentMap, and ShipmentsDataTable per /docs/07-dashboard-modules.md (Phase 7).
+				</AlertDescription>
+			</Alert>
 
-				{/* Middle Row: Product Insights & Total Earnings */}
-				<div className="col-span-full grid gap-6 lg:grid-cols-2">
-					<ProductInsightsCard className="h-full" />
+			<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+				<Card>
+					<CardHeader className="pb-3">
+						<CardTitle className="text-sm font-medium text-muted-foreground">
+							Active Shipments
+						</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<div className="text-2xl font-bold">--</div>
+						<p className="text-xs text-muted-foreground mt-1">Pending implementation</p>
+					</CardContent>
+				</Card>
 
-					<TotalEarningCard
-						title="Total Earning"
-						earning={24650}
-						trend="up"
-						percentage={10}
-						comparisonText="Compare to last year ($84,325)"
-						earningData={earningData}
-						className="h-full"
-					/>
-				</div>
+				<Card>
+					<CardHeader className="pb-3">
+						<CardTitle className="text-sm font-medium text-muted-foreground">
+							Warehouse Capacity
+						</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<div className="text-2xl font-bold">--</div>
+						<p className="text-xs text-muted-foreground mt-1">Pending implementation</p>
+					</CardContent>
+				</Card>
 
-				{/* Sales Metrics Card (Spans full width) */}
-				<SalesMetricsCard className="col-span-full" />
+				<Card>
+					<CardHeader className="pb-3">
+						<CardTitle className="text-sm font-medium text-muted-foreground">
+							Fleet Status
+						</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<div className="text-2xl font-bold">--</div>
+						<p className="text-xs text-muted-foreground mt-1">Pending implementation</p>
+					</CardContent>
+				</Card>
 
-				{/* Transaction Table */}
-				<Card className="col-span-full w-full py-0">
-					<TransactionDatatable data={transactionData} />
+				<Card>
+					<CardHeader className="pb-3">
+						<CardTitle className="text-sm font-medium text-muted-foreground">
+							Pending Invoices
+						</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<div className="text-2xl font-bold">--</div>
+						<p className="text-xs text-muted-foreground mt-1">Pending implementation</p>
+					</CardContent>
 				</Card>
 			</div>
-		</PageContainer>
+
+			<Card>
+				<CardHeader>
+					<CardTitle>Recent Activity</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<p className="text-sm text-muted-foreground">
+						Real-time operational data will be displayed here.
+					</p>
+				</CardContent>
+			</Card>
+		</DashboardPageLayout>
 	);
 }
+
