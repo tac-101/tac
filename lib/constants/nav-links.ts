@@ -53,7 +53,7 @@ export const NAV_GROUPS: NavGroup[] = [
 		title: "Support",
 		items: [
 			{ title: "Tickets", href: "/dashboard/support", icon: HeadphonesIcon },
-			{ title: "Alerts", href: "/dashboard/alerts", icon: ShieldAlert },
+			{ title: "Exceptions", href: "/dashboard/exceptions", icon: ShieldAlert },
 		],
 	},
 	{

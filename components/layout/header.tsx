@@ -4,7 +4,6 @@ import { Separator } from "@/components/ui/separator"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import SearchInput from "@/components/search-input"
 import { NavUser } from "@/components/nav-user"
-import { ThemeSelector } from "@/components/theme-selector"
 import { ModeToggle } from "@/components/theme-toggle"
 import { useUser } from "@/hooks/use-mock-auth"
 
@@ -28,7 +27,6 @@ export default function Header() {
                     avatar: user.imageUrl || ""
                 }} />
                 <ModeToggle />
-                <ThemeSelector />
             </div>
         </header>
     )

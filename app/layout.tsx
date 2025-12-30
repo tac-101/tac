@@ -3,9 +3,7 @@ import { Outfit, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { SentryInitializer } from "@/components/sentry-initializer";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ActiveThemeProvider } from "@/components/active-theme";
 import { TapanAssociateProvider } from "@/components/layout/tapan-associate-context";
-import { cookies } from "next/headers";
 import { LocationProvider } from "@/lib/location-context";
 import { SignoutToastProvider } from "@/lib/signout-toast-context";
 import { CommandMenu } from "@/components/command-menu";
@@ -28,19 +26,15 @@ export const metadata: Metadata = {
   description: "Next-gen dashboard experiment",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const activeTheme = cookieStore.get("active_theme")?.value || "default";
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${outfit.variable} ${jetbrainsMono.variable} font-sans antialiased ${activeTheme ? `theme-${activeTheme}` : ""
-          }`}
+        className={`${outfit.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
         <SentryInitializer />
         <ThemeProvider
@@ -49,17 +43,15 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ActiveThemeProvider initialTheme={activeTheme}>
-            <LocationProvider>
-              <SignoutToastProvider>
-                <TapanAssociateProvider>
-                  {children}
-                  <CommandMenu />
-                  <Toaster />
-                </TapanAssociateProvider>
-              </SignoutToastProvider>
-            </LocationProvider>
-          </ActiveThemeProvider>
+          <LocationProvider>
+            <SignoutToastProvider>
+              <TapanAssociateProvider>
+                {children}
+                <CommandMenu />
+                <Toaster />
+              </TapanAssociateProvider>
+            </SignoutToastProvider>
+          </LocationProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -1,8 +1,10 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { Loader2 } from "lucide-react";
+import { Loader2, Users } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+
+import DashboardPageLayout from "@/components/dashboard/layout";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { DataTableBlock } from "@/components/blocks/data-table/data-table-block";
@@ -113,12 +115,14 @@ export default function CustomersPage() {
 	}
 
 	return (
-		<div className="space-y-6">
-			<div className="flex items-center justify-between">
-				<div>
-					<h2 className="text-2xl font-bold tracking-tight">Customers</h2>
-					<p className="text-muted-foreground">Manage your client base.</p>
-				</div>
+		<DashboardPageLayout
+			header={{
+				title: "Customers",
+				description: "Manage your client base",
+				icon: Users,
+			}}
+		>
+			<div className="flex items-center justify-end mb-4">
 				<Button className="rounded-none">Add Customer</Button>
 			</div>
 
@@ -128,6 +132,6 @@ export default function CustomersPage() {
 				searchKey="name"
 				searchPlaceholder="Filter customers..."
 			/>
-		</div>
+		</DashboardPageLayout>
 	);
 }

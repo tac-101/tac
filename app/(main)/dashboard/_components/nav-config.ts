@@ -81,37 +81,13 @@ export const navMain: NavGroup[] = [
 				icon: ProcessorIcon,
 				badgeKey: "alerts",
 			},
-			{
-				title: "Aircargo Manifesto",
-				url: "/dashboard/aircargo",
-				icon: AtomIcon,
-			},
-			{
-				title: "Manifest Scan Session",
-				url: "/dashboard/aircargo/scan-session",
-				icon: AtomIcon,
-			},
-			{
-				title: "Barcode Tracking",
-				url: "/dashboard/barcodes",
-				icon: BracketsIcon,
-			},
 		],
 	},
 	{
 		id: "system",
 		title: "System",
 		items: [
-			{
-				title: "Tapan Associate",
-				url: "/dashboard/tapan-associate",
-				icon: MonkeyIcon,
-			},
-			{
-				title: "Global Search",
-				url: "/dashboard/search",
-				icon: ProcessorIcon,
-			},
+
 			{
 				title: "Reports & Analytics",
 				url: "/dashboard/reports",
@@ -125,26 +101,16 @@ export const navMain: NavGroup[] = [
 				requiresAdmin: true,
 			},
 			{
-				title: "Exceptions & Alerts",
-				url: "/dashboard/alerts",
+				title: "Exceptions",
+				url: "/dashboard/exceptions",
 				icon: BracketsIcon,
 				badgeKey: "alerts",
 				requiresAdmin: true,
 			},
 			{
-				title: "Notifications",
-				url: "/dashboard/notifications",
-				icon: EmailIcon,
-			},
-			{
 				title: "Support Tickets",
 				url: "/dashboard/support",
 				icon: EmailIcon,
-			},
-			{
-				title: "Ops Activity",
-				url: "/dashboard/ops-activity",
-				icon: ProcessorIcon,
 			},
 			{
 				title: "Settings",

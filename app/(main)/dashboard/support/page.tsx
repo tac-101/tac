@@ -1,8 +1,10 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { Loader2 } from "lucide-react";
+import { Loader2, MessageSquare } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+
+import DashboardPageLayout from "@/components/dashboard/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
@@ -111,18 +113,18 @@ export default function SupportPage() {
 	}
 
 	return (
-		<div className="space-y-6">
-			<div className="flex items-center justify-between">
-				<div>
-					<h2 className="text-2xl font-bold tracking-tight">Support Tickets</h2>
-					<p className="text-muted-foreground">
-						Manage customer inquiries and issues.
-					</p>
-				</div>
+		<DashboardPageLayout
+			header={{
+				title: "Support Tickets",
+				description: "Manage customer inquiries and issues",
+				icon: MessageSquare,
+			}}
+		>
+			<div className="flex items-center justify-end mb-4">
 				<Button className="rounded-none">New Ticket</Button>
 			</div>
 
 			<DataTable columns={columns} data={data} searchKey="ticketRef" />
-		</div>
+		</DashboardPageLayout>
 	);
 }

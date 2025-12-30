@@ -1,5 +1,8 @@
 "use client";
 
+import { Settings } from "lucide-react";
+
+import DashboardPageLayout from "@/components/dashboard/layout";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -13,14 +16,13 @@ import { Switch } from "@/components/ui/switch";
 
 export default function SettingsPage() {
 	return (
-		<div className="space-y-6">
-			<div>
-				<h2 className="text-2xl font-bold tracking-tight">Settings</h2>
-				<p className="text-muted-foreground">
-					Manage your account and system preferences.
-				</p>
-			</div>
-
+		<DashboardPageLayout
+			header={{
+				title: "Settings",
+				description: "Manage your account and system preferences",
+				icon: Settings,
+			}}
+		>
 			<div className="grid gap-6">
 				<Card className="rounded-none">
 					<CardHeader>
@@ -78,6 +80,6 @@ export default function SettingsPage() {
 					<Button className="rounded-none">Save Changes</Button>
 				</div>
 			</div>
-		</div>
+		</DashboardPageLayout>
 	);
 }

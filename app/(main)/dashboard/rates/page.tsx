@@ -1,8 +1,10 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { Loader2 } from "lucide-react";
+import { DollarSign, Loader2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+
+import DashboardPageLayout from "@/components/dashboard/layout";
 import { Button } from "@/components/ui/button";
 import { DataTableBlock } from "@/components/blocks/data-table/data-table-block";
 import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
@@ -104,18 +106,18 @@ export default function RatesPage() {
 	}
 
 	return (
-		<div className="space-y-6">
-			<div className="flex items-center justify-between">
-				<div>
-					<h2 className="text-2xl font-bold tracking-tight">Shipping Rates</h2>
-					<p className="text-muted-foreground">
-						Manage service pricing and tariffs.
-					</p>
-				</div>
+		<DashboardPageLayout
+			header={{
+				title: "Shipping Rates",
+				description: "Manage service pricing and tariffs",
+				icon: DollarSign,
+			}}
+		>
+			<div className="flex items-center justify-end mb-4">
 				<Button className="rounded-none">Update Rates</Button>
 			</div>
 
 			<DataTableBlock columns={columns} data={data} searchKey="origin" />
-		</div>
+		</DashboardPageLayout>
 	);
 }

@@ -1,8 +1,10 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { Loader2 } from "lucide-react";
+import { FileText, Loader2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+
+import DashboardPageLayout from "@/components/dashboard/layout";
 import { Button } from "@/components/ui/button";
 import { DataTableBlock } from "@/components/blocks/data-table/data-table-block";
 import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
@@ -105,18 +107,18 @@ export default function ReportsPage() {
 	}
 
 	return (
-		<div className="space-y-6">
-			<div className="flex items-center justify-between">
-				<div>
-					<h2 className="text-2xl font-bold tracking-tight">Reports</h2>
-					<p className="text-muted-foreground">
-						Access generated operational reports.
-					</p>
-				</div>
+		<DashboardPageLayout
+			header={{
+				title: "Reports",
+				description: "Access generated operational reports",
+				icon: FileText,
+			}}
+		>
+			<div className="flex items-center justify-end mb-4">
 				<Button className="rounded-none">Generate New Report</Button>
 			</div>
 
 			<DataTableBlock columns={columns} data={data} searchKey="name" />
-		</div>
+		</DashboardPageLayout>
 	);
 }

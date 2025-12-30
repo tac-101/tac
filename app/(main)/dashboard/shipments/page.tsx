@@ -2,11 +2,13 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
+import { Loader2, Package, Pencil, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm, type SubmitHandler, type UseFormReturn } from "react-hook-form";
 import { z } from "zod";
+
+import DashboardPageLayout from "@/components/dashboard/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTableBlock } from "@/components/blocks/data-table/data-table-block";
@@ -295,16 +297,13 @@ export default function ShipmentsPage() {
 	}
 
 	return (
-		<div className="space-y-6">
-			<div className="flex items-center justify-between">
-				<div>
-					<h2 className="text-2xl font-bold tracking-tight">Shipments</h2>
-					<p className="text-muted-foreground">
-						Manage and track all logistics operations.
-					</p>
-				</div>
-			</div>
-
+		<DashboardPageLayout
+			header={{
+				title: "Shipments",
+				description: "Manage and track all logistics operations",
+				icon: Package,
+			}}
+		>
 			<DataTableBlock
 				columns={columns}
 				data={data}
@@ -346,6 +345,6 @@ export default function ShipmentsPage() {
 					/>
 				}
 			/>
-		</div>
+		</DashboardPageLayout>
 	);
 }

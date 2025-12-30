@@ -1,10 +1,11 @@
 "use client";
 
 import { format } from "date-fns";
-import { AlertTriangle, ArrowDownCircle, ArrowUpCircle, Loader2, Radio, RefreshCw } from "lucide-react";
+import { AlertTriangle, ArrowDownCircle, ArrowUpCircle, Loader2, Package, Radio, RefreshCw, Settings2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
+import DashboardPageLayout from "@/components/dashboard/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -29,7 +30,6 @@ import {
 import { DataTableBlock } from "@/components/blocks/data-table/data-table-block";
 import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 import type { UIInventoryItem } from "@/features/inventory/types";
-import { Settings2 } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import type { ColumnDef } from "@tanstack/react-table";
 
@@ -382,16 +382,13 @@ export default function InventoryManagement() {
 	).length;
 
 	return (
-		<div className="space-y-6">
-			<div className="flex items-center justify-between">
-				<div>
-					<h2 className="text-2xl font-bold tracking-tight">Inventory & Goods</h2>
-					<p className="text-muted-foreground">
-						Perpetual inventory with real-time stock tracking.
-					</p>
-				</div>
-			</div>
-
+		<DashboardPageLayout
+			header={{
+				title: "Inventory & Goods",
+				description: "Perpetual inventory with real-time stock tracking",
+				icon: Package,
+			}}
+		>
 			<div className="space-y-6">
 				{/* Header Controls */}
 				<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -566,6 +563,6 @@ export default function InventoryManagement() {
 					</DialogContent>
 				</Dialog>
 			</div>
-		</div>
+		</DashboardPageLayout>
 	);
 }

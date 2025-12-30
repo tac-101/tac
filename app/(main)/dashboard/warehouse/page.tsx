@@ -1,8 +1,10 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { Loader2 } from "lucide-react";
+import { Loader2, Warehouse } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+
+import DashboardPageLayout from "@/components/dashboard/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTableBlock } from "@/components/blocks/data-table/data-table-block";
@@ -136,14 +138,14 @@ export default function WarehousePage() {
 	}
 
 	return (
-		<div className="space-y-6">
-			<div className="flex items-center justify-between">
-				<div>
-					<h2 className="text-2xl font-bold tracking-tight">Warehouse</h2>
-					<p className="text-muted-foreground">
-						Inventory and capacity management.
-					</p>
-				</div>
+		<DashboardPageLayout
+			header={{
+				title: "Warehouse",
+				description: "Inventory and capacity management",
+				icon: Warehouse,
+			}}
+		>
+			<div className="flex items-center justify-end mb-4">
 				<Button className="rounded-none">Add Warehouse</Button>
 			</div>
 
@@ -164,6 +166,6 @@ export default function WarehousePage() {
 					},
 				]}
 			/>
-		</div>
+		</DashboardPageLayout>
 	);
 }
