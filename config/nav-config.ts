@@ -16,20 +16,7 @@ export const navItems: NavItem[] = [
         isActive: false,
         items: [],
     },
-    {
-        title: "Air Cargo",
-        url: "/dashboard/aircargo",
-        icon: "kanban",
-        isActive: false,
-        items: [
-            {
-                title: "Scan Session",
-                url: "/dashboard/aircargo/scan-session",
-                icon: "media",
-                shortcut: ["s", "s"],
-            }
-        ],
-    },
+
     {
         title: "Warehouse",
         url: "/dashboard/warehouse",
@@ -53,16 +40,10 @@ export const navItems: NavItem[] = [
     },
     {
         title: "Tracking",
-        url: "#",
+        url: "/dashboard/tracking",
         icon: "post",
-        isActive: true,
-        items: [
-            {
-                title: "Barcodes",
-                url: "/dashboard/barcodes",
-                icon: "product",
-            }
-        ],
+        isActive: false,
+        items: [],
     },
     {
         title: "Account",
