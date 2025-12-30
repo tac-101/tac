@@ -1,51 +1,48 @@
-"use client";
+"use client"
 
-import { Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { IconBrightness } from "@tabler/icons-react"
+import { useTheme } from "next-themes"
+import * as React from "react"
 
-export function ThemeToggle() {
-	const { theme, resolvedTheme, setTheme } = useTheme();
-	const [mounted, setMounted] = useState(false);
+import { Button } from "@/components/ui/button"
 
-	useEffect(() => {
-		setMounted(true);
-	}, []);
+export function ModeToggle() {
+	const { setTheme, resolvedTheme } = useTheme()
 
-	// Avoid reading theme on the server to prevent SVG mismatches.
-	// Render a neutral placeholder until mounted, so server and first client HTML match.
-	if (!mounted) {
-		return (
-			<button
-				type="button"
-				aria-label="Toggle theme"
-				disabled
-				className="w-10 h-10 flex items-center justify-center border border-border hover:bg-muted transition-colors"
-			>
-				<span className="w-4 h-4" />
-			</button>
-		);
-	}
+	const handleThemeToggle = React.useCallback(
+		(e?: React.MouseEvent) => {
+			const newMode = resolvedTheme === "dark" ? "light" : "dark"
+			const root = document.documentElement
 
-	const currentTheme = theme === "system" ? resolvedTheme : theme;
+			if (!document.startViewTransition) {
+				setTheme(newMode)
+				return
+			}
 
-	const handleToggle = () => {
-		const next = currentTheme === "dark" ? "light" : "dark";
-		setTheme(next ?? "dark");
-	};
+			// Set coordinates from the click event
+			if (e) {
+				root.style.setProperty("--x", `${e.clientX}px`)
+				root.style.setProperty("--y", `${e.clientY}px`)
+			}
+
+			document.startViewTransition(() => {
+				setTheme(newMode)
+			})
+		},
+		[resolvedTheme, setTheme]
+	)
 
 	return (
-		<button
-			type="button"
-			aria-label="Toggle theme"
-			onClick={handleToggle}
-			className="w-10 h-10 flex items-center justify-center border border-border hover:bg-muted transition-colors"
+		<Button
+			variant="secondary"
+			size="icon"
+			className="group/toggle size-8"
+			onClick={handleThemeToggle}
 		>
-			{currentTheme === "dark" ? (
-				<Sun className="w-4 h-4 text-foreground" />
-			) : (
-				<Moon className="w-4 h-4 text-foreground" />
-			)}
-		</button>
-	);
+			<IconBrightness />
+			<span className="sr-only">Toggle theme</span>
+		</Button>
+	)
 }
+
+export { ModeToggle as ThemeToggle }

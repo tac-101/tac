@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function SupportLoading() {
 	return (
-		<div className="p-6 space-y-6">
+		<div className="space-y-6">
 			<div className="flex items-center justify-between">
 				<div className="space-y-2">
 					<Skeleton className="h-8 w-36" />

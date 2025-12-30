@@ -4,8 +4,7 @@ import { format } from "date-fns";
 import { AlertTriangle, ArrowDownCircle, ArrowUpCircle, Loader2, Radio, RefreshCw } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import DashboardPageLayout from "@/components/dashboard/layout";
-import BoxIcon from "@/components/icons/box";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,9 +26,12 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { InventoryTable } from "@/features/inventory/inventory-table";
+import { DataTableBlock } from "@/components/blocks/data-table/data-table-block";
+import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 import type { UIInventoryItem } from "@/features/inventory/types";
+import { Settings2 } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
+import type { ColumnDef } from "@tanstack/react-table";
 
 interface InventoryItemExtended extends UIInventoryItem {
 	isUpdated?: boolean;
@@ -211,7 +213,10 @@ export default function InventoryManagement() {
 	);
 
 	const locations = useMemo(
-		() => Array.from(new Set(inventoryData.map((i) => i.location))),
+		() => Array.from(new Set(inventoryData.map((i) => i.location))).map(l => ({
+			label: l,
+			value: l
+		})),
 		[inventoryData],
 	);
 
@@ -235,6 +240,93 @@ export default function InventoryManagement() {
 				return "bg-gray-500/20 text-gray-400";
 		}
 	};
+
+	const columns: ColumnDef<InventoryItemExtended>[] = useMemo(() => [
+		{
+			accessorKey: "sku",
+			header: ({ column }) => (
+				<DataTableColumnHeader column={column} title="SKU" />
+			),
+			cell: ({ row }) => <span className="font-mono text-xs">{row.getValue("sku")}</span>,
+		},
+		{
+			accessorKey: "description",
+			header: ({ column }) => (
+				<DataTableColumnHeader column={column} title="Description" />
+			),
+		},
+		{
+			accessorKey: "location",
+			header: ({ column }) => (
+				<DataTableColumnHeader column={column} title="Location" />
+			),
+			cell: ({ row }) => <span className="text-xs">{row.getValue("location")}</span>,
+			filterFn: (row, id, value) => {
+				return value.includes(row.getValue(id));
+			},
+		},
+		{
+			accessorKey: "currentStock",
+			header: ({ column }) => (
+				<DataTableColumnHeader column={column} title="Current" />
+			),
+			cell: ({ row }) => <span className="font-bold">{row.getValue("currentStock")}</span>,
+		},
+		{
+			accessorKey: "minStock",
+			header: ({ column }) => (
+				<DataTableColumnHeader column={column} title="Min Level" />
+			),
+		},
+		{
+			id: "status",
+			header: ({ column }) => (
+				<DataTableColumnHeader column={column} title="Status" />
+			),
+			cell: ({ row }) => {
+				const item = row.original;
+				const status = getStockStatus(item.currentStock, item.minStock);
+				return (
+					<span className={`px-2 py-1 text-xs font-semibold rounded-sm ${getStatusColor(status)}`}>
+						{status.toUpperCase()}
+					</span>
+				)
+			}
+		},
+		{
+			accessorKey: "lastUpdated",
+			header: ({ column }) => (
+				<DataTableColumnHeader column={column} title="Last Updated" />
+			),
+			cell: ({ row }) => {
+				const val = row.getValue("lastUpdated") as string;
+				if (!val) return "Not available";
+				const d = new Date(val);
+				if (Number.isNaN(d.getTime())) return val;
+				return <span className="text-xs text-muted-foreground">{d.toLocaleString("en-IN")}</span>;
+			}
+		},
+		{
+			id: "actions",
+			header: "Action",
+			cell: ({ row }) => {
+				if (!canEdit) return null;
+				return (
+					<Button
+						variant="ghost"
+						size="icon"
+						onClick={() => {
+							setSelectedSku(row.original.sku);
+							setAdjustmentOpen(true);
+						}}
+						className="h-8 w-8"
+					>
+						<Settings2 className="h-4 w-4" />
+					</Button>
+				)
+			}
+		}
+	], [canEdit]);
 
 	const handleAdjustment = async () => {
 		if (!selectedSku || !adjustmentQty) return;
@@ -290,14 +382,17 @@ export default function InventoryManagement() {
 	).length;
 
 	return (
-		<DashboardPageLayout
-			header={{
-				title: "Inventory & Goods",
-				description: "Perpetual inventory with real-time stock tracking",
-				icon: BoxIcon,
-			}}
-		>
-			<div className="space-y-6 px-4 lg:px-6 py-4">
+		<div className="space-y-6">
+			<div className="flex items-center justify-between">
+				<div>
+					<h2 className="text-2xl font-bold tracking-tight">Inventory & Goods</h2>
+					<p className="text-muted-foreground">
+						Perpetual inventory with real-time stock tracking.
+					</p>
+				</div>
+			</div>
+
+			<div className="space-y-6">
 				{/* Header Controls */}
 				<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
 					<div className="flex items-center gap-3">
@@ -344,30 +439,7 @@ export default function InventoryManagement() {
 					</div>
 				</div>
 
-				{/* Filters */}
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-					<Input
-						placeholder="Search by SKU or description..."
-						value={searchTerm}
-						onChange={(e) => setSearchTerm(e.target.value)}
-					/>
-					<Select
-						value={locationFilter}
-						onValueChange={(value) => setLocationFilter(value)}
-					>
-						<SelectTrigger className="w-full">
-							<SelectValue placeholder="All Locations" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="all">All Locations</SelectItem>
-							{locations.map((location) => (
-								<SelectItem key={location} value={location}>
-									{location}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				</div>
+
 
 				{roleLoaded && !canEdit && (
 					<p className="text-xs text-muted-foreground">
@@ -420,15 +492,19 @@ export default function InventoryManagement() {
 				</div>
 
 				{/* Inventory Table */}
-				<InventoryTable
-					items={filteredInventory}
-					getStockStatus={getStockStatus}
-					getStatusColor={getStatusColor}
-					canEdit={canEdit}
-					onAdjust={(sku) => {
-						setSelectedSku(sku);
-						setAdjustmentOpen(true);
-					}}
+				{/* Inventory Table */}
+				<DataTableBlock
+					columns={columns}
+					data={inventoryData}
+					searchKey="description"
+					searchPlaceholder="Filter items..."
+					facetedFilters={[
+						{
+							column: "location",
+							title: "Location",
+							options: locations
+						}
+					]}
 				/>
 
 				{/* Adjustment Dialog */}
@@ -490,6 +566,6 @@ export default function InventoryManagement() {
 					</DialogContent>
 				</Dialog>
 			</div>
-		</DashboardPageLayout>
+		</div>
 	);
 }

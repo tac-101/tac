@@ -1,11 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { 
-  Bot, 
-  Command, 
-  CornerDownRight, 
-  HelpCircle, 
+import {
+  Bot,
+  Command,
+  CornerDownRight,
+  HelpCircle,
   Settings,
   Sparkles,
   Zap
@@ -20,15 +20,15 @@ export default function TapanAssociatePage() {
   return (
     <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden">
       {/* Main Content Area */}
-      <div className="flex-1 p-8 space-y-8 overflow-y-auto no-scrollbar">
+      <div className="space-y-6">
         <div className="space-y-2">
           <div className="flex items-center gap-3">
             <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
               AI Tapan Associate
             </h2>
             <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 gap-1.5 px-3 py-1">
-               <Sparkles className="h-3.5 w-3.5" />
-               v4.2-Turbo
+              <Sparkles className="h-3.5 w-3.5" />
+              v4.2-Turbo
             </Badge>
           </div>
           <p className="text-muted-foreground max-w-2xl">
@@ -102,7 +102,7 @@ export default function TapanAssociatePage() {
               "Show overdue customs forms",
               "List active scanning sessions"
             ].map(cmd => (
-              <button 
+              <button
                 key={cmd}
                 className="text-left text-xs bg-white/5 hover:bg-white/10 p-3 rounded-xl border border-white/5 text-muted-foreground hover:text-foreground transition-all truncate"
               >
@@ -117,16 +117,16 @@ export default function TapanAssociatePage() {
       <div className="w-[450px] border-l border-white/5 bg-white/5 relative z-20 shadow-2xl">
         <div className="absolute inset-0 bg-sidebar/20 backdrop-blur-3xl -z-10" />
         <TapanAssociateSidebarWidget />
-        
+
         {/* Floating AI Identifier */}
         <div className="absolute top-4 right-4 z-50 pointer-events-none">
-           <div className="bg-background/80 backdrop-blur shadow-xl border border-white/10 rounded-full px-3 py-1.5 flex items-center gap-2">
-              <div className="relative">
-                 <Bot className="h-3.5 w-3.5 text-primary" />
-                 <div className="absolute -top-1 -right-1 w-2 h-2 bg-success rounded-full ring-2 ring-background animate-pulse" />
-              </div>
-              <span className="text-[10px] font-bold tracking-tight text-white/70 uppercase">Assistant Active</span>
-           </div>
+          <div className="bg-background/80 backdrop-blur shadow-xl border border-white/10 rounded-full px-3 py-1.5 flex items-center gap-2">
+            <div className="relative">
+              <Bot className="h-3.5 w-3.5 text-primary" />
+              <div className="absolute -top-1 -right-1 w-2 h-2 bg-success rounded-full ring-2 ring-background animate-pulse" />
+            </div>
+            <span className="text-[10px] font-bold tracking-tight text-white/70 uppercase">Assistant Active</span>
+          </div>
         </div>
       </div>
     </div>

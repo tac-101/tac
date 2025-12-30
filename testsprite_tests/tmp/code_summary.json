@@ -2,92 +2,46 @@
   "tech_stack": [
     "TypeScript",
     "Next.js",
-    "React",
-    "Tailwind CSS",
+    "TailwindCSS",
     "Supabase",
-    "Shadcn UI",
-    "React Hook Form",
-    "Zod"
+    "Sentry",
+    "Shadcn UI"
   ],
   "features": [
     {
-      "name": "Alerts",
-      "description": "System alerts and notifications management",
-      "files": [
-        "features/alerts"
-      ]
-    },
-    {
-      "name": "Customers",
-      "description": "Customer management and directory",
-      "files": [
-        "features/customers"
-      ]
-    },
-    {
-      "name": "Inventory",
-      "description": "Inventory tracking and management",
-      "files": [
-        "features/inventory"
-      ]
-    },
-    {
-      "name": "Invoices",
-      "description": "Invoice generation and tracking",
-      "files": [
-        "features/invoices"
-      ]
-    },
-    {
-      "name": "Notifications",
-      "description": "User notification system",
-      "files": [
-        "features/notifications"
-      ]
-    },
-    {
-      "name": "Rates",
-      "description": "Shipping rates and calculator",
-      "files": [
-        "features/rates"
-      ]
-    },
-    {
-      "name": "Shipments",
-      "description": "Shipment creation, tracking, and management",
-      "files": [
-        "features/shipments"
-      ]
-    },
-    {
-      "name": "Support",
-      "description": "Customer support ticketing system",
-      "files": [
-        "features/support"
-      ]
-    },
-    {
-      "name": "Warehouse",
-      "description": "Warehouse operations and management",
-      "files": [
-        "features/warehouse"
-      ]
-    },
-    {
       "name": "Authentication",
-      "description": "User authentication and layout protection",
+      "description": "User authentication flows including login and signup",
       "files": [
-        "app/(auth)",
-        "lib/auth",
-        "lib/api/withAuth.ts"
+        "app/(auth)"
       ]
     },
     {
       "name": "Dashboard",
-      "description": "Main application dashboard layout and widgets",
+      "description": "Main application dashboard for authenticated users",
       "files": [
         "app/(main)/dashboard",
         "components/dashboard"
+      ]
+    },
+    {
+      "name": "Landing Page",
+      "description": "Public facing landing page and external routes",
+      "files": [
+        "app/(external)"
+      ]
+    },
+    {
+      "name": "API Routes",
+      "description": "Backend API endpoints for data handling",
+      "files": [
+        "app/api"
+      ]
+    },
+    {
+      "name": "UI Components",
+      "description": "Reusable UI components using Shadcn UI",
+      "files": [
+        "components/ui"
       ]
     }
   ]

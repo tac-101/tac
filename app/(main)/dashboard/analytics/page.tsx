@@ -4,7 +4,7 @@ import { format, subDays, subYears } from "date-fns";
 import { useEffect, useState } from "react";
 import DashboardCard from "@/components/dashboard/card";
 import DashboardChart from "@/components/dashboard/chart";
-import DashboardPageLayout from "@/components/dashboard/layout";
+
 import AtomIcon from "@/components/icons/atom";
 import { useTapanAssociateContext } from "@/components/layout/tapan-associate-context";
 import { Card } from "@/components/ui/card";
@@ -258,11 +258,11 @@ export default function AnalyticsPage() {
 			stats,
 			trends: chartData
 				? {
-						// Keep it compact: recent points only
-						week: chartData.week.slice(-7),
-						month: chartData.month.slice(-4),
-						year: chartData.year.slice(-6),
-					}
+					// Keep it compact: recent points only
+					week: chartData.week.slice(-7),
+					month: chartData.month.slice(-4),
+					year: chartData.year.slice(-6),
+				}
 				: null,
 		};
 
@@ -274,13 +274,15 @@ export default function AnalyticsPage() {
 	}, [loading, stats, chartData, setModuleContext]);
 
 	return (
-		<DashboardPageLayout
-			header={{
-				title: "Network Analytics",
-				description: "Operational and financial KPIs for Tapan Associate",
-				icon: AtomIcon,
-			}}
-		>
+		<div className="space-y-6">
+			<div className="flex items-center justify-between">
+				<div>
+					<h2 className="text-2xl font-bold tracking-tight">Network Analytics</h2>
+					<p className="text-muted-foreground">
+						Operational and financial KPIs for Tapan Associate
+					</p>
+				</div>
+			</div>
 			<div className="flex flex-col gap-6">
 				{/* KPI Cards */}
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -362,6 +364,6 @@ export default function AnalyticsPage() {
 					)}
 				</Card>
 			</div>
-		</DashboardPageLayout>
+		</div>
 	);
 }

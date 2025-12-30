@@ -2,7 +2,6 @@
 
 import { ThemePresetSwitcher } from "@/components/theme-preset-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 
@@ -17,9 +16,6 @@ export function AppHeader() {
 		>
 			<div className="flex flex-1 items-center gap-2">
 				<SidebarTrigger />
-				<Separator orientation="vertical" className="mr-2 h-4" />
-				{/* Placeholder for Dynamic Breadcrumbs - can be added later */}
-				<span className="text-sm font-medium text-primary/80">Ops Command</span>
 			</div>
 
 			<div className="flex items-center gap-2">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import DashboardPageLayout from "@/components/dashboard/layout";
+
 import AtomIcon from "@/components/icons/atom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -91,13 +91,15 @@ export default function ScanSessionPage() {
   };
 
   return (
-    <DashboardPageLayout
-      header={{
-        title: "Manifest Scan Session",
-        description: "Real-time manifest verification and package loading session",
-        icon: AtomIcon,
-      }}
-    >
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Manifest Scan Session</h2>
+          <p className="text-muted-foreground">
+            Real-time manifest verification and package loading session.
+          </p>
+        </div>
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left: Session Controls & Stats */}
         <div className="lg:col-span-2 space-y-6">
@@ -252,6 +254,6 @@ export default function ScanSessionPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </DashboardPageLayout>
+    </div>
   );
 }

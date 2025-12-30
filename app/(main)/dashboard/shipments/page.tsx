@@ -2,13 +2,15 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Loader2, Pencil, Trash2 } from "lucide-react";
+import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm, type SubmitHandler, type UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/data-table";
+import { DataTableBlock } from "@/components/blocks/data-table/data-table-block";
+import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 import { ShipmentsDialog } from "@/features/shipments/shipments-dialog";
 import type { UIShipment } from "@/features/shipments/types";
 import { useToast } from "@/hooks/use-toast";
@@ -186,7 +188,9 @@ export default function ShipmentsPage() {
 		() => [
 			{
 				accessorKey: "shipmentId",
-				header: "Reference",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Reference" />
+				),
 				cell: ({ row }) => (
 					<span className="font-mono font-medium">
 						{row.getValue("shipmentId")}
@@ -195,15 +199,24 @@ export default function ShipmentsPage() {
 			},
 			{
 				accessorKey: "origin",
-				header: "Origin",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Origin" />
+				),
 			},
 			{
 				accessorKey: "destination",
-				header: "Destination",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Destination" />
+				),
 			},
 			{
 				accessorKey: "status",
-				header: "Status",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Status" />
+				),
+				filterFn: (row, id, value) => {
+					return value.includes(row.getValue(id));
+				},
 				cell: ({ row }) => {
 					const status = row.getValue("status") as string;
 					let variant: "default" | "secondary" | "destructive" | "outline" =
@@ -222,7 +235,9 @@ export default function ShipmentsPage() {
 			},
 			{
 				accessorKey: "weight",
-				header: "Weight (kg)",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Weight (kg)" />
+				),
 			},
 			{
 				id: "actions",
@@ -288,32 +303,49 @@ export default function ShipmentsPage() {
 						Manage and track all logistics operations.
 					</p>
 				</div>
-				<ShipmentsDialog
-					open={isDialogOpen}
-					onOpenChange={setIsDialogOpen}
-					canEdit={true}
-					isCreating={false} // Just for loading state in button
-					editingShipment={editingShipment}
-					customers={customers}
-					form={form}
-					onSubmit={handleSubmit as any}
-					onNewShipmentClick={() => {
-						setEditingShipment(null);
-						form.reset({
-							shipmentRef: "",
-							customerId: "",
-							route: "0",
-							weight: 1,
-							status: "pending",
-						});
-						setIsDialogOpen(true);
-					}}
-					serviceRoutes={SERVICE_ROUTES}
-					statusOptions={SHIPMENT_STATUSES}
-				/>
 			</div>
 
-			<DataTable columns={columns} data={data} searchKey="shipmentId" />
+			<DataTableBlock
+				columns={columns}
+				data={data}
+				searchKey="shipmentId"
+				searchPlaceholder="Filter shipments..."
+				facetedFilters={[
+					{
+						column: "status",
+						title: "Status",
+						options: SHIPMENT_STATUSES.map((status) => ({
+							label: status.charAt(0).toUpperCase() + status.slice(1),
+							value: status,
+						})),
+					},
+				]}
+				toolbarActions={
+					<ShipmentsDialog
+						open={isDialogOpen}
+						onOpenChange={setIsDialogOpen}
+						canEdit={true}
+						isCreating={false}
+						editingShipment={editingShipment}
+						customers={customers}
+						form={form}
+						onSubmit={handleSubmit as any}
+						onNewShipmentClick={() => {
+							setEditingShipment(null);
+							form.reset({
+								shipmentRef: "",
+								customerId: "",
+								route: "0",
+								weight: 1,
+								status: "pending",
+							});
+							setIsDialogOpen(true);
+						}}
+						serviceRoutes={SERVICE_ROUTES}
+						statusOptions={SHIPMENT_STATUSES}
+					/>
+				}
+			/>
 		</div>
 	);
 }

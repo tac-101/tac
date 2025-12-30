@@ -8,56 +8,95 @@ async def run_test():
     context = None
     
     try:
+        # Start a Playwright session in asynchronous mode
         pw = await async_api.async_playwright().start()
         
-        # Removed --single-process as it is brittle and not recommended for production environments
+        # Launch a Chromium browser in headless mode with custom arguments
         browser = await pw.chromium.launch(
             headless=True,
             args=[
-                "--window-size=1280,720",
-                "--disable-dev-shm-usage",
-                "--ipc=host"
+                "--window-size=1280,720",         # Set the browser window size
+                "--disable-dev-shm-usage",        # Avoid using /dev/shm which can cause issues in containers
+                "--ipc=host",                     # Use host-level IPC for better stability
+                "--single-process"                # Run the browser in a single process mode
             ],
         )
         
+        # Create a new browser context (like an incognito window)
         context = await browser.new_context()
-        context.set_default_timeout(10000)
+        context.set_default_timeout(5000)
         
+        # Open a new page in the browser context
         page = await context.new_page()
         
-        # Navigate and wait for stability
-        await page.goto("http://localhost:3000", wait_until="networkidle", timeout=15000)
+        # Navigate to your target URL and wait until the network request is committed
+        await page.goto("http://localhost:3000", wait_until="commit", timeout=10000)
         
-        # Navigate to Portal (Login page)
-        # Using role-based selectors instead of brittle XPath
-        portal_button = page.get_by_role("link", name="Portal")
-        await expect(portal_button).to_be_visible()
-        await portal_button.click()
+        # Wait for the main page to reach DOMContentLoaded state (optional for stability)
+        try:
+            await page.wait_for_load_state("domcontentloaded", timeout=3000)
+        except async_api.Error:
+            pass
         
-        # Enter limited role user credentials
-        # Selectors match the Login Page implementation
-        await page.get_by_label("Email Address").fill('user@limited.role')
-        await page.get_by_label("Password").fill('LimitedUserPass123')
+        # Iterate through all iframes and wait for them to load as well
+        for frame in page.frames:
+            try:
+                await frame.wait_for_load_state("domcontentloaded", timeout=3000)
+            except async_api.Error:
+                pass
         
-        # Click Sign In
-        sign_in_button = page.get_by_role("button", name="Sign In")
-        await sign_in_button.click()
+        # Interact with the page elements to simulate user flow
+        # -> Click on 'Access Portal' to go to login page
+        frame = context.pages[-1]
+        # Click on 'Access Portal' button to navigate to login page
+        elem = frame.locator('xpath=html/body/div[2]/main/section/div/div/div[2]/a[2]').nth(0)
+        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
-        # Verify landing on dashboard
-        await expect(page).to_have_url(lambda url: "/dashboard" in url, timeout=10000)
 
-        # Assertion: Verify that Admin-only elements are NOT visible for a limited user
-        # We check both the text and potential links to admin pages
-        admin_gate_text = page.get_by_text("Admin Access Granted")
-        await expect(admin_gate_text).not_to_be_visible(timeout=5000)
+        # -> Input email and password, then click Sign In button
+        frame = context.pages[-1]
+        # Input email address for login
+        elem = frame.locator('xpath=html/body/div[2]/main/div/div/div/div[2]/div[2]/form/div/div/input').nth(0)
+        await page.wait_for_timeout(3000); await elem.fill('testadmin@tapan-cargo.test')
         
-        # Additionally check if the Admin Nav item is hidden
-        admin_nav = page.get_by_role("link", name="Admin")
-        await expect(admin_nav).not_to_be_visible(timeout=2000)
 
-    except Exception as e:
-        print(f"Test failed: {e}")
-        raise e
+        frame = context.pages[-1]
+        # Input password for login
+        elem = frame.locator('xpath=html/body/div[2]/main/div/div/div/div[2]/div[2]/form/div[2]/div[2]/input').nth(0)
+        await page.wait_for_timeout(3000); await elem.fill('TestAdmin2024!')
+        
+
+        # -> Click Sign In button to log in
+        frame = context.pages[-1]
+        # Click Sign In button to submit login form and log in
+        elem = frame.locator('xpath=html/body/div[2]/main/div/div/div/div[2]/div[2]/form/div[4]/button').nth(0)
+        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
+        
+
+        # -> Click Sign In button to submit login form and authenticate user
+        frame = context.pages[-1]
+        # Click Sign In button to submit login form and log in
+        elem = frame.locator('xpath=html/body/div[2]/div/div[2]/div/div[2]/div[2]/div[2]/ul/li[5]/a').nth(0)
+        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
+        
+
+        # -> Attempt to access admin-only shipment creation endpoint
+        await page.goto('http://localhost:3000/api/shipments/create', timeout=10000)
+        await asyncio.sleep(3)
+        
+
+        # -> Access allowed shipment viewing endpoint to verify access is permitted and data is correct
+        await page.goto('http://localhost:3000/api/shipments/view', timeout=10000)
+        await asyncio.sleep(3)
+        
+
+        # --> Assertions to verify final state
+        frame = context.pages[-1]
+        try:
+            await expect(frame.locator('text=Unauthorized Access to Shipment Creation').first).to_be_visible(timeout=3000)
+        except AssertionError:
+            raise AssertionError("Test case failed: User was able to access the admin-only shipment creation endpoint, which violates role-based access control as per the test plan.")
+        await asyncio.sleep(5)
     
     finally:
         if context:
@@ -67,5 +106,5 @@ async def run_test():
         if pw:
             await pw.stop()
             
-if __name__ == "__main__":
-    asyncio.run(run_test())
+asyncio.run(run_test())
+    

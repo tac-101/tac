@@ -1,0 +1,119 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [active]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - navigation [ref=e7]:
+            - button "previous" [disabled] [ref=e8]:
+              - img "previous" [ref=e9]
+            - generic [ref=e11]:
+              - generic [ref=e12]: 1/
+              - text: "2"
+            - button "next" [ref=e13] [cursor=pointer]:
+              - img "next" [ref=e14]
+          - img
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - img [ref=e18]
+            - generic "Latest available version is detected (16.1.1)." [ref=e20]: Next.js 16.1.1
+            - generic [ref=e21]: Turbopack
+          - img
+      - dialog "Recoverable Error" [ref=e23]:
+        - generic [ref=e26]:
+          - generic [ref=e27]:
+            - generic [ref=e28]:
+              - generic [ref=e30]: Recoverable Error
+              - generic [ref=e31]:
+                - button "Copy Error Info" [ref=e32] [cursor=pointer]:
+                  - img [ref=e33]
+                - link "Go to related documentation" [ref=e35] [cursor=pointer]:
+                  - /url: https://nextjs.org/docs/messages/react-hydration-error
+                  - img [ref=e36]
+                - button "Attach Node.js inspector" [ref=e38] [cursor=pointer]:
+                  - img [ref=e39]
+            - generic [ref=e48]: "Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:"
+          - generic [ref=e49]:
+            - generic [ref=e50]:
+              - paragraph [ref=e51]: "- A server/client branch `if (typeof window !== 'undefined')`. - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called. - Date formatting in a user's locale which doesn't match the server. - External changing data without sending a snapshot of it along with the HTML. - Invalid HTML tag nesting. It can also happen if the client has a browser extension installed which messes with the HTML before React loaded."
+              - paragraph [ref=e52]:
+                - text: "See more info here:"
+                - link "https://nextjs.org/docs/messages/react-hydration-error" [ref=e53] [cursor=pointer]:
+                  - /url: https://nextjs.org/docs/messages/react-hydration-error
+            - generic [ref=e54]:
+              - button "complete Component Stack" [ref=e55] [cursor=pointer]:
+                - img [ref=e56]
+              - code [ref=e59]:
+                - generic [ref=e60]: ...
+                - generic [ref=e61]: "<ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>"
+                - generic [ref=e62]: "<LoadingBoundary name=\"new/\" loading={null}>"
+                - generic [ref=e63]: "<HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>"
+                - generic [ref=e64]: <RedirectBoundary>
+                - generic [ref=e65]: "<RedirectErrorBoundary router={{...}}>"
+                - generic [ref=e66]: "<InnerLayoutRouter url=\"/dashboard...\" tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} ...>"
+                - generic [ref=e67]: <SegmentViewNode type="page" pagePath="(main)/das...">
+                - generic [ref=e68]: <SegmentTrieNode>
+                - generic [ref=e69]: "<ClientPageRoot Component={function NewShipmentPage} serverProvidedParams={{...}}>"
+                - generic [ref=e70]: "<NewShipmentPage params={Promise} searchParams={Promise}>"
+                - generic [ref=e71]: <div className="container ...">
+                - generic [ref=e72]: <div className="flex items...">
+                - generic [ref=e73]: <Button>
+                - generic [ref=e74]: <div>
+                - generic [ref=e75]: <h1>
+                - generic [ref=e76]: <p className="text-muted...">
+                - generic [ref=e77]: <span className="font-mono font-semibold">
+                - generic [ref=e79]: + TAC-251230-C0TK
+                - generic [ref=e81]: "- TAC-251230-K5X4"
+                - generic [ref=e82]: ...
+                - generic [ref=e83]: ...
+                - generic [ref=e84]: ...
+            - generic [ref=e85]:
+              - paragraph [ref=e87]:
+                - img [ref=e89]
+                - generic [ref=e92]: app/(main)/dashboard/shipments/new/page.tsx (197:18) @ NewShipmentPage
+                - button "Open in editor" [ref=e93] [cursor=pointer]:
+                  - img [ref=e95]
+              - generic [ref=e98]:
+                - generic [ref=e99]: 195 | <h1 className="text-2xl font-bold tracking-tight">Create New Shipment</h1>
+                - generic [ref=e100]: 196 | <p className="text-muted-foreground">
+                - generic [ref=e101]: "> 197 | Reference: <span className=\"font-mono font-semibold\">{generatedRef}</span>"
+                - generic [ref=e102]: "| ^"
+                - generic [ref=e103]: 198 | </p>
+                - generic [ref=e104]: 199 | </div>
+                - generic [ref=e105]: 200 | </div>
+            - generic [ref=e106]:
+              - generic [ref=e107]:
+                - paragraph [ref=e108]:
+                  - text: Call Stack
+                  - generic [ref=e109]: "18"
+                - button "Show 16 ignore-listed frame(s)" [ref=e110] [cursor=pointer]:
+                  - text: Show 16 ignore-listed frame(s)
+                  - img [ref=e111]
+              - generic [ref=e113]:
+                - generic [ref=e114]: span
+                - text: <anonymous>
+              - generic [ref=e115]:
+                - generic [ref=e116]:
+                  - text: NewShipmentPage
+                  - button "Open NewShipmentPage in editor" [ref=e117] [cursor=pointer]:
+                    - img [ref=e118]
+                - text: app/(main)/dashboard/shipments/new/page.tsx (197:18)
+        - generic [ref=e120]: "1"
+        - generic [ref=e121]: "2"
+    - generic [ref=e126] [cursor=pointer]:
+      - button "Open Next.js Dev Tools" [ref=e127]:
+        - img [ref=e128]
+      - generic [ref=e131]:
+        - button "Open issues overlay" [ref=e132]:
+          - generic [ref=e133]:
+            - generic [ref=e134]: "1"
+            - generic [ref=e135]: "2"
+          - generic [ref=e136]:
+            - text: Issue
+            - generic [ref=e137]: s
+        - button "Collapse issues badge" [ref=e138]:
+          - img [ref=e139]
+  - 'heading "Application error: a client-side exception has occurred while loading localhost (see the browser console for more information)." [level=2] [ref=e143]'
+```

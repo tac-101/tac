@@ -1,247 +1,158 @@
-import * as Sentry from "@sentry/nextjs";
-import DashboardPageLayout from "@/components/dashboard/layout";
-import { OpsCommandGrid } from "@/components/dashboard/ops-command-grid";
-import { RecentShipments } from "@/components/dashboard/recent-shipments";
-import { ShipmentDiagnostics } from "@/components/dashboard/shipment-diagnostics";
-import { ShipmentMap } from "./_components/shipment-map";
-import { ShipmentsDataTable } from "@/components/dashboard/shipments-data-table";
-import BracketsIcon from "@/components/icons/brackets";
+"use client";
 
-type TypedShipment = {
-	id: number;
-	shipment_ref: string;
-	customer_name: string;
-	origin: string;
-	destination: string;
-	status: "pending" | "in_transit" | "delivered" | "cancelled";
-	weight: number;
-	created_at: string;
-};
+import React from "react";
+import {
+	CalendarX2,
+	Truck,
+	TriangleAlert,
+} from "lucide-react";
 
-// Fetch dashboard stats from Supabase (safe if env missing)
-async function getDashboardStats() {
-	const logger = (Sentry as any).logger ?? console;
+import { Card } from "@/components/ui/card";
+import { StatisticsCard } from "@/app/(main)/dashboard/_components/widgets/statistics-card-01";
+import { ProductInsightsCard } from "@/app/(main)/dashboard/_components/widgets/widget-product-insights";
+import { TotalEarningCard } from "@/app/(main)/dashboard/_components/widgets/widget-total-earning";
+import { SalesMetricsCard } from "@/app/(main)/dashboard/_components/widgets/chart-sales-metrics";
+import TransactionDatatable, { type Item } from "@/app/(main)/dashboard/_components/widgets/datatable-transaction";
+import PageContainer from "@/components/layout/page-container";
 
-	return Sentry.startSpan(
-		{
-			op: "db.query",
-			name: "dashboard:getDashboardStats",
-		},
-		async (span) => {
-			try {
-				const { supabaseAdmin } = await import("@/lib/supabaseAdmin");
+// Statistics card data
+const StatisticsCardData = [
+	{
+		icon: <Truck className="size-4" />,
+		value: "42",
+		title: "Shipped Orders",
+		changePercentage: "+18.2%",
+	},
+	{
+		icon: <TriangleAlert className="size-4" />,
+		value: "8",
+		title: "Damaged Returns",
+		changePercentage: "-8.7%",
+	},
+	{
+		icon: <CalendarX2 className="size-4" />,
+		value: "27",
+		title: "Missed Delivery Slots",
+		changePercentage: "+4.3%",
+	},
+];
 
-				const [shipmentsRes, customersRes, invoicesRes, warehouseRes] =
-					await Promise.all([
-						supabaseAdmin
-							.from("shipments")
-							.select("id, status", { count: "exact" }),
-						supabaseAdmin.from("customers").select("id", { count: "exact" }),
-						supabaseAdmin
-							.from("invoices")
-							.select("id, amount, status", { count: "exact" }),
-						supabaseAdmin
-							.from("warehouses")
-							.select("id, capacity_used", { count: "exact" }),
-					]);
+// Earning data for Total Earning card
+const earningData = [
+	{
+		icon: "",
+		platform: "Zipcar",
+		technologies: "Vuejs & HTML",
+		earnings: "-$23,569.26",
+		progressPercentage: 75,
+		colorClass: "bg-emerald-500/10 text-emerald-500",
+	},
+	{
+		icon: "",
+		platform: "Bitbank",
+		technologies: "Figma & React",
+		earnings: "-$12,650.31",
+		progressPercentage: 25,
+		colorClass: "bg-blue-500/10 text-blue-500",
+	},
+];
 
-				span.setAttribute("dashboard.shipments.count", shipmentsRes.count ?? 0);
-				span.setAttribute("dashboard.customers.count", customersRes.count ?? 0);
-				span.setAttribute("dashboard.invoices.count", invoicesRes.count ?? 0);
-				span.setAttribute(
-					"dashboard.warehouses.count",
-					warehouseRes.count ?? 0,
-				);
+const transactionData: Item[] = [
+	{
+		id: "1",
+		avatar: "https://github.com/shadcn.png",
+		avatarFallback: "HR",
+		name: "Hallie Richards",
+		email: "hallie.richards@example.com",
+		amount: 129.99,
+		status: "paid",
+		paidBy: "mastercard"
+	},
+	{
+		id: "2",
+		avatar: "https://github.com/shadcn.png",
+		avatarFallback: "MJ",
+		name: "Michael Jones",
+		email: "michael.jones@example.com",
+		amount: 59.50,
+		status: "pending",
+		paidBy: "visa"
+	},
+	{
+		id: "3",
+		avatar: "https://github.com/shadcn.png",
+		avatarFallback: "SK",
+		name: "Sarah King",
+		email: "sarah.king@example.com",
+		amount: 245.00,
+		status: "processing",
+		paidBy: "visa"
+	},
+	{
+		id: "4",
+		avatar: "https://github.com/shadcn.png",
+		avatarFallback: "DL",
+		name: "David Lee",
+		email: "david.lee@example.com",
+		amount: 89.99,
+		status: "failed",
+		paidBy: "mastercard"
+	},
+	{
+		id: "5",
+		avatar: "https://github.com/shadcn.png",
+		avatarFallback: "AM",
+		name: "Andrea Morgan",
+		email: "andrea.morgan@example.com",
+		amount: 154.20,
+		status: "paid",
+		paidBy: "visa"
+	}
+]
 
-				const activeShipments =
-					shipmentsRes.data?.filter((s) =>
-						["pending", "in_transit", "processing"].includes(s.status),
-					).length ?? 0;
-
-				const pendingInvoices =
-					invoicesRes.data?.filter(
-						(i) =>
-							i.status === "pending" ||
-							i.status === "overdue" ||
-							i.status === "unpaid",
-					).length ?? 0;
-
-				const avgCapacity = warehouseRes.data?.length
-					? warehouseRes.data.reduce(
-						(sum, w) => sum + (Number(w.capacity_used) || 0),
-						0,
-					) / warehouseRes.data.length
-					: 0;
-
-				return {
-					totalShipments: shipmentsRes.count ?? activeShipments,
-					activeShipments,
-					activeCustomers: customersRes.count ?? 0,
-					pendingInvoices: pendingInvoices,
-					warehouseCapacity: Math.round(avgCapacity),
-					shipmentsTrend: 12.5,
-					customersTrend: 8.2,
-					invoicesTrend: -5.3,
-					capacityTrend: -2.3,
-					exceptionsThisWeek: 12,
-					exceptionsTrend: 5.4,
-				};
-			} catch (error) {
-				Sentry.captureException(error);
-
-				logger.error(
-					logger.fmt`Error fetching dashboard stats: ${error instanceof Error ? error.message : "unknown error"
-						}`,
-				);
-
-				return {
-					totalShipments: 0,
-					activeShipments: 0,
-					activeCustomers: 0,
-					pendingInvoices: 0,
-					warehouseCapacity: 0,
-					shipmentsTrend: 0,
-					customersTrend: 0,
-					invoicesTrend: 0,
-					capacityTrend: 0,
-					exceptionsThisWeek: 0,
-					exceptionsTrend: 0,
-				};
-			}
-		},
-	);
-}
-
-async function getShipments(limit = 50): Promise<TypedShipment[]> {
-	const logger = (Sentry as any).logger ?? console;
-
-	return Sentry.startSpan(
-		{
-			op: "db.query",
-			name: "dashboard:getShipments",
-		},
-		async (span) => {
-			try {
-				const { supabaseAdmin } = await import("@/lib/supabaseAdmin");
-
-				const { data, error } = await supabaseAdmin
-					.from("shipments")
-					.select(`
-						id,
-						shipment_ref,
-						origin,
-						destination,
-						status,
-						weight,
-						created_at,
-						customer:customers(name)
-					`)
-					.order("created_at", { ascending: false })
-					.limit(limit);
-
-				if (error) throw error;
-
-				span.setAttribute("dashboard.shipments.fetched", data?.length ?? 0);
-
-				return (data || []).map((row: any, index: number) => ({
-					id: index + 1,
-					shipment_ref: row.shipment_ref || `SHP-${index}`,
-					customer_name: row.customer?.name || "Unknown Customer",
-					origin: row.origin || "—",
-					destination: row.destination || "—",
-					status: normalizeStatus(row.status),
-					weight: row.weight || 0,
-					created_at: row.created_at,
-				}));
-			} catch (error) {
-				Sentry.captureException(error);
-				logger.error(
-					logger.fmt`Error fetching shipments: ${error instanceof Error ? error.message : "unknown error"}`,
-				);
-				return [];
-			}
-		},
-	);
-}
-
-function normalizeStatus(status: string | null): TypedShipment["status"] {
-	const s = (status || "").toLowerCase().replace(/-/g, "_");
-	if (s === "pending") return "pending";
-	if (s === "in_transit" || s === "in-transit") return "in_transit";
-	if (s === "delivered") return "delivered";
-	if (s === "cancelled" || s === "canceled") return "cancelled";
-	return "pending";
-}
-
-
-import { MotionItem, MotionList } from "@/components/ui/motion-wrapper";
-import { ArSummaryCards } from "@/features/invoices/ar-summary-cards";
-import { getARStats } from "@/lib/finance";
-
-export default async function Page({
-	searchParams,
-}: {
-	searchParams?: Promise<{
-		q?: string;
-		status?: "pending" | "in_transit" | "delivered" | "cancelled";
-	}>;
-}) {
-	const params = await searchParams;
-	const [stats, arStats, shipments] = await Promise.all([
-		getDashboardStats(),
-		getARStats().catch(() => null),
-		getShipments(50),
-	]);
-
+export default function DashboardHome() {
 	return (
-		<DashboardPageLayout
-			header={{
-				title: "Dashboard",
-				description:
-					"Core operations overview for shipments, customers, billing, and capacity.",
-				icon: BracketsIcon,
-			}}
+		<PageContainer
+			pageTitle="Dashboard"
+			pageDescription="Core operations overview for shipments, customers, billing, and capacity."
 		>
-			<div className="flex flex-1 flex-col">
-				<div className="@container/main flex flex-1 flex-col gap-2">
-					<MotionList className="flex flex-col gap-4 py-4 md:gap-6 md:py-6" stagger={0.15}>
-						<MotionItem>
-							<OpsCommandGrid stats={stats} />
-						</MotionItem>
-
-						{arStats && (
-							<MotionItem className="px-4 lg:px-6 space-y-4">
-								<h2 className="text-lg font-semibold tracking-tight">
-									Financial Performance
-								</h2>
-								<ArSummaryCards arSummary={arStats} />
-							</MotionItem>
-						)}
-
-						<MotionItem className="px-4 lg:px-6">
-							<ShipmentMap />
-						</MotionItem>
-
-						<MotionItem className="grid gap-4 px-4 lg:px-6 md:grid-cols-2">
-							<ShipmentDiagnostics />
-							<RecentShipments
-								shipments={shipments.map((s) => ({
-									shipment_ref: s.shipment_ref,
-									customer_name: s.customer_name,
-									status: s.status,
-								}))}
-							/>
-						</MotionItem>
-						<MotionItem>
-							<ShipmentsDataTable
-								data={shipments}
-								initialFilter={params?.q}
-								initialStatus={params?.status}
-							/>
-						</MotionItem>
-					</MotionList>
+			<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+				{/* Statistics Cards - Full Width on Mobile, Grid on Large */}
+				<div className="col-span-full grid gap-6 sm:grid-cols-3">
+					{StatisticsCardData.map((card, index) => (
+						<StatisticsCard
+							key={index}
+							icon={card.icon}
+							title={card.title}
+							value={card.value}
+							changePercentage={card.changePercentage}
+						/>
+					))}
 				</div>
+
+				{/* Middle Row: Product Insights & Total Earnings */}
+				<div className="col-span-full grid gap-6 lg:grid-cols-2">
+					<ProductInsightsCard className="h-full" />
+
+					<TotalEarningCard
+						title="Total Earning"
+						earning={24650}
+						trend="up"
+						percentage={10}
+						comparisonText="Compare to last year ($84,325)"
+						earningData={earningData}
+						className="h-full"
+					/>
+				</div>
+
+				{/* Sales Metrics Card (Spans full width) */}
+				<SalesMetricsCard className="col-span-full" />
+
+				{/* Transaction Table */}
+				<Card className="col-span-full w-full py-0">
+					<TransactionDatatable data={transactionData} />
+				</Card>
 			</div>
-		</DashboardPageLayout>
+		</PageContainer>
 	);
 }

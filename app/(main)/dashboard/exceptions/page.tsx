@@ -4,7 +4,7 @@ import * as Sentry from "@sentry/nextjs";
 import { AlertTriangle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
-import DashboardPageLayout from "@/components/dashboard/layout";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -69,13 +69,15 @@ function ExceptionsTracker() {
 
 export default function ExceptionsPage() {
 	return (
-		<DashboardPageLayout
-			header={{
-				title: "Exceptions & Delays",
-				description: "Monitor and triage active shipment issues.",
-				icon: AlertTriangle,
-			}}
-		>
+		<div className="space-y-6">
+			<div className="flex items-center justify-between">
+				<div>
+					<h2 className="text-2xl font-bold tracking-tight">Exceptions & Delays</h2>
+					<p className="text-muted-foreground">
+						Monitor and triage active shipment issues.
+					</p>
+				</div>
+			</div>
 			<ExceptionsTracker />
 			<div className="space-y-6">
 				<div className="flex items-center gap-4">
@@ -158,6 +160,6 @@ export default function ExceptionsPage() {
 					</CardContent>
 				</Card>
 			</div>
-		</DashboardPageLayout>
+		</div>
 	);
 }

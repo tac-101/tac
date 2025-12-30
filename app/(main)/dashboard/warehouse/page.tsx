@@ -5,7 +5,8 @@ import { Loader2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/data-table";
+import { DataTableBlock } from "@/components/blocks/data-table/data-table-block";
+import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabaseClient";
@@ -63,21 +64,27 @@ export default function WarehousePage() {
 		() => [
 			{
 				accessorKey: "name",
-				header: "Warehouse",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Warehouse" />
+				),
 				cell: ({ row }) => (
 					<span className="font-medium">{row.getValue("name")}</span>
 				),
 			},
 			{
 				accessorKey: "location",
-				header: "Location",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Location" />
+				),
 				cell: ({ row }) => (
 					<span className="uppercase">{row.getValue("location")}</span>
 				),
 			},
 			{
 				accessorKey: "utilization",
-				header: "Utilization",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Utilization" />
+				),
 				cell: ({ row }) => {
 					const used = row.original.capacityUsed;
 					const total = row.original.totalCapacity;
@@ -98,7 +105,12 @@ export default function WarehousePage() {
 			},
 			{
 				accessorKey: "status",
-				header: "Status",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Status" />
+				),
+				filterFn: (row, id, value) => {
+					return value.includes(row.getValue(id));
+				},
 				cell: ({ row }) => {
 					const status = row.getValue("status") as string;
 					return (
@@ -135,7 +147,23 @@ export default function WarehousePage() {
 				<Button className="rounded-none">Add Warehouse</Button>
 			</div>
 
-			<DataTable columns={columns} data={data} searchKey="name" />
+			<DataTableBlock
+				columns={columns}
+				data={data}
+				searchKey="name"
+				searchPlaceholder="Filter warehouses..."
+				facetedFilters={[
+					{
+						column: "status",
+						title: "Status",
+						options: [
+							{ label: "Active", value: "active" },
+							{ label: "Inactive", value: "inactive" },
+							{ label: "Maintenance", value: "maintenance" },
+						],
+					},
+				]}
+			/>
 		</div>
 	);
 }

@@ -1,0 +1,98 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [active]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - navigation [ref=e7]:
+            - button "previous" [disabled] [ref=e8]:
+              - img "previous" [ref=e9]
+            - generic [ref=e11]:
+              - generic [ref=e12]: 1/
+              - text: "1"
+            - button "next" [disabled] [ref=e13]:
+              - img "next" [ref=e14]
+          - img
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - img [ref=e18]
+            - generic "Latest available version is detected (16.1.1)." [ref=e20]: Next.js 16.1.1
+            - generic [ref=e21]: Turbopack
+          - img
+      - dialog "Runtime Error" [ref=e23]:
+        - generic [ref=e26]:
+          - generic [ref=e27]:
+            - generic [ref=e28]:
+              - generic [ref=e30]: Runtime Error
+              - generic [ref=e31]:
+                - button "Copy Error Info" [ref=e32] [cursor=pointer]:
+                  - img [ref=e33]
+                - button "No related documentation found" [disabled] [ref=e35]:
+                  - img [ref=e36]
+                - button "Attach Node.js inspector" [ref=e38] [cursor=pointer]:
+                  - img [ref=e39]
+            - generic [ref=e48]: A <Select.Item /> must have a value prop that is not an empty string. This is because the Select value can be set to an empty string to clear the selection and show the placeholder.
+          - generic [ref=e49]:
+            - generic [ref=e50]:
+              - paragraph [ref=e52]:
+                - img [ref=e54]
+                - generic [ref=e57]: components/ui/select.tsx (111:5) @ SelectItem
+                - button "Open in editor" [ref=e58] [cursor=pointer]:
+                  - img [ref=e60]
+              - generic [ref=e63]:
+                - generic [ref=e64]: "109 | }: React.ComponentProps<typeof SelectPrimitive.Item>) {"
+                - generic [ref=e65]: 110 | return (
+                - generic [ref=e66]: "> 111 | <SelectPrimitive.Item"
+                - generic [ref=e67]: "| ^"
+                - generic [ref=e68]: 112 | data-slot="select-item"
+                - generic [ref=e69]: "113 | className={cn("
+                - generic [ref=e70]: 114 | "focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground gap-2 rounded-none py-2 pr-8 pl-2 text-xs [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2 relative flex w-full cursor-default items-center outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+            - generic [ref=e71]:
+              - generic [ref=e72]:
+                - paragraph [ref=e73]:
+                  - text: Call Stack
+                  - generic [ref=e74]: "24"
+                - button "Show 20 ignore-listed frame(s)" [ref=e75] [cursor=pointer]:
+                  - text: Show 20 ignore-listed frame(s)
+                  - img [ref=e76]
+              - generic [ref=e78]:
+                - generic [ref=e79]:
+                  - text: SelectItem
+                  - button "Open SelectItem in editor" [ref=e80] [cursor=pointer]:
+                    - img [ref=e81]
+                - text: components/ui/select.tsx (111:5)
+              - generic [ref=e83]:
+                - generic [ref=e84]:
+                  - text: Object.render
+                  - button "Open Object.render in editor" [ref=e85] [cursor=pointer]:
+                    - img [ref=e86]
+                - text: app/(main)/dashboard/invoices/new/page.tsx (228:13)
+              - generic [ref=e88]:
+                - generic [ref=e89]:
+                  - text: FormField
+                  - button "Open FormField in editor" [ref=e90] [cursor=pointer]:
+                    - img [ref=e91]
+                - text: components/ui/form.tsx (39:4)
+              - generic [ref=e93]:
+                - generic [ref=e94]:
+                  - text: NewInvoicePage
+                  - button "Open NewInvoicePage in editor" [ref=e95] [cursor=pointer]:
+                    - img [ref=e96]
+                - text: app/(main)/dashboard/invoices/new/page.tsx (215:8)
+        - generic [ref=e98]: "1"
+        - generic [ref=e99]: "2"
+    - generic [ref=e104] [cursor=pointer]:
+      - button "Open Next.js Dev Tools" [ref=e105]:
+        - img [ref=e106]
+      - generic [ref=e109]:
+        - button "Open issues overlay" [ref=e110]:
+          - generic [ref=e111]:
+            - generic [ref=e112]: "0"
+            - generic [ref=e113]: "1"
+          - generic [ref=e114]: Issue
+        - button "Collapse issues badge" [ref=e115]:
+          - img [ref=e116]
+  - 'heading "Application error: a client-side exception has occurred while loading localhost (see the browser console for more information)." [level=2] [ref=e120]'
+```

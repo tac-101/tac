@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import DashboardPageLayout from "@/components/dashboard/layout";
+
 import GearIcon from "@/components/icons/gear";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -86,14 +86,15 @@ export default function InvoiceLogsPage() {
 		value ? new Date(value).toLocaleString() : "-";
 
 	return (
-		<DashboardPageLayout
-			header={{
-				title: "Invoice Generation Logs",
-				description:
-					"Inspect invoice PDF generation attempts and retry if needed",
-				icon: GearIcon,
-			}}
-		>
+		<div className="space-y-6">
+			<div className="flex items-center justify-between">
+				<div>
+					<h2 className="text-2xl font-bold tracking-tight">Invoice Generation Logs</h2>
+					<p className="text-muted-foreground">
+						Inspect invoice PDF generation attempts and retry if needed
+					</p>
+				</div>
+			</div>
 			<div className="flex flex-col gap-6">
 				<Card>
 					<CardHeader>
@@ -184,6 +185,6 @@ export default function InvoiceLogsPage() {
 					</CardContent>
 				</Card>
 			</div>
-		</DashboardPageLayout>
+		</div>
 	);
 }

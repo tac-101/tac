@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { Loader2, Radio, RefreshCw, Volume2, VolumeX } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import DashboardPageLayout from "@/components/dashboard/layout";
+
 import ProcessorIcon from "@/components/icons/proccesor";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -115,7 +115,7 @@ export default function TrackingPage() {
 					setNewEventCount((c) => c + 1);
 
 					if (soundEnabled && audioRef.current) {
-						audioRef.current.play().catch(() => {});
+						audioRef.current.play().catch(() => { });
 					}
 
 					setTimeout(() => {
@@ -191,39 +191,32 @@ export default function TrackingPage() {
 
 	if (loading) {
 		return (
-			<DashboardPageLayout
-				header={{
-					title: "Live Tracking",
-					description: "Real-time scan events stream",
-					icon: ProcessorIcon,
-				}}
-			>
-				<div className="flex h-64 items-center justify-center">
-					<Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-				</div>
-			</DashboardPageLayout>
+			<div className="flex h-64 items-center justify-center">
+				<Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+			</div>
 		);
 	}
 
 	return (
-		<DashboardPageLayout
-			header={{
-				title: "Live Tracking",
-				description: "Real-time scan events stream",
-				icon: ProcessorIcon,
-			}}
-		>
+		<div className="space-y-6">
 			<audio ref={audioRef} src="/sounds/scan-beep.mp3" preload="auto" />
+			<div className="flex items-center justify-between">
+				<div>
+					<h2 className="text-2xl font-bold tracking-tight">Live Tracking</h2>
+					<p className="text-muted-foreground">
+						Real-time scan events stream.
+					</p>
+				</div>
+			</div>
 
-			<div className="space-y-6 px-4 lg:px-6 py-4">
+			<div className="space-y-6">
 				<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
 					<div className="flex items-center gap-3">
 						<div
-							className={`flex items-center gap-2 px-3 py-1.5 text-xs font-mono uppercase tracking-wider border ${
-								isLive
-									? "bg-emerald-500/10 text-emerald-500 border-emerald-500/30"
-									: "bg-muted text-muted-foreground border-border"
-							}`}
+							className={`flex items-center gap-2 px-3 py-1.5 text-xs font-mono uppercase tracking-wider border ${isLive
+								? "bg-emerald-500/10 text-emerald-500 border-emerald-500/30"
+								: "bg-muted text-muted-foreground border-border"
+								}`}
 						>
 							<Radio className={`h-3 w-3 ${isLive ? "animate-pulse" : ""}`} />
 							{isLive ? "Live" : "Paused"}
@@ -273,6 +266,6 @@ export default function TrackingPage() {
 
 				<DataTable columns={columns} data={data} searchKey="shipmentRef" />
 			</div>
-		</DashboardPageLayout>
+		</div>
 	);
 }

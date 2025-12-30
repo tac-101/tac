@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import DashboardPageLayout from "@/components/dashboard/layout";
+
 import StorageIcon from "@/components/icons/gear";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
@@ -165,14 +165,15 @@ export default function AdminSettingsPage() {
 	};
 
 	return (
-		<DashboardPageLayout
-			header={{
-				title: "Admin Settings",
-				description:
-					"Platform configuration, maintenance controls, and security posture",
-				icon: StorageIcon,
-			}}
-		>
+		<div className="space-y-6">
+			<div className="flex items-center justify-between">
+				<div>
+					<h2 className="text-2xl font-bold tracking-tight">Admin Settings</h2>
+					<p className="text-muted-foreground">
+						Platform configuration, maintenance controls, and security posture.
+					</p>
+				</div>
+			</div>
 			<div className="space-y-6">
 				<Card className="border-pop bg-background">
 					<CardHeader>
@@ -232,6 +233,6 @@ export default function AdminSettingsPage() {
 					</CardContent>
 				</Card>
 			</div>
-		</DashboardPageLayout>
+		</div>
 	);
 }

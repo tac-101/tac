@@ -1,14 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { 
-  Barcode, 
-  ChevronRight, 
-  Clock, 
-  ExternalLink, 
-  LocateFixed, 
-  MapPin, 
-  Package, 
+import {
+  Barcode,
+  ChevronRight,
+  Clock,
+  ExternalLink,
+  LocateFixed,
+  MapPin,
+  Package,
   Search,
   Truck
 } from "lucide-react";
@@ -28,74 +28,6 @@ const MOCK_HISTORY = [
   { id: "4", date: "2024-03-23 18:00", location: "Doha Hub", event: "Consolidated into XL-92", user: "Hub Admin" },
 ];
 
-<<<<<<< HEAD
-    const handleSearch = () => {
-        if (!trackingId) return;
-        setLoading(true);
-        // Mock search delay
-        setTimeout(() => {
-            setResults({
-                id: trackingId,
-                status: "In Transit",
-                origin: "Bangalore Hub (BLR)",
-                destination: "Dubai (DXB)",
-                currentLocation: "Mumbai Gateway (BOM)",
-                history: [
-                    { status: "Arrived at Hub", location: "BOM", time: "2025-12-29 04:12" },
-                    { status: "Manifested", location: "BLR", time: "2025-12-28 22:45" },
-                    { status: "Picked Up", location: "Warehouse A", time: "2025-12-28 18:30" },
-                ]
-            });
-            setLoading(false);
-        }, 1000);
-    };
-
-    const handleReset = () => {
-        setTrackingId("");
-        setResults(null);
-    };
-
-    return (
-        <DashboardPageLayout
-            header={{
-                title: "Barcode Tracking",
-                description: "Lookup and trace individual barcode lifecycle and chain of custody",
-                icon: BracketsIcon,
-            }}
-        >
-            <div className="max-w-4xl mx-auto space-y-8">
-                {/* Search Hero Section */}
-                <Card className="bg-primary/5 border-primary/20 rounded-none overflow-hidden shadow-[0_0_40px_rgba(var(--primary),0.1)]">
-                    <CardContent className="p-8 space-y-6">
-                        <div className="space-y-2 text-center">
-                            <h3 className="text-2xl font-bold">Fast Tracking</h3>
-                            <p className="text-muted-foreground">Enter a package barcode to view its journey</p>
-                        </div>
-
-                        <div className="flex gap-2 p-1 bg-background/50 border border-white/5 backdrop-blur-md">
-                            <Input
-                                placeholder="e.g. TAC-12345678"
-                                className="h-12 border-none rounded-none text-lg font-mono focus-visible:ring-0 bg-transparent placeholder:text-muted-foreground/30"
-                                value={trackingId}
-                                onChange={(e) => setTrackingId(e.target.value.toUpperCase())}
-                                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                            />
-                            <div className="flex gap-2">
-                                {results && (
-                                    <Button variant="outline" size="lg" className="h-12 px-6 rounded-none" onClick={handleReset}>
-                                        <History className="mr-2 h-4 w-4" /> Reset
-                                    </Button>
-                                )}
-                                <Button size="lg" className="h-12 px-8 rounded-none shadow-lg" onClick={handleSearch} disabled={loading}>
-                                    {loading ? "Searching..." : (
-                                        <><Search className="mr-2 h-5 w-5" /> Track Package</>
-                                    )}
-                                </Button>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-=======
 export default function BarcodesPage() {
   const [trackingId, setTrackingId] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
@@ -105,14 +37,14 @@ export default function BarcodesPage() {
   };
 
   return (
-    <div className="flex-1 space-y-8 p-8 pt-6">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-bold tracking-tight">
             Barcode Tracking
           </h2>
           <p className="text-muted-foreground">
-            Search and trace any package using unique barcode identifiers.
+            Search and trace package movements across the network.
           </p>
         </div>
         <div className="flex gap-2">
@@ -126,7 +58,6 @@ export default function BarcodesPage() {
           </Button>
         </div>
       </div>
->>>>>>> origin/main
 
       <Card className="glass overflow-hidden border-none shadow-2xl relative">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5" />
@@ -144,16 +75,16 @@ export default function BarcodesPage() {
           <div className="flex w-full max-w-xl items-center space-x-2 bg-white/5 p-2 rounded-2xl border border-white/5 ring-1 ring-white/5 shadow-2xl backdrop-blur-3xl">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-              <Input 
-                placeholder="Ex: TAC-AWB-987219..." 
+              <Input
+                placeholder="Ex: TAC-AWB-987219..."
                 className="pl-10 h-12 bg-transparent border-none focus-visible:ring-0 text-lg font-medium"
                 value={trackingId}
                 onChange={(e) => setTrackingId(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               />
             </div>
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               className="h-12 px-8 btn-gradient-warm rounded-xl shadow-xl hover:scale-105 transition-all"
               onClick={handleSearch}
             >
@@ -162,14 +93,14 @@ export default function BarcodesPage() {
           </div>
 
           <div className="flex gap-6 text-xs text-muted-foreground font-medium uppercase tracking-widest pt-4">
-             <span className="flex items-center gap-2"><div className="w-1 h-1 bg-primary rounded-full" /> 3.2M Scanned this week</span>
-             <span className="flex items-center gap-2"><div className="w-1 h-1 bg-primary rounded-full" /> 99.9% Tracking uptime</span>
+            <span className="flex items-center gap-2"><div className="w-1 h-1 bg-primary rounded-full" /> 3.2M Scanned this week</span>
+            <span className="flex items-center gap-2"><div className="w-1 h-1 bg-primary rounded-full" /> 99.9% Tracking uptime</span>
           </div>
         </CardContent>
       </Card>
 
       {hasSearched && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
@@ -246,7 +177,7 @@ export default function BarcodesPage() {
                           <span className="text-[11px] uppercase">{item.user}</span>
                         </div>
                         {i === 0 && (
-                          <motion.div 
+                          <motion.div
                             initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                             className="bg-primary/5 border border-primary/10 rounded-lg p-2 mt-2 flex items-center justify-between group cursor-pointer hover:bg-primary/10 transition-colors"
                           >
@@ -260,11 +191,11 @@ export default function BarcodesPage() {
                 </div>
               </ScrollArea>
               <div className="p-4 bg-white/5 border-t border-white/5 flex gap-2 overflow-x-auto no-scrollbar">
-                 {['Photo Proof', 'GPS Coordinates', 'Signature', 'Invoice'].map(tag => (
-                   <Badge key={tag} variant="secondary" className="glass bg-white/5 hover:bg-white/10 whitespace-nowrap cursor-pointer">
-                     {tag}
-                   </Badge>
-                 ))}
+                {['Photo Proof', 'GPS Coordinates', 'Signature', 'Invoice'].map(tag => (
+                  <Badge key={tag} variant="secondary" className="glass bg-white/5 hover:bg-white/10 whitespace-nowrap cursor-pointer">
+                    {tag}
+                  </Badge>
+                ))}
               </div>
             </CardContent>
           </Card>

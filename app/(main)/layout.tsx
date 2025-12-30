@@ -1,14 +1,25 @@
-// Layout for (main) route group - provides sidebar shell for all authenticated routes
-// This replaces having individual layouts in each sub-route
+"use client"
 
-import type React from "react";
-
-import AppShell from "@/components/layout/app-shell";
+import type React from "react"
+import AppSidebar from "@/components/layout/app-sidebar"
+import Header from "@/components/layout/header"
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import KBar from "@/components/kbar"
 
 export default function MainLayout({
 	children,
 }: {
-	children: React.ReactNode;
+	children: React.ReactNode
 }) {
-	return <AppShell>{children}</AppShell>;
+	return (
+		<KBar>
+			<SidebarProvider>
+				<AppSidebar />
+				<SidebarInset>
+					<Header />
+					{children}
+				</SidebarInset>
+			</SidebarProvider>
+		</KBar>
+	)
 }

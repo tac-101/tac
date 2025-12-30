@@ -1,0 +1,7 @@
+[defaults]
+url=https://de.sentry.io
+org=tapan-go
+project=javascript-nextjs
+
+[auth]
+# token=your_sentry_auth_token_here

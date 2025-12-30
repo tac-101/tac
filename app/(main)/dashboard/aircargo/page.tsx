@@ -1,14 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { 
-  ArrowRight, 
-  BarChart3, 
-  Box, 
-  Calendar, 
-  ChevronRight, 
-  Filter, 
-  Package, 
+import {
+  ArrowRight,
+  BarChart3,
+  Box,
+  Calendar,
+  ChevronRight,
+  Filter,
+  Package,
   Search,
   Ship,
   TrendingUp
@@ -20,13 +20,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 
@@ -80,16 +80,16 @@ const MOCK_MANIFESTS = [
 export default function AircargoPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredManifests = MOCK_MANIFESTS.filter(m => 
-    m.id.toLowerCase().includes(searchQuery.toLowerCase()) || 
+  const filteredManifests = MOCK_MANIFESTS.filter(m =>
+    m.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
     m.flight.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
-    <div className="flex-1 space-y-8 p-8 pt-6">
-      <div className="flex items-center justify-between space-y-2">
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-bold tracking-tight">
             Aircargo Manifest
           </h2>
           <p className="text-muted-foreground">
@@ -101,6 +101,12 @@ export default function AircargoPage() {
             <Calendar className="mr-2 h-4 w-4" />
             Schedule
           </Button>
+          <Link href="/dashboard/aircargo/manifests/new">
+            <Button variant="outline" className="glass transition-all hover:scale-105">
+              <Box className="mr-2 h-4 w-4" />
+              New Manifest
+            </Button>
+          </Link>
           <Link href="/dashboard/aircargo/scan-session">
             <Button className="btn-gradient-warm transition-all hover:scale-105">
               <Package className="mr-2 h-4 w-4" />
@@ -157,8 +163,8 @@ export default function AircargoPage() {
               </CardTitle>
               <div className="relative w-72">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input 
-                  placeholder="Search manifest or flight..." 
+                <Input
+                  placeholder="Search manifest or flight..."
                   className="pl-9 bg-white/5 border-white/10 h-9 transition-all focus:ring-primary/20"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -189,8 +195,8 @@ export default function AircargoPage() {
             </TableHeader>
             <TableBody>
               {filteredManifests.map((manifest) => (
-                <TableRow 
-                  key={manifest.id} 
+                <TableRow
+                  key={manifest.id}
                   className="group hover:bg-white/5 border-white/5 transition-colors cursor-pointer"
                 >
                   <TableCell className="font-mono font-medium text-primary">
@@ -221,8 +227,8 @@ export default function AircargoPage() {
                     {manifest.weight}
                   </TableCell>
                   <TableCell>
-                    <Badge 
-                      variant="outline" 
+                    <Badge
+                      variant="outline"
                       className={cn(
                         "font-medium",
                         manifest.status === "Arrived" && "bg-success/10 text-success border-success/20",

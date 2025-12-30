@@ -6,6 +6,14 @@ import { useCallback, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table"
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabaseClient";
 
@@ -76,15 +84,15 @@ export function ShipmentMap() {
 			const { data, error } = await supabase
 				.from("shipments")
 				.select(`
-					id,
-					shipment_ref,
-					origin,
-					destination,
-					status,
-					progress,
-					transport_mode,
-					eta,
-					customer:customers(name)
+id,
+	shipment_ref,
+	origin,
+	destination,
+	status,
+	progress,
+	transport_mode,
+	eta,
+	customer: customers(name)
 				`)
 				.in("status", ["pending", "in_transit", "in-transit", "processing"])
 				.order("created_at", { ascending: false })
@@ -221,10 +229,10 @@ export function ShipmentMap() {
 									return (
 										<g key={s.id}>
 											<line
-												x1={`${x1}%`}
-												y1={`${y1}%`}
-												x2={`${x2}%`}
-												y2={`${y2}%`}
+												x1={`${x1}% `}
+												y1={`${y1}% `}
+												x2={`${x2}% `}
+												y2={`${y2}% `}
 												stroke={isActive ? "hsl(var(--primary))" : "rgba(100,100,100,0.3)"}
 												strokeWidth={isActive ? 2 : 1}
 												strokeDasharray={isActive ? "none" : "4,4"}
@@ -232,8 +240,8 @@ export function ShipmentMap() {
 											/>
 											{isActive && (
 												<circle
-													cx={`${x1 + (x2 - x1) * (s.progress / 100)}%`}
-													cy={`${y1 + (y2 - y1) * (s.progress / 100)}%`}
+													cx={`${x1 + (x2 - x1) * (s.progress / 100)}% `}
+													cy={`${y1 + (y2 - y1) * (s.progress / 100)}% `}
 													r="4"
 													fill="hsl(var(--primary))"
 													className="animate-pulse"
@@ -256,7 +264,7 @@ export function ShipmentMap() {
 									<div
 										key={node.name}
 										className="absolute transform -translate-x-1/2 -translate-y-1/2 z-10"
-										style={{ left: `${x}%`, top: `${y}%` }}
+										style={{ left: `${x}% `, top: `${y}% ` }}
 									>
 										<div
 											className={cn(
@@ -295,25 +303,25 @@ export function ShipmentMap() {
 					</div>
 				) : (
 					<div className="max-h-[400px] overflow-y-auto">
-						<table className="w-full text-sm">
-							<thead className="bg-muted/50 sticky top-0">
-								<tr>
-									<th className="text-left py-2 px-4 font-semibold">Reference</th>
-									<th className="text-left py-2 px-4 font-semibold">Route</th>
-									<th className="text-left py-2 px-4 font-semibold">Status</th>
-									<th className="text-left py-2 px-4 font-semibold">Progress</th>
-									<th className="text-left py-2 px-4 font-semibold">ETA</th>
-								</tr>
-							</thead>
-							<tbody>
+						<Table>
+							<TableHeader className="bg-muted/50 sticky top-0">
+								<TableRow>
+									<TableHead>Reference</TableHead>
+									<TableHead>Route</TableHead>
+									<TableHead>Status</TableHead>
+									<TableHead>Progress</TableHead>
+									<TableHead>ETA</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
 								{shipments.map((s) => (
-									<tr
+									<TableRow
 										key={s.id}
-										className="border-b border-border hover:bg-muted/30 cursor-pointer"
+										className="hover:bg-muted/30 cursor-pointer"
 										onClick={() => setSelectedShipment(s)}
 									>
-										<td className="py-3 px-4 font-mono text-xs">{s.shipment_ref}</td>
-										<td className="py-3 px-4">
+										<TableCell className="font-mono text-xs">{s.shipment_ref}</TableCell>
+										<TableCell>
 											<div className="flex items-center gap-2 text-xs">
 												<span>{s.origin}</span>
 												{s.transport_mode === "air" ? (
@@ -323,8 +331,8 @@ export function ShipmentMap() {
 												)}
 												<span>{s.destination}</span>
 											</div>
-										</td>
-										<td className="py-3 px-4">
+										</TableCell>
+										<TableCell>
 											<Badge
 												variant="outline"
 												className={cn(
@@ -334,27 +342,27 @@ export function ShipmentMap() {
 											>
 												{s.status.replace(/_/g, " ")}
 											</Badge>
-										</td>
-										<td className="py-3 px-4">
+										</TableCell>
+										<TableCell>
 											<div className="flex items-center gap-2">
 												<div className="h-1.5 w-20 bg-muted rounded-full overflow-hidden">
 													<div
 														className="h-full bg-primary transition-all"
-														style={{ width: `${s.progress}%` }}
+														style={{ width: `${s.progress}% ` }}
 													/>
 												</div>
 												<span className="text-xs text-muted-foreground font-mono">
 													{s.progress}%
 												</span>
 											</div>
-										</td>
-										<td className="py-3 px-4 text-xs text-muted-foreground font-mono">
+										</TableCell>
+										<TableCell className="text-xs text-muted-foreground font-mono">
 											{s.eta ? format(new Date(s.eta), "dd MMM, HH:mm") : "—"}
-										</td>
-									</tr>
+										</TableCell>
+									</TableRow>
 								))}
-							</tbody>
-						</table>
+							</TableBody>
+						</Table>
 					</div>
 				)}
 			</CardContent>

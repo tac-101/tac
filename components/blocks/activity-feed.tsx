@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
-interface ActivityItem {
+export interface ActivityItem {
   id: string
   user: {
     name: string

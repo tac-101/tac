@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from '@/lib/react-query/client'
-import { createClient } from '@/lib/supabase/client'
+import { supabase } from '@/lib/supabaseClient'
 
 // Types
 interface Shipment {
@@ -28,7 +28,7 @@ interface ShipmentFilters {
 // API functions
 const shipmentsApi = {
   getAll: async (filters: ShipmentFilters = {}): Promise<Shipment[]> => {
-    const supabase = createClient()
+    // Using imported supabase client
     let query = supabase.from('shipments').select('*')
     
     if (filters.status) {
@@ -68,7 +68,7 @@ const shipmentsApi = {
   },
   
   getById: async (id: string): Promise<Shipment> => {
-    const supabase = createClient()
+    // Using imported supabase client
     const { data, error } = await supabase
       .from('shipments')
       .select('*')
@@ -80,7 +80,7 @@ const shipmentsApi = {
   },
   
   create: async (shipment: Omit<Shipment, 'id' | 'created_at' | 'updated_at'>): Promise<Shipment> => {
-    const supabase = createClient()
+    // Using imported supabase client
     const { data, error } = await supabase
       .from('shipments')
       .insert(shipment)
@@ -92,7 +92,7 @@ const shipmentsApi = {
   },
   
   update: async (id: string, updates: Partial<Shipment>): Promise<Shipment> => {
-    const supabase = createClient()
+    // Using imported supabase client
     const { data, error } = await supabase
       .from('shipments')
       .update({ ...updates, updated_at: new Date().toISOString() })
@@ -105,7 +105,7 @@ const shipmentsApi = {
   },
   
   delete: async (id: string): Promise<void> => {
-    const supabase = createClient()
+    // Using imported supabase client
     const { error } = await supabase
       .from('shipments')
       .delete()

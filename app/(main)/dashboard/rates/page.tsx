@@ -4,7 +4,8 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/data-table";
+import { DataTableBlock } from "@/components/blocks/data-table/data-table-block";
+import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 import { supabase } from "@/lib/supabaseClient";
 
 type UIRate = {
@@ -57,15 +58,21 @@ export default function RatesPage() {
 		() => [
 			{
 				accessorKey: "origin",
-				header: "Origin",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Origin" />
+				),
 			},
 			{
 				accessorKey: "destination",
-				header: "Destination",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Destination" />
+				),
 			},
 			{
 				accessorKey: "ratePerKg",
-				header: "Rate / kg",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Rate / kg" />
+				),
 				cell: ({ row }) => {
 					const rate = parseFloat(row.getValue("ratePerKg"));
 					return new Intl.NumberFormat("en-IN", {
@@ -108,7 +115,7 @@ export default function RatesPage() {
 				<Button className="rounded-none">Update Rates</Button>
 			</div>
 
-			<DataTable columns={columns} data={data} searchKey="origin" />
+			<DataTableBlock columns={columns} data={data} searchKey="origin" />
 		</div>
 	);
 }

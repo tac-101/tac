@@ -1,5 +1,5 @@
 {
-  "status": "committed",
+  "status": "commited",
   "type": "frontend",
   "scope": "codebase",
   "localEndpoint": "http://localhost:3000",
@@ -7,10 +7,13 @@
     "projectName": "tac",
     "projectPath": "c:\\cargo-project\\tac",
     "testIds": [],
-    "additionalInstruction": "",
+    "additionalInstruction": "Ensure all tests use http://localhost:3000 as the base URL.",
     "envs": {
-      "API_KEY": "${TEST_API_KEY}"
+      "API_KEY": "sk-user-P5Ii-6qhm5eMh3HLcvR811kMSmRDW_K35G2LF9x-4lh-qZtw76FKlBgJqDcjWhe6rmHxkZN5nXQjHZReeZAP9qnRmGr9MtNDzl6i5rvKBYcliqi-lojkod_FE_xWSx4f66c",
+      "TEST_ADMIN_EMAIL": "admin@tapango.logistics",
+      "TEST_ADMIN_PASSWORD": "Test@1498",
+      "TEST_BASE_URL": "http://localhost:3000"
     }
   },
-  "proxy": "${TEST_PROXY_URL}"
+  "proxy": "http://976c4c8d-ccc2-4806-a2f0-ddef8493d6b6:F4k27PMT0lJFcIxT53P6ahys92VVG4o9@tun.testsprite.com:8080"
 }

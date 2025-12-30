@@ -5,7 +5,8 @@ import { Loader2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/data-table";
+import { DataTableBlock } from "@/components/blocks/data-table/data-table-block";
+import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabaseClient";
 
@@ -60,7 +61,9 @@ export default function CustomersPage() {
 		() => [
 			{
 				accessorKey: "name",
-				header: "Customer",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Customer" />
+				),
 				cell: ({ row }) => {
 					const name = row.getValue("name") as string;
 					return (
@@ -77,15 +80,21 @@ export default function CustomersPage() {
 			},
 			{
 				accessorKey: "email",
-				header: "Email",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Email" />
+				),
 			},
 			{
 				accessorKey: "phone",
-				header: "Phone",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Phone" />
+				),
 			},
 			{
 				accessorKey: "createdAt",
-				header: "Joined",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Joined" />
+				),
 				cell: ({ row }) => {
 					const date = new Date(row.getValue("createdAt"));
 					return date.toLocaleDateString();
@@ -113,7 +122,12 @@ export default function CustomersPage() {
 				<Button className="rounded-none">Add Customer</Button>
 			</div>
 
-			<DataTable columns={columns} data={data} searchKey="name" />
+			<DataTableBlock
+				columns={columns}
+				data={data}
+				searchKey="name"
+				searchPlaceholder="Filter customers..."
+			/>
 		</div>
 	);
 }

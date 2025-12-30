@@ -1,0 +1,80 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Back to Website" [ref=e9] [cursor=pointer]:
+      - /url: /
+      - button "Back to Website" [ref=e10]:
+        - img
+        - text: Back to Website
+    - button "Toggle theme" [ref=e12]:
+      - img [ref=e13]
+    - main [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e18]:
+          - generic [ref=e20]:
+            - generic [ref=e22]:
+              - img [ref=e24]
+              - generic [ref=e26]: TAC Logistics
+            - img [ref=e30]
+            - generic [ref=e61]:
+              - generic [ref=e62]:
+                - heading "Command Center" [level=3] [ref=e63]
+                - paragraph [ref=e64]: Real-time logistics monitoring and fleet management terminal.
+              - generic [ref=e65]:
+                - generic [ref=e66]:
+                  - img [ref=e67]
+                  - generic [ref=e69]: Encrypted
+                - generic [ref=e71]:
+                  - img [ref=e72]
+                  - generic [ref=e75]: 24/7 Access
+          - generic [ref=e77]:
+            - generic [ref=e78]:
+              - heading "Welcome back" [level=1] [ref=e79]
+              - paragraph [ref=e80]: Please enter your credentials to access your account.
+            - generic [ref=e81]:
+              - generic [ref=e82]:
+                - generic [ref=e83]:
+                  - generic [ref=e84]: Email Address
+                  - generic [ref=e85]:
+                    - img [ref=e86]
+                    - textbox "name@company.com" [ref=e89]: testadmin@tapan-cargo.test
+                - generic [ref=e90]:
+                  - generic [ref=e91]:
+                    - generic [ref=e92]: Password
+                    - link "Forgot password?" [ref=e93] [cursor=pointer]:
+                      - /url: /forgot-password
+                  - generic [ref=e94]:
+                    - img [ref=e95]
+                    - textbox "••••••••" [ref=e98]: TestAdmin2024!
+                    - button [ref=e99]:
+                      - img
+                - generic [ref=e101]:
+                  - checkbox "Remember me for 30 days" [checked] [ref=e102]:
+                    - generic:
+                      - img
+                  - checkbox [checked]
+                  - generic [ref=e103]: Remember me for 30 days
+                - button "Sign In" [ref=e105]:
+                  - img
+                  - text: Sign In
+              - generic [ref=e109]: Or continue with
+              - paragraph [ref=e110]:
+                - text: Don't have an account?
+                - link "Request Access" [ref=e111] [cursor=pointer]:
+                  - /url: /support
+        - generic [ref=e112]: © 2025 TAC Logistics. All rights reserved. V2.0
+  - generic [ref=e113]:
+    - heading "Command Palette" [level=2] [ref=e114]
+    - paragraph [ref=e115]: Search for a command to run...
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e121] [cursor=pointer]:
+    - generic [ref=e124]:
+      - text: Rendering
+      - generic [ref=e125]:
+        - generic [ref=e126]: .
+        - generic [ref=e127]: .
+        - generic [ref=e128]: .
+  - alert [ref=e129]
+```

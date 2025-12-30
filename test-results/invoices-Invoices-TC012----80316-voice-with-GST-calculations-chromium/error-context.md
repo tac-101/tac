@@ -1,0 +1,346 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - generic [ref=e7]:
+        - img [ref=e9]
+        - generic [ref=e12]:
+          - generic [ref=e13]: TAC.
+          - generic [ref=e14]: Tapan Associate Cargo
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - generic [ref=e19]: Core Operations
+          - list [ref=e22]:
+            - listitem [ref=e23]:
+              - link "Dashboard" [ref=e24] [cursor=pointer]:
+                - /url: /dashboard
+                - generic [ref=e25]:
+                  - img [ref=e26]
+                  - generic [ref=e29]: Dashboard
+              - generic: Live
+            - listitem [ref=e30]:
+              - link "Warehouse" [ref=e31] [cursor=pointer]:
+                - /url: /dashboard/warehouse
+                - generic [ref=e32]:
+                  - img [ref=e33]
+                  - generic [ref=e36]: Warehouse
+            - listitem [ref=e37]:
+              - link "Shipments" [ref=e38] [cursor=pointer]:
+                - /url: /dashboard/shipments
+                - generic [ref=e39]:
+                  - img [ref=e40]
+                  - generic [ref=e45]: Shipments
+            - listitem [ref=e46]:
+              - link "Inventory" [ref=e47] [cursor=pointer]:
+                - /url: /dashboard/inventory
+                - generic [ref=e48]:
+                  - img [ref=e49]
+                  - generic [ref=e52]: Inventory
+        - generic [ref=e53]:
+          - generic [ref=e54]: Management & Billing
+          - list [ref=e57]:
+            - listitem [ref=e58]:
+              - link "Customers" [ref=e59] [cursor=pointer]:
+                - /url: /dashboard/customers
+                - generic [ref=e60]:
+                  - img [ref=e61]
+                  - generic [ref=e64]: Customers
+            - listitem [ref=e65]:
+              - link "Invoices" [ref=e66] [cursor=pointer]:
+                - /url: /dashboard/invoices
+                - generic [ref=e67]:
+                  - img [ref=e68]
+                  - generic [ref=e79]: Invoices
+            - listitem [ref=e80]:
+              - link "Rates" [ref=e81] [cursor=pointer]:
+                - /url: /dashboard/rates
+                - generic [ref=e82]:
+                  - img [ref=e83]
+                  - generic [ref=e86]: Rates
+            - listitem [ref=e87]:
+              - link "Aircargo Manifesto" [ref=e88] [cursor=pointer]:
+                - /url: /dashboard/aircargo
+                - generic [ref=e89]:
+                  - img [ref=e90]
+                  - generic [ref=e94]: Aircargo Manifesto
+            - listitem [ref=e95]:
+              - link "Manifest Scan Session" [ref=e96] [cursor=pointer]:
+                - /url: /dashboard/aircargo/scan-session
+                - generic [ref=e97]:
+                  - img [ref=e98]
+                  - generic [ref=e102]: Manifest Scan Session
+            - listitem [ref=e103]:
+              - link "Barcode Tracking" [ref=e104] [cursor=pointer]:
+                - /url: /dashboard/barcodes
+                - generic [ref=e105]:
+                  - img [ref=e106]
+                  - generic [ref=e109]: Barcode Tracking
+        - generic [ref=e110]:
+          - generic [ref=e111]: System
+          - list [ref=e114]:
+            - listitem [ref=e115]:
+              - link "Tapan Associate" [ref=e116] [cursor=pointer]:
+                - /url: /dashboard/tapan-associate
+                - generic [ref=e117]:
+                  - img [ref=e118]
+                  - generic [ref=e121]: Tapan Associate
+            - listitem [ref=e122]:
+              - link "Global Search" [ref=e123] [cursor=pointer]:
+                - /url: /dashboard/search
+                - generic [ref=e124]:
+                  - img [ref=e125]
+                  - generic [ref=e128]: Global Search
+            - listitem [ref=e129]:
+              - link "Notifications" [ref=e130] [cursor=pointer]:
+                - /url: /dashboard/notifications
+                - generic [ref=e131]:
+                  - img [ref=e132]
+                  - generic [ref=e135]: Notifications
+            - listitem [ref=e136]:
+              - link "Support Tickets" [ref=e137] [cursor=pointer]:
+                - /url: /dashboard/support
+                - generic [ref=e138]:
+                  - img [ref=e139]
+                  - generic [ref=e142]: Support Tickets
+            - listitem [ref=e143]:
+              - link "Ops Activity" [ref=e144] [cursor=pointer]:
+                - /url: /dashboard/ops-activity
+                - generic [ref=e145]:
+                  - img [ref=e146]
+                  - generic [ref=e149]: Ops Activity
+      - list [ref=e151]:
+        - listitem [ref=e152]:
+          - button "Tapan Go Ops ops@tapango.logistics" [ref=e153]:
+            - generic [ref=e156]:
+              - generic [ref=e157]: Tapan Go Ops
+              - generic [ref=e158]: ops@tapango.logistics
+            - img [ref=e159]
+      - button "Toggle Sidebar" [ref=e161]
+    - main [ref=e162]:
+      - generic [ref=e163]:
+        - generic [ref=e164]:
+          - button "Toggle Sidebar" [ref=e165]:
+            - img
+            - generic [ref=e166]: Toggle Sidebar
+          - generic [ref=e167]: Ops Command
+        - generic [ref=e168]:
+          - button "Switch theme preset" [ref=e169]:
+            - img
+            - generic [ref=e170]: Switch theme preset
+          - button "Toggle theme" [disabled] [ref=e171]
+      - main [ref=e173]:
+        - generic [ref=e174]:
+          - generic [ref=e177]:
+            - generic [ref=e179]:
+              - img [ref=e181]
+              - generic [ref=e184]:
+                - generic [ref=e185]: TAC.
+                - generic [ref=e186]: Tapan Associate Cargo
+            - generic [ref=e189]:
+              - generic [ref=e190]:
+                - generic [ref=e191]: Core Operations
+                - list [ref=e194]:
+                  - listitem [ref=e195]:
+                    - link "Dashboard" [ref=e196] [cursor=pointer]:
+                      - /url: /dashboard
+                      - generic [ref=e197]:
+                        - img [ref=e198]
+                        - generic [ref=e201]: Dashboard
+                    - generic: Live
+                  - listitem [ref=e202]:
+                    - link "Warehouse" [ref=e203] [cursor=pointer]:
+                      - /url: /dashboard/warehouse
+                      - generic [ref=e204]:
+                        - img [ref=e205]
+                        - generic [ref=e208]: Warehouse
+                  - listitem [ref=e209]:
+                    - link "Shipments" [ref=e210] [cursor=pointer]:
+                      - /url: /dashboard/shipments
+                      - generic [ref=e211]:
+                        - img [ref=e212]
+                        - generic [ref=e217]: Shipments
+                  - listitem [ref=e218]:
+                    - link "Inventory" [ref=e219] [cursor=pointer]:
+                      - /url: /dashboard/inventory
+                      - generic [ref=e220]:
+                        - img [ref=e221]
+                        - generic [ref=e224]: Inventory
+              - generic [ref=e225]:
+                - generic [ref=e226]: Management & Billing
+                - list [ref=e229]:
+                  - listitem [ref=e230]:
+                    - link "Customers" [ref=e231] [cursor=pointer]:
+                      - /url: /dashboard/customers
+                      - generic [ref=e232]:
+                        - img [ref=e233]
+                        - generic [ref=e236]: Customers
+                  - listitem [ref=e237]:
+                    - link "Invoices" [ref=e238] [cursor=pointer]:
+                      - /url: /dashboard/invoices
+                      - generic [ref=e239]:
+                        - img [ref=e240]
+                        - generic [ref=e251]: Invoices
+                  - listitem [ref=e252]:
+                    - link "Rates" [ref=e253] [cursor=pointer]:
+                      - /url: /dashboard/rates
+                      - generic [ref=e254]:
+                        - img [ref=e255]
+                        - generic [ref=e258]: Rates
+                  - listitem [ref=e259]:
+                    - link "Aircargo Manifesto" [ref=e260] [cursor=pointer]:
+                      - /url: /dashboard/aircargo
+                      - generic [ref=e261]:
+                        - img [ref=e262]
+                        - generic [ref=e266]: Aircargo Manifesto
+                  - listitem [ref=e267]:
+                    - link "Manifest Scan Session" [ref=e268] [cursor=pointer]:
+                      - /url: /dashboard/aircargo/scan-session
+                      - generic [ref=e269]:
+                        - img [ref=e270]
+                        - generic [ref=e274]: Manifest Scan Session
+                  - listitem [ref=e275]:
+                    - link "Barcode Tracking" [ref=e276] [cursor=pointer]:
+                      - /url: /dashboard/barcodes
+                      - generic [ref=e277]:
+                        - img [ref=e278]
+                        - generic [ref=e281]: Barcode Tracking
+              - generic [ref=e282]:
+                - generic [ref=e283]: System
+                - list [ref=e286]:
+                  - listitem [ref=e287]:
+                    - link "Tapan Associate" [ref=e288] [cursor=pointer]:
+                      - /url: /dashboard/tapan-associate
+                      - generic [ref=e289]:
+                        - img [ref=e290]
+                        - generic [ref=e293]: Tapan Associate
+                  - listitem [ref=e294]:
+                    - link "Global Search" [ref=e295] [cursor=pointer]:
+                      - /url: /dashboard/search
+                      - generic [ref=e296]:
+                        - img [ref=e297]
+                        - generic [ref=e300]: Global Search
+                  - listitem [ref=e301]:
+                    - link "Notifications" [ref=e302] [cursor=pointer]:
+                      - /url: /dashboard/notifications
+                      - generic [ref=e303]:
+                        - img [ref=e304]
+                        - generic [ref=e307]: Notifications
+                  - listitem [ref=e308]:
+                    - link "Support Tickets" [ref=e309] [cursor=pointer]:
+                      - /url: /dashboard/support
+                      - generic [ref=e310]:
+                        - img [ref=e311]
+                        - generic [ref=e314]: Support Tickets
+                  - listitem [ref=e315]:
+                    - link "Ops Activity" [ref=e316] [cursor=pointer]:
+                      - /url: /dashboard/ops-activity
+                      - generic [ref=e317]:
+                        - img [ref=e318]
+                        - generic [ref=e321]: Ops Activity
+            - list [ref=e323]:
+              - listitem [ref=e324]:
+                - button "Tapan Go Ops ops@tapango.logistics" [ref=e325]:
+                  - generic [ref=e328]:
+                    - generic [ref=e329]: Tapan Go Ops
+                    - generic [ref=e330]: ops@tapango.logistics
+                  - img [ref=e331]
+            - button "Toggle Sidebar" [ref=e333]
+          - main [ref=e334]:
+            - generic [ref=e335]:
+              - generic [ref=e336]:
+                - button "Toggle Sidebar" [ref=e337]:
+                  - img
+                  - generic [ref=e338]: Toggle Sidebar
+                - generic [ref=e339]: Ops Command
+              - generic [ref=e340]:
+                - button "Switch theme preset" [ref=e341]:
+                  - img
+                  - generic [ref=e342]: Switch theme preset
+                - button "Toggle theme" [disabled] [ref=e343]
+            - main [ref=e345]:
+              - generic [ref=e346]:
+                - generic [ref=e347]:
+                  - link [ref=e348] [cursor=pointer]:
+                    - /url: /dashboard/invoices
+                    - img
+                  - generic [ref=e349]:
+                    - heading "Create New Invoice" [level=1] [ref=e350]
+                    - paragraph [ref=e351]: "Invoice #: INV-251230-HW5C"
+                - generic [ref=e352]:
+                  - generic [ref=e353]:
+                    - generic [ref=e354]:
+                      - generic [ref=e355]: Customer & Shipment Details
+                      - generic [ref=e356]: Link this invoice to a customer and optionally a shipment
+                    - generic [ref=e357]:
+                      - generic [ref=e358]:
+                        - generic [ref=e359]: Customer *
+                        - combobox "Customer *" [ref=e360]:
+                          - generic: Select customer
+                          - img
+                        - combobox [ref=e361]
+                      - generic [ref=e362]:
+                        - generic [ref=e363]: Shipment Reference
+                        - combobox "Shipment Reference" [ref=e364]:
+                          - generic: Select shipment (optional)
+                          - img
+                        - combobox [ref=e365]
+                  - generic [ref=e366]:
+                    - generic [ref=e367]:
+                      - generic [ref=e368]: Charges & Amounts
+                      - generic [ref=e369]: Enter freight and additional charges
+                    - generic [ref=e370]:
+                      - generic [ref=e371]:
+                        - generic [ref=e372]: Freight Amount (₹) *
+                        - spinbutton "Freight Amount (₹) *" [ref=e373]: "0"
+                      - generic [ref=e374]:
+                        - generic [ref=e375]: Handling Charges (₹)
+                        - spinbutton "Handling Charges (₹)" [ref=e376]: "0"
+                      - generic [ref=e377]:
+                        - generic [ref=e378]: Other Charges (₹)
+                        - spinbutton "Other Charges (₹)" [ref=e379]: "0"
+                      - generic [ref=e380]:
+                        - generic [ref=e381]: Discount (₹)
+                        - spinbutton "Discount (₹)" [ref=e382]: "0"
+                      - generic [ref=e383]:
+                        - generic [ref=e384]: GST Rate *
+                        - combobox "GST Rate *" [ref=e385]:
+                          - img
+                        - combobox [ref=e386]
+                      - generic [ref=e387]:
+                        - generic [ref=e388]: Due Date *
+                        - textbox "Due Date *" [ref=e389]: 2026-01-29
+                  - generic [ref=e390]:
+                    - generic [ref=e392]:
+                      - img [ref=e393]
+                      - text: Invoice Summary
+                    - generic [ref=e396]:
+                      - generic [ref=e397]:
+                        - generic [ref=e398]: Subtotal
+                        - generic [ref=e399]: ₹0.00
+                      - generic [ref=e400]:
+                        - generic [ref=e401]: Taxable Amount
+                        - generic [ref=e402]: ₹0.00
+                      - generic [ref=e403]:
+                        - generic [ref=e404]: GST (18%)
+                        - generic [ref=e405]: ₹0.00
+                      - generic [ref=e406]:
+                        - generic [ref=e407]: Total Amount
+                        - generic [ref=e408]: ₹0.00
+                  - generic [ref=e409]:
+                    - generic [ref=e411]: Additional Notes
+                    - textbox "Any additional notes or payment instructions..." [ref=e414]
+                  - generic [ref=e415]:
+                    - link "Cancel" [ref=e416] [cursor=pointer]:
+                      - /url: /dashboard/invoices
+                    - button "Create Invoice" [ref=e417]:
+                      - img
+                      - text: Create Invoice
+  - generic [ref=e418]:
+    - heading "Command Palette" [level=2] [ref=e419]
+    - paragraph [ref=e420]: Search for a command to run...
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e426] [cursor=pointer]:
+    - img [ref=e427]
+```

@@ -5,10 +5,20 @@ interface SearchBody {
 	q?: string;
 }
 
+export async function GET(req: Request) {
+	const { searchParams } = new URL(req.url);
+	const q = searchParams.get("q") || "";
+	return performSearch(q);
+}
+
 export async function POST(req: Request) {
+	const { q } = (await req.json()) as SearchBody;
+	return performSearch(q ?? "");
+}
+
+async function performSearch(q: string) {
 	try {
-		const { q } = (await req.json()) as SearchBody;
-		const term = (q ?? "").trim();
+		const term = q.trim();
 
 		if (!term) {
 			return NextResponse.json({

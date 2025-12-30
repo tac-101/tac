@@ -2,7 +2,7 @@
 
 import { useTheme } from "next-themes"
 import { Toaster as Sonner, type ToasterProps } from "sonner"
-import { IconCircleCheck, IconCircleInfo, IconAlert, IconCircleX, IconLoader2 } from "@tabler/icons-react"
+import { IconCircleCheck, IconInfoCircle, IconAlertTriangle, IconCircleX, IconLoader2 } from "@tabler/icons-react"
 
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme()
@@ -16,10 +16,10 @@ const Toaster = ({ ...props }: ToasterProps) => {
           <IconCircleCheck className="size-4" />
         ),
         info: (
-          <IconCircleInfo className="size-4" />
+          <IconInfoCircle className="size-4" />
         ),
         warning: (
-          <IconAlert className="size-4" />
+          <IconAlertTriangle className="size-4" />
         ),
         error: (
           <IconCircleX className="size-4" />

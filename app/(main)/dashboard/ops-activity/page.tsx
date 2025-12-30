@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import DashboardPageLayout from "@/components/dashboard/layout";
+
 import ProcessorIcon from "@/components/icons/proccesor";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -45,13 +45,15 @@ export default function OpsActivityPage() {
 	const invoiceLogs = data?.invoiceLogs ?? [];
 
 	return (
-		<DashboardPageLayout
-			header={{
-				title: "Ops Activity",
-				description: "Recent scans, manifests, and invoice generation activity",
-				icon: ProcessorIcon,
-			}}
-		>
+		<div className="space-y-6">
+			<div className="flex items-center justify-between">
+				<div>
+					<h2 className="text-2xl font-bold tracking-tight">Ops Activity</h2>
+					<p className="text-muted-foreground">
+						Recent scans, manifests, and invoice generation activity
+					</p>
+				</div>
+			</div>
 			<div className="flex flex-col gap-6">
 				<div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 					<Card>
@@ -119,7 +121,7 @@ export default function OpsActivityPage() {
 													<div className="text-xs text-muted-foreground">
 														{m.origin_hub}
 														{"  a0 a0 a0"}
-														 b7
+														b7
 														{"  a0 a0 a0"}
 														{m.destination}
 													</div>
@@ -191,6 +193,6 @@ export default function OpsActivityPage() {
 					</Card>
 				</div>
 			</div>
-		</DashboardPageLayout>
+		</div>
 	);
 }

@@ -25,8 +25,8 @@ export default function AlertsPage() {
 		async function loadAlerts() {
 			try {
 				const { data, error } = await supabase
-					.from("alerts")
-					.select("id, type, message, severity, created_at, is_read")
+					.from("notifications")
+					.select("id, type, title, message, priority, created_at, is_read")
 					.order("created_at", { ascending: false });
 
 				if (error) throw error;
@@ -34,8 +34,8 @@ export default function AlertsPage() {
 				const normalized: UIAlert[] = (data || []).map((a: any) => ({
 					id: a.id,
 					type: a.type,
-					message: a.message,
-					severity: a.severity,
+					message: a.title || a.message,
+					severity: a.priority,
 					createdAt: a.created_at,
 					isRead: a.is_read,
 				}));

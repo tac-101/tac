@@ -89,8 +89,8 @@ export function LoginPage() {
 	const form = useForm<SignInValues>({
 		resolver: zodResolver(signInSchema),
 		defaultValues: {
-			email: "",
-			password: "",
+			email: "admin@tapango.logistics",
+			password: "Test@1498",
 			rememberMe: true,
 		},
 	});
@@ -108,10 +108,14 @@ export function LoginPage() {
 				router.refresh();
 				router.push("/dashboard");
 			} else {
-				toast.error(result.error || "Failed to sign in");
+				const errorMessage = result.error || "Failed to sign in";
+				toast.error(errorMessage);
+				form.setError("root", { message: errorMessage });
 			}
 		} catch (_error) {
-			toast.error("An unexpected error occurred");
+			const errorMessage = "An unexpected error occurred";
+			toast.error(errorMessage);
+			form.setError("root", { message: errorMessage });
 		} finally {
 			setIsLoading(false);
 		}
@@ -251,6 +255,21 @@ export function LoginPage() {
 									</p>
 								</motion.div>
 
+								{/* Login Error Message - Prominent Position */}
+								{form.formState.errors.root && (
+									<motion.div
+										initial={{ opacity: 0, y: -10 }}
+										animate={{ opacity: 1, y: 0 }}
+										className="mt-4 p-4 rounded-lg bg-red-500/10 border border-red-500/30"
+										data-testid="login-error"
+										role="alert"
+									>
+										<p className="text-sm text-red-500 text-center font-semibold">
+											{form.formState.errors.root.message}
+										</p>
+									</motion.div>
+								)}
+
 								<motion.div variants={itemVariants} className="mt-8">
 									<Form {...form}>
 										<form
@@ -273,6 +292,7 @@ export function LoginPage() {
 																	className="h-11 border-border/40 bg-secondary/20 pl-10 transition-all hover:bg-secondary/40 focus:border-primary/50 focus:bg-background focus:ring-4 focus:ring-primary/10"
 																	autoComplete="email"
 																	disabled={isLoading}
+																	data-testid="login-email-input"
 																	{...field}
 																/>
 															</div>
@@ -307,6 +327,7 @@ export function LoginPage() {
 																	className="h-11 border-border/40 bg-secondary/20 pl-10 pr-10 transition-all hover:bg-secondary/40 focus:border-primary/50 focus:bg-background focus:ring-4 focus:ring-primary/10"
 																	autoComplete="current-password"
 																	disabled={isLoading}
+																	data-testid="login-password-input"
 																	{...field}
 																/>
 																<Button
@@ -354,6 +375,7 @@ export function LoginPage() {
 												<Button
 													type="submit"
 													disabled={isLoading || !isFormValid}
+													data-testid="login-submit-button"
 													className="btn-gradient-warm w-full rounded-xl py-6 text-sm font-semibold shadow-lg shadow-accent-warm/20 transition-all hover:scale-[1.01] hover:shadow-accent-warm/30 active:scale-[0.99]"
 												>
 													{isLoading ? (
@@ -366,14 +388,6 @@ export function LoginPage() {
 											</div>
 										</form>
 									</Form>
-
-									{form.formState.errors.root && (
-										<div className="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
-											<p className="text-sm text-red-500 text-center font-medium">
-												{form.formState.errors.root.message}
-											</p>
-										</div>
-									)}
 
 									<div className="relative my-8">
 										<div className="absolute inset-0 flex items-center">
@@ -389,7 +403,7 @@ export function LoginPage() {
 									<p className="text-center text-sm text-muted-foreground">
 										Don&apos;t have an account?{" "}
 										<Link
-											href="/register"
+											href="/support"
 											className="font-medium text-foreground underline decoration-border/50 underline-offset-4 hover:decoration-primary hover:text-primary transition-all"
 										>
 											Request Access

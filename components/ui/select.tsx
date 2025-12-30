@@ -4,7 +4,7 @@ import * as React from "react"
 import { Select as SelectPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
-import { IconChevronDown, IconCheck, IconChevronUp, IconChevronsUpDown } from "@tabler/icons-react"
+import { IconChevronDown, IconCheck, IconChevronUp, IconSelector } from "@tabler/icons-react"
 
 function Select({
   ...props
@@ -51,7 +51,7 @@ function SelectTrigger({
     >
       {children}
       <SelectPrimitive.Icon asChild>
-        <IconChevronsUpDown className="text-muted-foreground size-4 pointer-events-none" />
+        <IconSelector className="text-muted-foreground size-4 pointer-events-none" />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   )

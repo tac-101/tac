@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { queryKeys } from '@/lib/react-query/client'
-import { createClient } from '@/lib/supabase/client'
+import { supabase } from '@/lib/supabaseClient'
 
 // Types
 interface DashboardStats {
@@ -29,7 +29,7 @@ interface AnalyticsFilters {
 // API functions
 const analyticsApi = {
   getDashboardStats: async (filters: AnalyticsFilters = {}): Promise<DashboardStats> => {
-    const supabase = createClient()
+    // Using imported supabase client
     
     // Get date range
     const dateFrom = filters.dateFrom || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
@@ -100,7 +100,7 @@ const analyticsApi = {
   },
   
   getShipmentTrends: async (filters: AnalyticsFilters = {}): Promise<ChartData[]> => {
-    const supabase = createClient()
+    // Using imported supabase client
     const period = filters.period || 'day'
     const dateFrom = filters.dateFrom || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
     const dateTo = filters.dateTo || new Date().toISOString()
@@ -143,7 +143,7 @@ const analyticsApi = {
   },
   
   getStatusDistribution: async (filters: AnalyticsFilters = {}): Promise<ChartData[]> => {
-    const supabase = createClient()
+    // Using imported supabase client
     const dateFrom = filters.dateFrom || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
     const dateTo = filters.dateTo || new Date().toISOString()
     

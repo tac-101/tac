@@ -1,0 +1,329 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - generic [ref=e7]:
+        - img [ref=e9]
+        - generic [ref=e12]:
+          - generic [ref=e13]: TAC.
+          - generic [ref=e14]: Tapan Associate Cargo
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - generic [ref=e19]: Core Operations
+          - list [ref=e22]:
+            - listitem [ref=e23]:
+              - link "Dashboard" [ref=e24] [cursor=pointer]:
+                - /url: /dashboard
+                - generic [ref=e25]:
+                  - img [ref=e26]
+                  - generic [ref=e29]: Dashboard
+              - generic: Live
+            - listitem [ref=e30]:
+              - link "Warehouse" [ref=e31] [cursor=pointer]:
+                - /url: /dashboard/warehouse
+                - generic [ref=e32]:
+                  - img [ref=e33]
+                  - generic [ref=e36]: Warehouse
+            - listitem [ref=e37]:
+              - link "Shipments" [ref=e38] [cursor=pointer]:
+                - /url: /dashboard/shipments
+                - generic [ref=e39]:
+                  - img [ref=e40]
+                  - generic [ref=e45]: Shipments
+            - listitem [ref=e46]:
+              - link "Inventory" [ref=e47] [cursor=pointer]:
+                - /url: /dashboard/inventory
+                - generic [ref=e48]:
+                  - img [ref=e49]
+                  - generic [ref=e52]: Inventory
+        - generic [ref=e53]:
+          - generic [ref=e54]: Management & Billing
+          - list [ref=e57]:
+            - listitem [ref=e58]:
+              - link "Customers" [ref=e59] [cursor=pointer]:
+                - /url: /dashboard/customers
+                - generic [ref=e60]:
+                  - img [ref=e61]
+                  - generic [ref=e64]: Customers
+            - listitem [ref=e65]:
+              - link "Invoices" [ref=e66] [cursor=pointer]:
+                - /url: /dashboard/invoices
+                - generic [ref=e67]:
+                  - img [ref=e68]
+                  - generic [ref=e79]: Invoices
+            - listitem [ref=e80]:
+              - link "Rates" [ref=e81] [cursor=pointer]:
+                - /url: /dashboard/rates
+                - generic [ref=e82]:
+                  - img [ref=e83]
+                  - generic [ref=e86]: Rates
+            - listitem [ref=e87]:
+              - link "Aircargo Manifesto" [ref=e88] [cursor=pointer]:
+                - /url: /dashboard/aircargo
+                - generic [ref=e89]:
+                  - img [ref=e90]
+                  - generic [ref=e94]: Aircargo Manifesto
+            - listitem [ref=e95]:
+              - link "Manifest Scan Session" [ref=e96] [cursor=pointer]:
+                - /url: /dashboard/aircargo/scan-session
+                - generic [ref=e97]:
+                  - img [ref=e98]
+                  - generic [ref=e102]: Manifest Scan Session
+            - listitem [ref=e103]:
+              - link "Barcode Tracking" [ref=e104] [cursor=pointer]:
+                - /url: /dashboard/barcodes
+                - generic [ref=e105]:
+                  - img [ref=e106]
+                  - generic [ref=e109]: Barcode Tracking
+        - generic [ref=e110]:
+          - generic [ref=e111]: System
+          - list [ref=e114]:
+            - listitem [ref=e115]:
+              - link "Tapan Associate" [ref=e116] [cursor=pointer]:
+                - /url: /dashboard/tapan-associate
+                - generic [ref=e117]:
+                  - img [ref=e118]
+                  - generic [ref=e121]: Tapan Associate
+            - listitem [ref=e122]:
+              - link "Global Search" [ref=e123] [cursor=pointer]:
+                - /url: /dashboard/search
+                - generic [ref=e124]:
+                  - img [ref=e125]
+                  - generic [ref=e128]: Global Search
+            - listitem [ref=e129]:
+              - link "Reports & Analytics" [ref=e130] [cursor=pointer]:
+                - /url: /dashboard/reports
+                - generic [ref=e131]:
+                  - img [ref=e132]
+                  - generic [ref=e135]: Reports & Analytics
+            - listitem [ref=e136]:
+              - link "Network Analytics" [ref=e137] [cursor=pointer]:
+                - /url: /dashboard/analytics
+                - generic [ref=e138]:
+                  - img [ref=e139]
+                  - generic [ref=e143]: Network Analytics
+            - listitem [ref=e144]:
+              - link "Exceptions & Alerts" [ref=e145] [cursor=pointer]:
+                - /url: /dashboard/alerts
+                - generic [ref=e146]:
+                  - img [ref=e147]
+                  - generic [ref=e150]: Exceptions & Alerts
+            - listitem [ref=e151]:
+              - link "Notifications" [ref=e152] [cursor=pointer]:
+                - /url: /dashboard/notifications
+                - generic [ref=e153]:
+                  - img [ref=e154]
+                  - generic [ref=e157]: Notifications
+            - listitem [ref=e158]:
+              - link "Support Tickets" [ref=e159] [cursor=pointer]:
+                - /url: /dashboard/support
+                - generic [ref=e160]:
+                  - img [ref=e161]
+                  - generic [ref=e164]: Support Tickets
+            - listitem [ref=e165]:
+              - link "Ops Activity" [ref=e166] [cursor=pointer]:
+                - /url: /dashboard/ops-activity
+                - generic [ref=e167]:
+                  - img [ref=e168]
+                  - generic [ref=e171]: Ops Activity
+            - listitem [ref=e172]:
+              - link "Settings" [ref=e173] [cursor=pointer]:
+                - /url: /dashboard/settings
+                - generic [ref=e174]:
+                  - img [ref=e175]
+                  - generic [ref=e186]: Settings
+            - listitem [ref=e187]:
+              - link "Admin" [ref=e188] [cursor=pointer]:
+                - /url: /dashboard/admin
+                - generic [ref=e189]:
+                  - img [ref=e190]
+                  - generic [ref=e201]: Admin
+      - list [ref=e203]:
+        - listitem [ref=e204]:
+          - button "Test Admin Test Admin testadmin@tapan-cargo.test" [ref=e205]:
+            - img "Test Admin" [ref=e207]
+            - generic [ref=e208]:
+              - generic [ref=e209]: Test Admin
+              - generic [ref=e210]: testadmin@tapan-cargo.test
+            - img [ref=e211]
+      - button "Toggle Sidebar" [ref=e213]
+    - main [ref=e214]:
+      - generic [ref=e215]:
+        - generic [ref=e216]:
+          - button "Toggle Sidebar" [ref=e217]:
+            - img
+            - generic [ref=e218]: Toggle Sidebar
+          - generic [ref=e219]: Ops Command
+        - generic [ref=e220]:
+          - button "Switch theme preset" [ref=e221]:
+            - img
+            - generic [ref=e222]: Switch theme preset
+          - button "Toggle theme" [ref=e223]:
+            - img [ref=e224]
+      - main [ref=e226]:
+        - generic [ref=e227]:
+          - generic [ref=e228]:
+            - generic [ref=e229]:
+              - heading "Shipments" [level=2] [ref=e230]
+              - paragraph [ref=e231]: Manage and track all logistics operations.
+            - generic [ref=e232]:
+              - link "New Shipment" [ref=e233] [cursor=pointer]:
+                - /url: /dashboard/shipments/new
+                - img
+                - text: New Shipment
+              - button "New Shipment" [ref=e234]
+          - generic [ref=e235]:
+            - textbox "Search..." [ref=e237]
+            - table [ref=e240]:
+              - rowgroup [ref=e241]:
+                - row "Reference Origin Destination Status Weight (kg)" [ref=e242]:
+                  - columnheader "Reference" [ref=e243]
+                  - columnheader "Origin" [ref=e244]
+                  - columnheader "Destination" [ref=e245]
+                  - columnheader "Status" [ref=e246]
+                  - columnheader "Weight (kg)" [ref=e247]
+                  - columnheader [ref=e248]
+              - rowgroup [ref=e249]:
+                - row "TG-IMPH-0001 Imphal, MN New Delhi, DL pending 1" [ref=e250]:
+                  - cell "TG-IMPH-0001" [ref=e251]
+                  - cell "Imphal, MN" [ref=e252]
+                  - cell "New Delhi, DL" [ref=e253]
+                  - cell "pending" [ref=e254]:
+                    - generic [ref=e255]: pending
+                  - cell "1" [ref=e256]
+                  - cell [ref=e257]:
+                    - generic [ref=e258]:
+                      - button "Edit" [ref=e259]:
+                        - img
+                      - button "Delete" [ref=e260]:
+                        - img
+                - row "TEST-SHIP-0001 Imphal, MN New Delhi, DL pending 1" [ref=e261]:
+                  - cell "TEST-SHIP-0001" [ref=e262]
+                  - cell "Imphal, MN" [ref=e263]
+                  - cell "New Delhi, DL" [ref=e264]
+                  - cell "pending" [ref=e265]:
+                    - generic [ref=e266]: pending
+                  - cell "1" [ref=e267]
+                  - cell [ref=e268]:
+                    - generic [ref=e269]:
+                      - button "Edit" [ref=e270]:
+                        - img
+                      - button "Delete" [ref=e271]:
+                        - img
+                - row "TEST-SHIP-7777 Imphal, MN New Delhi, DL pending 1" [ref=e272]:
+                  - cell "TEST-SHIP-7777" [ref=e273]
+                  - cell "Imphal, MN" [ref=e274]
+                  - cell "New Delhi, DL" [ref=e275]
+                  - cell "pending" [ref=e276]:
+                    - generic [ref=e277]: pending
+                  - cell "1" [ref=e278]
+                  - cell [ref=e279]:
+                    - generic [ref=e280]:
+                      - button "Edit" [ref=e281]:
+                        - img
+                      - button "Delete" [ref=e282]:
+                        - img
+                - row "TEST-SHIP-5555 Imphal, MN New Delhi, DL pending 1" [ref=e283]:
+                  - cell "TEST-SHIP-5555" [ref=e284]
+                  - cell "Imphal, MN" [ref=e285]
+                  - cell "New Delhi, DL" [ref=e286]
+                  - cell "pending" [ref=e287]:
+                    - generic [ref=e288]: pending
+                  - cell "1" [ref=e289]
+                  - cell [ref=e290]:
+                    - generic [ref=e291]:
+                      - button "Edit" [ref=e292]:
+                        - img
+                      - button "Delete" [ref=e293]:
+                        - img
+                - row "TEST-SHIP-1234 Imphal, MN New Delhi, DL pending 1" [ref=e294]:
+                  - cell "TEST-SHIP-1234" [ref=e295]
+                  - cell "Imphal, MN" [ref=e296]
+                  - cell "New Delhi, DL" [ref=e297]
+                  - cell "pending" [ref=e298]:
+                    - generic [ref=e299]: pending
+                  - cell "1" [ref=e300]
+                  - cell [ref=e301]:
+                    - generic [ref=e302]:
+                      - button "Edit" [ref=e303]:
+                        - img
+                      - button "Delete" [ref=e304]:
+                        - img
+                - row "TEST-SHIP-9999 Imphal, MN New Delhi, DL pending 1" [ref=e305]:
+                  - cell "TEST-SHIP-9999" [ref=e306]
+                  - cell "Imphal, MN" [ref=e307]
+                  - cell "New Delhi, DL" [ref=e308]
+                  - cell "pending" [ref=e309]:
+                    - generic [ref=e310]: pending
+                  - cell "1" [ref=e311]
+                  - cell [ref=e312]:
+                    - generic [ref=e313]:
+                      - button "Edit" [ref=e314]:
+                        - img
+                      - button "Delete" [ref=e315]:
+                        - img
+                - row "TEST-SHIP-3044 Imphal New Delhi in-transit 15.5" [ref=e316]:
+                  - cell "TEST-SHIP-3044" [ref=e317]
+                  - cell "Imphal" [ref=e318]
+                  - cell "New Delhi" [ref=e319]
+                  - cell "in-transit" [ref=e320]:
+                    - generic [ref=e321]: in-transit
+                  - cell "15.5" [ref=e322]
+                  - cell [ref=e323]:
+                    - generic [ref=e324]:
+                      - button "Edit" [ref=e325]:
+                        - img
+                      - button "Delete" [ref=e326]:
+                        - img
+                - row "TEST-SHIP-2069 Imphal New Delhi in-transit 15.5" [ref=e327]:
+                  - cell "TEST-SHIP-2069" [ref=e328]
+                  - cell "Imphal" [ref=e329]
+                  - cell "New Delhi" [ref=e330]
+                  - cell "in-transit" [ref=e331]:
+                    - generic [ref=e332]: in-transit
+                  - cell "15.5" [ref=e333]
+                  - cell [ref=e334]:
+                    - generic [ref=e335]:
+                      - button "Edit" [ref=e336]:
+                        - img
+                      - button "Delete" [ref=e337]:
+                        - img
+                - row "TEST-SHIP-2829 Imphal New Delhi in-transit 15.5" [ref=e338]:
+                  - cell "TEST-SHIP-2829" [ref=e339]
+                  - cell "Imphal" [ref=e340]
+                  - cell "New Delhi" [ref=e341]
+                  - cell "in-transit" [ref=e342]:
+                    - generic [ref=e343]: in-transit
+                  - cell "15.5" [ref=e344]
+                  - cell [ref=e345]:
+                    - generic [ref=e346]:
+                      - button "Edit" [ref=e347]:
+                        - img
+                      - button "Delete" [ref=e348]:
+                        - img
+                - row "TEST-SHIP-8401 Imphal New Delhi in-transit 15.5" [ref=e349]:
+                  - cell "TEST-SHIP-8401" [ref=e350]
+                  - cell "Imphal" [ref=e351]
+                  - cell "New Delhi" [ref=e352]
+                  - cell "in-transit" [ref=e353]:
+                    - generic [ref=e354]: in-transit
+                  - cell "15.5" [ref=e355]
+                  - cell [ref=e356]:
+                    - generic [ref=e357]:
+                      - button "Edit" [ref=e358]:
+                        - img
+                      - button "Delete" [ref=e359]:
+                        - img
+            - generic [ref=e360]:
+              - button "Previous" [disabled]
+              - button "Next" [ref=e361]
+  - generic [ref=e362]:
+    - heading "Command Palette" [level=2] [ref=e363]
+    - paragraph [ref=e364]: Search for a command to run...
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e370] [cursor=pointer]:
+    - img [ref=e371]
+  - alert [ref=e374]
+```

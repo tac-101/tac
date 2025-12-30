@@ -1,421 +1,198 @@
-"use client";
-
+"use client"
 import {
-	Bell,
-	ChevronDown,
-	ChevronLeft,
-	ChevronRight,
-	MapPin,
-} from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import * as React from "react";
-import { type NavBadgeKey, navMain } from "@/components/dashboard/nav-config";
-import { UserProfile } from "@/components/dashboard/sidebar/user-profile";
-import { Bullet } from "@/components/ui/bullet";
-import { Button } from "@/components/ui/button";
+	Collapsible,
+	CollapsibleContent,
+	CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover";
-import { UnifiedLogo } from "@/components/ui/unified-logo";
-import { useLocation } from "@/lib/location-context";
-import { supabase } from "@/lib/supabaseClient";
-import { cn } from "@/lib/utils";
-import { LOCATIONS, type Location } from "@/types/auth";
-import { useSidebar } from "./sidebar-context";
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuGroup,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+	Sidebar,
+	SidebarContent,
+	SidebarFooter,
+	SidebarGroup,
+	SidebarGroupLabel,
+	SidebarHeader,
+	SidebarMenu,
+	SidebarMenuButton,
+	SidebarMenuItem,
+	SidebarMenuSub,
+	SidebarMenuSubButton,
+	SidebarMenuSubItem,
+	SidebarRail,
+} from "@/components/ui/sidebar"
+import { UserAvatarProfile } from "@/components/user-avatar-profile"
+import { navItems } from "@/config/nav-config"
+import { useMediaQuery } from "@/hooks/use-media-query"
+import { useOrganization, useUser, SignOutButton } from "@/hooks/use-mock-auth"
+import { useFilteredNavItems } from "@/hooks/use-nav"
+import {
+	IconBell,
+	IconChevronRight,
+	IconChevronsDown,
+	IconCreditCard,
+	IconLogout,
+	IconUserCircle,
+} from "@tabler/icons-react"
+import Link from "next/link"
+import { usePathname, useRouter } from "next/navigation"
+import * as React from "react"
+import { Icons } from "@/components/icons"
+import { OrgSwitcher } from "@/components/org-switcher"
 
-function LocationNotificationBar({ isCollapsed }: { isCollapsed: boolean }) {
-	const { locationScope, setLocationScope } = useLocation();
-	const [notificationCount, setNotificationCount] = React.useState(0);
+export default function AppSidebar() {
+	const pathname = usePathname()
+	const { isOpen } = useMediaQuery()
+	const { user } = useUser()
+	const { organization } = useOrganization()
+	const router = useRouter()
+	const filteredItems = useFilteredNavItems(navItems)
 
 	React.useEffect(() => {
-		async function fetchNotificationCount() {
-			try {
-				const { count, error } = await supabase
-					.from("notifications")
-					.select("*", { count: "exact", head: true })
-					.eq("is_read", false);
-
-				if (!error && count !== null) {
-					setNotificationCount(count);
-				}
-			} catch {
-				setNotificationCount(0);
-			}
-		}
-		fetchNotificationCount();
-	}, []);
-
-	if (isCollapsed) {
-		return (
-			<div className="flex flex-col items-center gap-2 px-2">
-				<Popover>
-					<PopoverTrigger asChild>
-						<button
-							type="button"
-							className="flex items-center justify-center w-10 h-10 rounded-md bg-muted/50 hover:bg-muted transition-colors"
-						>
-							<MapPin className="h-4 w-4 text-primary" />
-						</button>
-					</PopoverTrigger>
-					<PopoverContent className="w-48 p-2" side="right" align="start">
-						<div className="space-y-1">
-							<p className="text-xs font-medium text-muted-foreground px-2 pb-1">
-								Branch Location
-							</p>
-							<button
-								type="button"
-								onClick={() => setLocationScope("imphal")}
-								className={cn(
-									"w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md transition-colors",
-									locationScope === "imphal"
-										? "bg-primary text-primary-foreground"
-										: "hover:bg-accent",
-								)}
-							>
-								<span className="font-mono text-xs">IMF</span>
-								<span>Imphal</span>
-							</button>
-							<button
-								type="button"
-								onClick={() => setLocationScope("newdelhi")}
-								className={cn(
-									"w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md transition-colors",
-									locationScope === "newdelhi"
-										? "bg-primary text-primary-foreground"
-										: "hover:bg-accent",
-								)}
-							>
-								<span className="font-mono text-xs">DEL</span>
-								<span>New Delhi</span>
-							</button>
-							<div className="border-t my-1" />
-							<button
-								type="button"
-								onClick={() => setLocationScope("all")}
-								className={cn(
-									"w-full flex items-center gap-2 px-3 py-2 text-xs rounded-md transition-colors",
-									locationScope === "all"
-										? "bg-primary/10 text-primary"
-										: "hover:bg-accent text-muted-foreground",
-								)}
-							>
-								View all locations
-							</button>
-						</div>
-					</PopoverContent>
-				</Popover>
-				<Link
-					href="/notifications"
-					className="relative flex items-center justify-center w-10 h-10 rounded-md bg-muted/50 hover:bg-muted transition-colors"
-				>
-					<Bell className="h-4 w-4" />
-					{notificationCount > 0 && (
-						<span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 text-xs font-medium bg-destructive text-destructive-foreground rounded-full">
-							{notificationCount > 9 ? "9+" : notificationCount}
-						</span>
-					)}
-				</Link>
-			</div>
-		);
-	}
+		// Side effects based on sidebar state changes
+	}, [isOpen])
 
 	return (
-		<div className="flex items-center gap-2 px-3">
-			<Popover>
-				<PopoverTrigger asChild>
-					<button
-						type="button"
-						className="flex-1 flex items-center gap-2 px-3 py-2 rounded-md bg-muted/50 hover:bg-muted transition-colors text-left"
-					>
-						<MapPin className="h-3.5 w-3.5 text-primary" />
-						<span className="text-xs font-medium truncate flex-1">
-							{locationScope === "all"
-								? "All Locations"
-								: LOCATIONS[locationScope as Location]?.name || "Imphal"}
-						</span>
-						<ChevronDown className="h-3 w-3 opacity-50" />
-					</button>
-				</PopoverTrigger>
-				<PopoverContent className="w-48 p-2" side="right" align="start">
-					<div className="space-y-1">
-						<p className="text-xs font-medium text-muted-foreground px-2 pb-1">
-							Branch Location
-						</p>
-						<button
-							type="button"
-							onClick={() => setLocationScope("imphal")}
-							className={cn(
-								"w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md transition-colors",
-								locationScope === "imphal"
-									? "bg-primary text-primary-foreground"
-									: "hover:bg-accent",
-							)}
-						>
-							<span className="font-mono text-xs">IMF</span>
-							<span>Imphal</span>
-						</button>
-						<button
-							type="button"
-							onClick={() => setLocationScope("newdelhi")}
-							className={cn(
-								"w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md transition-colors",
-								locationScope === "newdelhi"
-									? "bg-primary text-primary-foreground"
-									: "hover:bg-accent",
-							)}
-						>
-							<span className="font-mono text-xs">DEL</span>
-							<span>New Delhi</span>
-						</button>
-						<div className="border-t my-1" />
-						<button
-							type="button"
-							onClick={() => setLocationScope("all")}
-							className={cn(
-								"w-full flex items-center gap-2 px-3 py-2 text-xs rounded-md transition-colors",
-								locationScope === "all"
-									? "bg-primary/10 text-primary"
-									: "hover:bg-accent text-muted-foreground",
-							)}
-						>
-							View all locations
-						</button>
-					</div>
-				</PopoverContent>
-			</Popover>
-
-			<Link
-				href="/notifications"
-				className="relative flex items-center justify-center w-9 h-9 rounded-md bg-muted/50 hover:bg-muted transition-colors"
-			>
-				<Bell className="h-4 w-4" />
-				{notificationCount > 0 && (
-					<span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 text-xs font-medium bg-destructive text-destructive-foreground rounded-full">
-						{notificationCount > 9 ? "9+" : notificationCount}
-					</span>
-				)}
-			</Link>
-		</div>
-	);
-}
-
-export function AppSidebar() {
-	const { isCollapsed, toggleSidebar, isMobile } = useSidebar();
-	const pathname = usePathname();
-	const [sidebarCounts, setSidebarCounts] = React.useState<
-		Record<NavBadgeKey, number | null>
-	>({
-		warehouses: null,
-		shipments: null,
-		invoices: null,
-		alerts: null,
-	});
-
-	const memoizedSupabase = React.useMemo(() => supabase, []);
-
-	// Check if admin for filtering nav items
-	// Since we don't have profile here anymore, we can fetch it or just allow all for now
-	// OR we can fetch basic user roles here if needed for nav filtering.
-	// For now let's assume all nav is visible or fetch role purely for this.
-	const [isAdmin, setIsAdmin] = React.useState(false);
-
-	React.useEffect(() => {
-		let cancelled = false;
-
-		const timeoutId = setTimeout(async () => {
-			if (cancelled) return;
-
-			try {
-				const [warehousesRes, shipmentsRes, invoicesRes] = await Promise.all([
-					memoizedSupabase
-						.from("warehouses")
-						.select("*", { count: "exact", head: true }),
-					memoizedSupabase
-						.from("shipments")
-						.select("*", { count: "exact", head: true })
-						.in("status", ["pending", "in-transit", "at-warehouse"]),
-					memoizedSupabase
-						.from("invoices")
-						.select("*", { count: "exact", head: true })
-						.in("status", ["pending", "overdue"]),
-				]);
-
-				if (cancelled) return;
-
-				setSidebarCounts({
-					warehouses: warehousesRes.count,
-					shipments: shipmentsRes.count,
-					invoices: invoicesRes.count,
-					alerts: null,
-				});
-			} catch (error) {
-				if (cancelled) return;
-				console.warn("Failed to load sidebarCounts", error);
-			}
-		}, 500);
-
-		return () => {
-			cancelled = true;
-			clearTimeout(timeoutId);
-		};
-	}, [memoizedSupabase]);
-
-	React.useEffect(() => {
-		async function checkRole() {
-			const {
-				data: { user },
-			} = await memoizedSupabase.auth.getUser();
-			if (user) {
-				const { data } = await memoizedSupabase
-					.from("users")
-					.select("role")
-					.eq("id", user.id)
-					.single();
-				setIsAdmin(data?.role === "admin");
-			}
-		}
-		checkRole();
-	}, [memoizedSupabase]);
-
-	const toPositiveBadge = (value: number | null) =>
-		typeof value === "number" && value > 0 ? value : undefined;
-
-	const navWithBadges = navMain.map((group) => ({
-		...group,
-		items: group.items.map((item) => {
-			if (!item.badgeKey) return item;
-			const raw = sidebarCounts[item.badgeKey];
-			return { ...item, badge: toPositiveBadge(raw) };
-		}),
-	}));
-
-	const visibleNav = navWithBadges
-		.map((group) => ({
-			...group,
-			items: group.items.filter((item) => !item.requiresAdmin || isAdmin),
-		}))
-		.filter((group) => group.items.length > 0);
-
-	const renderBadge = (
-		badge: string | number | undefined,
-		color: "default" | "success" | "warning" | "destructive" = "default",
-	) => {
-		if (badge === undefined || badge === null) return null;
-		if (typeof badge === "number" && badge <= 0) return null;
-
-		const colorClasses = {
-			default: "bg-muted text-muted-foreground",
-			success: "bg-primary/20 text-primary",
-			warning: "bg-accent/20 text-accent-foreground",
-			destructive: "bg-destructive/20 text-destructive",
-		};
-
-		return (
-			<span
-				className={cn(
-					"ml-auto px-1.5 py-0.5 text-xs font-semibold rounded",
-					colorClasses[color],
-				)}
-			>
-				{badge}
-			</span>
-		);
-	};
-
-	if (isMobile && isCollapsed) return null;
-
-	return (
-		<aside
-			className={cn(
-				"fixed left-0 top-0 z-40 h-screen border-r bg-background transition-all duration-300 ease-in-out",
-				isCollapsed ? "w-[70px]" : "w-64",
-			)}
-		>
-			<div className="flex h-full flex-col">
-				{/* Header */}
-				<div className="flex h-16 items-center border-b px-3 gap-2">
-					<div className="flex items-center gap-2 flex-1">
-						<UnifiedLogo
-							collapsed={isCollapsed}
-							className={cn("", isCollapsed && "pl-1")}
-						/>
-					</div>
-					<div className="flex items-center gap-1">
-						{!isMobile && (
-							<Button
-								variant="ghost"
-								size="icon"
-								className="h-8 w-8"
-								onClick={toggleSidebar}
-							>
-								{isCollapsed ? (
-									<ChevronRight className="h-4 w-4" />
-								) : (
-									<ChevronLeft className="h-4 w-4" />
-								)}
-							</Button>
-						)}
-					</div>
-				</div>
-
-				{/* Location & Notifications */}
-				<div className="py-3 border-b">
-					<LocationNotificationBar isCollapsed={isCollapsed} />
-				</div>
-
-				{/* Scrollable Navigation */}
-				<div className="flex-1 overflow-y-auto py-4">
-					<nav className="space-y-6 px-2">
-						{visibleNav.map((group) => (
-							<div key={group.title}>
-								{!isCollapsed && (
-									<h3 className="mb-2 px-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-										<Bullet className="opacity-60" />
-										{group.title}
-									</h3>
-								)}
-								<div className="space-y-1">
-									{group.items.map((item) => {
-										const isActive =
-											pathname === item.url ||
-											pathname.startsWith(`${item.url}/`);
-										return (
-											<Link
-												key={item.url}
-												href={item.url}
-												className={cn(
-													"flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground",
-													isActive
-														? "bg-primary/10 text-primary"
-														: "text-muted-foreground",
-													isCollapsed && "justify-center px-2",
-												)}
-												title={isCollapsed ? item.title : undefined}
+		<Sidebar collapsible="icon" variant="inset">
+			<SidebarHeader>
+				<OrgSwitcher />
+			</SidebarHeader>
+			<SidebarContent className="overflow-x-hidden">
+				<SidebarGroup>
+					<SidebarGroupLabel>Overview</SidebarGroupLabel>
+					<SidebarMenu>
+						{filteredItems.map((item: any) => {
+							const Icon = item.icon ? Icons[item.icon as keyof typeof Icons] : Icons.logo
+							return item?.items && item?.items?.length > 0 ? (
+								<Collapsible
+									key={item.title}
+									asChild
+									defaultOpen={item.isActive}
+									className="group/collapsible"
+								>
+									<SidebarMenuItem>
+										<CollapsibleTrigger asChild>
+											<SidebarMenuButton
+												tooltip={item.title}
+												isActive={pathname === item.url}
 											>
-												<item.icon className="h-5 w-5 shrink-0" />
-												{!isCollapsed && (
-													<>
-														<span className="flex-1">{item.title}</span>
-														{renderBadge(item.badge, item.badgeColor)}
-													</>
-												)}
-											</Link>
-										);
-									})}
-								</div>
-							</div>
-						))}
-					</nav>
-				</div>
+												{item.icon && <Icon />}
+												<span>{item.title}</span>
+												<IconChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+											</SidebarMenuButton>
+										</CollapsibleTrigger>
+										<CollapsibleContent>
+											<SidebarMenuSub>
+												{item.items?.map((subItem: any) => (
+													<SidebarMenuSubItem key={subItem.title}>
+														<SidebarMenuSubButton
+															asChild
+															isActive={pathname === subItem.url}
+														>
+															<Link href={subItem.url}>
+																<span>{subItem.title}</span>
+															</Link>
+														</SidebarMenuSubButton>
+													</SidebarMenuSubItem>
+												))}
+											</SidebarMenuSub>
+										</CollapsibleContent>
+									</SidebarMenuItem>
+								</Collapsible>
+							) : (
+								<SidebarMenuItem key={item.title}>
+									<SidebarMenuButton
+										asChild
+										tooltip={item.title}
+										isActive={pathname === item.url}
+									>
+										<Link href={item.url}>
+											<Icon />
+											<span>{item.title}</span>
+										</Link>
+									</SidebarMenuButton>
+								</SidebarMenuItem>
+							)
+						})}
+					</SidebarMenu>
+				</SidebarGroup>
+			</SidebarContent>
+			<SidebarFooter>
+				<SidebarMenu>
+					<SidebarMenuItem>
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<SidebarMenuButton
+									size="lg"
+									className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+								>
+									{user && (
+										<UserAvatarProfile
+											className="h-8 w-8 rounded-lg"
+											showInfo
+											user={user}
+										/>
+									)}
+									<IconChevronsDown className="ml-auto size-4" />
+								</SidebarMenuButton>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent
+								className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+								side="bottom"
+								align="end"
+								sideOffset={4}
+							>
+								<DropdownMenuLabel className="p-0 font-normal">
+									<div className="px-1 py-1.5">
+										{user && (
+											<UserAvatarProfile
+												className="h-8 w-8 rounded-lg"
+												showInfo
+												user={user}
+											/>
+										)}
+									</div>
+								</DropdownMenuLabel>
+								<DropdownMenuSeparator />
 
-				{/* Footer */}
-				<div className="border-t p-2">
-					<UserProfile />
-				</div>
-			</div>
-		</aside>
-	);
+								<DropdownMenuGroup>
+									<DropdownMenuItem
+										onClick={() => router.push("/dashboard/profile")}
+									>
+										<IconUserCircle className="mr-2 h-4 w-4" />
+										Profile
+									</DropdownMenuItem>
+									{organization && (
+										<DropdownMenuItem
+											onClick={() => router.push("/dashboard/billing")}
+										>
+											<IconCreditCard className="mr-2 h-4 w-4" />
+											Billing
+										</DropdownMenuItem>
+									)}
+									<DropdownMenuItem>
+										<IconBell className="mr-2 h-4 w-4" />
+										Notifications
+									</DropdownMenuItem>
+								</DropdownMenuGroup>
+								<DropdownMenuSeparator />
+								<DropdownMenuItem>
+									<IconLogout className="mr-2 h-4 w-4" />
+									<SignOutButton redirectUrl="/auth/sign-in" />
+								</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
+					</SidebarMenuItem>
+				</SidebarMenu>
+			</SidebarFooter>
+			<SidebarRail />
+		</Sidebar>
+	)
 }

@@ -4,7 +4,8 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/data-table";
+import { DataTableBlock } from "@/components/blocks/data-table/data-table-block";
+import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 import { supabase } from "@/lib/supabaseClient";
 
 type UIReport = {
@@ -53,7 +54,9 @@ export default function ReportsPage() {
 		() => [
 			{
 				accessorKey: "name",
-				header: "Report Name",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Report Name" />
+				),
 				cell: ({ row }) => (
 					<span className="font-medium">{row.getValue("name")}</span>
 				),
@@ -69,7 +72,9 @@ export default function ReportsPage() {
 			},
 			{
 				accessorKey: "generatedAt",
-				header: "Generated",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Generated" />
+				),
 				cell: ({ row }) =>
 					new Date(row.getValue("generatedAt")).toLocaleDateString(),
 			},
@@ -111,7 +116,7 @@ export default function ReportsPage() {
 				<Button className="rounded-none">Generate New Report</Button>
 			</div>
 
-			<DataTable columns={columns} data={data} searchKey="name" />
+			<DataTableBlock columns={columns} data={data} searchKey="name" />
 		</div>
 	);
 }

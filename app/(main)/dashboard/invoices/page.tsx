@@ -1,12 +1,14 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { ExternalLink, Loader2 } from "lucide-react";
+import { ExternalLink, Loader2, Plus } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/data-table";
+import { DataTableBlock } from "@/components/blocks/data-table/data-table-block";
+import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabaseClient";
 
@@ -75,14 +77,18 @@ export default function InvoicesPage() {
 		() => [
 			{
 				accessorKey: "ref",
-				header: "Invoice #",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Invoice #" />
+				),
 				cell: ({ row }) => (
 					<span className="font-mono">{row.getValue("ref")}</span>
 				),
 			},
 			{
 				accessorKey: "amount",
-				header: "Amount",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Amount" />
+				),
 				cell: ({ row }) => {
 					const amount = parseFloat(row.getValue("amount"));
 					return new Intl.NumberFormat("en-IN", {
@@ -93,7 +99,9 @@ export default function InvoicesPage() {
 			},
 			{
 				accessorKey: "dueDate",
-				header: "Due Date",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Due Date" />
+				),
 				cell: ({ row }) => {
 					const date = new Date(row.getValue("dueDate"));
 					return date.toLocaleDateString();
@@ -101,7 +109,12 @@ export default function InvoicesPage() {
 			},
 			{
 				accessorKey: "status",
-				header: "Status",
+				header: ({ column }) => (
+					<DataTableColumnHeader column={column} title="Status" />
+				),
+				filterFn: (row, id, value) => {
+					return value.includes(row.getValue(id));
+				},
 				cell: ({ row }) => {
 					const status = row.getValue("status") as string;
 					let variant: "default" | "secondary" | "destructive" | "outline" =
@@ -144,15 +157,31 @@ export default function InvoicesPage() {
 					<h2 className="text-2xl font-bold tracking-tight">Invoices</h2>
 					<p className="text-muted-foreground">Manage billing and payments.</p>
 				</div>
-				<Button
-					className="rounded-none"
-					onClick={() => router.push("/invoices")}
-				>
-					Create Invoice
+				<Button asChild>
+					<Link href="/dashboard/invoices/new">
+						<Plus className="mr-2 h-4 w-4" />
+						New Invoice
+					</Link>
 				</Button>
 			</div>
 
-			<DataTable columns={columns} data={data} searchKey="ref" />
+			<DataTableBlock
+				columns={columns}
+				data={data}
+				searchKey="ref"
+				searchPlaceholder="Filter by reference..."
+				facetedFilters={[
+					{
+						column: "status",
+						title: "Status",
+						options: [
+							{ label: "Paid", value: "paid" },
+							{ label: "Overdue", value: "overdue" },
+							{ label: "Pending", value: "pending" },
+						],
+					},
+				]}
+			/>
 		</div>
 	);
 }
